@@ -222,7 +222,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-docs/PLAN/
+docs/PLAN
 
 # Temporary files
 *.tmp

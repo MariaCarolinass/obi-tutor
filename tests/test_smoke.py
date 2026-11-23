@@ -1,4 +1,4 @@
-"""Verificações da instalação e da página inicial do bootstrap."""
+"""Verificações da importação e da página inicial do bootstrap."""
 
 from importlib import import_module
 from pathlib import Path
@@ -7,7 +7,7 @@ import socket
 from streamlit.testing.v1 import AppTest
 
 
-def test_installed_package_can_be_imported():
+def test_local_package_can_be_imported():
     import_module("obi_tutor")
 
 

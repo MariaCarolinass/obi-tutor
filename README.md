@@ -35,7 +35,7 @@ A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, ex
 
 ## Desenvolvimento local
 
-O PR 0 disponibiliza a instalação do pacote, uma página inicial Streamlit e testes
+O PR 0 disponibiliza uma estrutura Python inicial, uma página Streamlit e testes
 de smoke. Os modelos de domínio, aluno e pedagógico, as missões e o chat descritos
 acima continuam planejados.
 
@@ -46,7 +46,7 @@ Requer **Python 3.10 ou superior**. Execute os comandos na raiz do repositório.
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e ".[dev]"
+python -m pip install -r requirements.txt
 ```
 
 No Windows (PowerShell), crie o ambiente com `py -m venv .venv` e ative-o com
@@ -70,5 +70,5 @@ Para encerrar o servidor, pressione `Ctrl+C`.
 python -m pytest
 ```
 
-Os testes verificam a importação do pacote instalado e a página inicial com
+Os testes verificam a importação de `obi_tutor/` e a página inicial com
 conexões de rede bloqueadas. Para sair do ambiente virtual, execute `deactivate`.
