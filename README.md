@@ -32,3 +32,43 @@ A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, ex
 | [`docs/interface-e-fluxos.md`](docs/interface-e-fluxos.md) | Organização das telas e rascunhos em texto |
 | [`docs/testes-e-organizacao.md`](docs/testes-e-organizacao.md) | Frentes de trabalho, casos de teste e demonstração |
 | [`AGENTS.md`](AGENTS.md) | Instruções para agentes de IA usados no desenvolvimento |
+
+## Desenvolvimento local
+
+O PR 0 disponibiliza a instalação do pacote, uma página inicial Streamlit e testes
+de smoke. Os modelos de domínio, aluno e pedagógico, as missões e o chat descritos
+acima continuam planejados.
+
+Requer **Python 3.10 ou superior**. Execute os comandos na raiz do repositório.
+
+### Preparar o ambiente
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[dev]"
+```
+
+No Windows (PowerShell), crie o ambiente com `py -m venv .venv` e ative-o com
+`.venv\Scripts\Activate.ps1`; depois use o mesmo comando de instalação.
+
+O bootstrap não exige `.env`, chave de API nem arquivos de questões. Após instalar
+as dependências, a página inicial funciona sem acesso à internet.
+
+### Iniciar a aplicação
+
+```bash
+python -m streamlit run app.py
+```
+
+Abra o endereço local indicado no terminal (normalmente `http://localhost:8501`).
+Para encerrar o servidor, pressione `Ctrl+C`.
+
+### Executar os testes
+
+```bash
+python -m pytest
+```
+
+Os testes verificam a importação do pacote instalado e a página inicial com
+conexões de rede bloqueadas. Para sair do ambiente virtual, execute `deactivate`.
