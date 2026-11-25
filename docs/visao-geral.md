@@ -28,34 +28,39 @@ O **laço externo** seleciona o próximo conceito ou exercício. O **laço inter
 
 ## 4. Experiências
 
-**Pergunte ao Tutor:** chat para perguntas, conceitos e interpretação de código. As respostas são orientações e não avaliações objetivas.
+**Pergunte ao Tutor** oferece um chat para dúvidas e exemplos de Python. Na demonstração, a aplicação seleciona respostas predefinidas a partir da mensagem do estudante. A conversa não altera a pontuação.
 
-**Missões Interativas:** diagnóstico e pequenos desafios com gabaritos. O sistema pode conceder pontos e oferecer ajuda, mas não repete pontuação do mesmo item.
+**Missões Interativas** oferece diagnóstico opcional e desafios com gabarito local. A aplicação registra tentativas, oferece ajuda e concede pontos uma única vez por item.
 
 O estudante pode alternar os modos na mesma sessão.
 
 ## 5. Fluxo funcional
 
-1. Abrir o sistema e selecionar um modo.
-2. No modo de missões, responder ao diagnóstico curto e observar a recomendação inicial.
-3. Escolher um conceito ou aceitar uma sugestão baseada no grafo.
-4. Responder, solicitar ajuda ou tentar outra abordagem.
-5. Corrigir objetivamente quando houver gabarito, registrando o resultado.
-6. Atualizar a estimativa por conceito, exibir o progresso e sugerir próximo passo.
-7. Continuar, alternar o modo, pausar ou encerrar.
+1. Abrir o Início e escolher entre fazer o diagnóstico, começar a treinar ou acessar o tutor pelo menu.
+2. Responder ao diagnóstico opcional e consultar a recomendação inicial, ou seguir direto para a trilha.
+3. Escolher um conceito ou seguir uma sugestão. A trilha indica dependências e atividades disponíveis.
+4. Na missão, verificar uma resposta, pedir ajuda ou tentar outra abordagem.
+5. Consultar o progresso atualizado por conceito e escolher o próximo passo.
+6. Continuar treinando, alternar para o chat, pausar a atividade ou sair da página.
 
-A pausa mantém o estado apenas enquanto a sessão estiver ativa.
+A pausa e a navegação preservam o progresso registrado enquanto a sessão estiver ativa. O fluxo dedicado de encerramento está previsto para o MVP. [Interface e fluxos](interface-e-fluxos.md)
 
-## 6. Arquitetura prevista
+## 6. Arquitetura
 
-- **Python + Streamlit:** lógica e interface.
-- **JSON:** conceitos, dependências, questões, alternativas, gabaritos, explicações e dicas.
-- **Estado de sessão:** pontuações, questões concluídas, tentativas, pistas, conceito em foco e histórico do chat.
-- **LLM:** redação de explicações, contextualização e orientação. Nunca executa a regra oficial de pontuação.
-- **Fallback:** resposta preparada caso a API não esteja acessível.
+### Demonstração atual
+
+- React, TypeScript, TanStack Router e Vite executam a interface migrada do Lovable no navegador. [Frontend](../frontend/)
+- O grafo C1 a C10, o catálogo demonstrativo, o gabarito, a pontuação e as recomendações são locais. [Lógica em TypeScript](../frontend/src/lib/learning.ts)
+- O provedor de sessão mantém pontuações, conclusões, resultados do diagnóstico, erros e ajuda usada por atividade, além do histórico do chat. Recarregar a página ou confirmar **Reiniciar demonstração** descarta esse estado. [Provedor de sessão](../frontend/src/components/learning-provider.tsx)
+
+### Evolução prevista para o MVP
+
+- O pacote Python está reservado para a lógica planejada. Os arquivos JSON previstos descrevem conceitos, dependências, questões, gabaritos, explicações e dicas do catálogo completo. [Pacote Python](../obi_tutor/)
+- A integração de LLM poderá formular explicações, contextualizar orientações e usar o conceito em foco. As regras locais continuam responsáveis pelo gabarito, pela pontuação e pelo estado de domínio.
+- Se a API ficar indisponível, a aplicação deve manter o fluxo principal e usar uma orientação preparada. [Modelo pedagógico](modelo-pedagogico.md)
 
 O sistema não exige banco de dados no MVP. Não serão implementados autenticação, perfis permanentes, execução de código enviado, RAG, scraping de provas, ranking ou voz.
 
 ## 7. Resultado demonstrável
 
-A demonstração deve conectar as três camadas: responder a uma missão, atualizar o estado do aluno, alterar o grafo e observar uma recomendação coerente. O grupo validará essa cadeia com perfis de acerto total, erro total e desempenho misto.
+A demonstração conecta as três camadas quando a resposta a uma missão atualiza a pontuação e o estado do conceito na trilha e no painel, alimentando a recomendação seguinte. O grupo validará a cadeia completa do MVP com perfis de acerto total, erro total e desempenho misto. [Cenários de validação](testes-e-organizacao.md#3-cenários-obrigatórios)

@@ -13,62 +13,59 @@ O estudante pode alternar, na mesma sessão, entre:
 
 A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, exemplo menor, explicação direta, outra missão ou pausa, conforme o contexto e a escolha do estudante.
 
-## Escopo do protótipo
+## Demonstração atual
 
-- **Tecnologias previstas:** Python, Streamlit e arquivos JSON para conceitos e exercícios.
-- **Estado do aluno:** memória da sessão, sem banco de dados ou autenticação.
-- **Conteúdo:** 10 questões diagnósticas, 20 missões de prática e 3 missões adicionais de reforço para conceitos centrais da demonstração.
-- **Avaliação:** regras explícitas e determinísticas, sem usar o LLM como corretor de gabaritos.
-- **Fora do escopo:** persistência entre sessões, execução de código arbitrário enviado pelo aluno, scraping de provas, geração ilimitada de questões, ranking e voz.
+- Início, Diagnóstico, Treinar para a OBI, Pergunte ao Tutor e Meu Progresso em React, TypeScript, TanStack Router e Vite.
+- Uma trilha com os dez conceitos, cinco questões de diagnóstico opcional e sete missões de prática.
+- Gabaritos e pontuação calculados no navegador. Um conceito é exibido como **Dominado** quando tem pelo menos 70 pontos e dois acertos independentes em questões distintas.
+- Chat com respostas predefinidas. O progresso e a conversa ficam em memória no navegador enquanto a sessão está ativa.
+
+O MVP prevê um catálogo de 33 itens e uma integração de LLM para formular orientações, com resposta local de contingência. Autenticação, armazenamento persistente, execução de código enviado pelo aluno, RAG, scraping de provas, geração ilimitada de questões, ranking e voz ficam fora do escopo. [Visão geral do MVP](docs/visao-geral.md)
 
 ## Documentação
 
 | Arquivo | Finalidade |
 | --- | --- |
-| [`docs/visao-geral.md`](docs/visao-geral.md) | Requisitos, fluxo e arquitetura prevista |
+| [`docs/visao-geral.md`](docs/visao-geral.md) | Requisitos, fluxo e arquitetura |
 | [`docs/dominio-e-conteudo.md`](docs/dominio-e-conteudo.md) | Conceitos, grafo e preparação dos exercícios |
 | [`docs/modelo-do-aluno.md`](docs/modelo-do-aluno.md) | Estado, pontuação, domínio e regras verificáveis |
 | [`docs/modelo-pedagogico.md`](docs/modelo-pedagogico.md) | Estratégias de ajuda, dois modos e laços do tutor |
-| [`docs/interface-e-fluxos.md`](docs/interface-e-fluxos.md) | Organização das telas e rascunhos em texto |
+| [`docs/interface-e-fluxos.md`](docs/interface-e-fluxos.md) | Telas, rotas e comportamento da sessão |
 | [`docs/testes-e-organizacao.md`](docs/testes-e-organizacao.md) | Frentes de trabalho, casos de teste e demonstração |
 | [`AGENTS.md`](AGENTS.md) | Instruções para agentes de IA usados no desenvolvimento |
 
 ## Desenvolvimento local
 
-O PR 0 disponibiliza uma estrutura Python inicial, uma página Streamlit e testes
-de smoke. Os modelos de domínio, aluno e pedagógico, as missões e o chat descritos
-acima continuam planejados.
-
-Requer **Python 3.10 ou superior**. Execute os comandos na raiz do repositório.
-
-### Preparar o ambiente
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-No Windows (PowerShell), crie o ambiente com `py -m venv .venv` e ative-o com
-`.venv\Scripts\Activate.ps1`; depois use o mesmo comando de instalação.
-
-O bootstrap não exige `.env`, chave de API nem arquivos de questões. Após instalar
-as dependências, a página inicial funciona sem acesso à internet.
-
 ### Iniciar a aplicação
 
+Use **Node.js 20.19 ou superior na linha 20.x, ou Node.js 22.12 ou superior**, com npm. Execute na raiz do repositório.
+
 ```bash
-python -m streamlit run app.py
+cd frontend
+npm ci
+npm run dev
 ```
 
-Abra o endereço local indicado no terminal (normalmente `http://localhost:8501`).
-Para encerrar o servidor, pressione `Ctrl+C`.
+Abra o endereço exibido no terminal, normalmente [http://localhost:5173](http://localhost:5173). Depois de instalar as dependências, a demonstração usa fontes, imagens e dados locais e dispensa um arquivo `.env` ou chaves de API.
 
-### Executar os testes
+### Testar e gerar o build
+
+Execute em `frontend/`.
 
 ```bash
+npm test
+npm run typecheck
+npm run lint
+npm run build
+```
+
+`npm run build` gera `frontend/dist/`. Use `npm run preview` para testar esse build localmente. Em uma hospedagem estática, configure o servidor para servir `index.html` ao acessar diretamente rotas do frontend como `/tutor` e `/missoes/if-1`.
+
+### Pacote Python
+
+O pacote `obi_tutor/` está reservado para a lógica planejada do MVP. Seu teste atual verifica a importação do pacote. Para executá-lo, use **Python 3.10+** em um ambiente virtual e rode a partir da raiz.
+
+```bash
+python -m pip install -r requirements.txt
 python -m pytest
 ```
-
-Os testes verificam a importação de `obi_tutor/` e a página inicial com
-conexões de rede bloqueadas. Para sair do ambiente virtual, execute `deactivate`.

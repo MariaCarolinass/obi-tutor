@@ -32,9 +32,29 @@ Essa ordem segue a orientação da disciplina de implementar domínio, depois al
 | Erra tudo | Erra diagnóstico e missões | Nota não fica negativa, ajuda e revisão funcionam |
 | Misto | Alterna acertos, erros, pedidos de dica e novas tentativas | Notas diferenciadas e recomendação apropriada |
 
-**Cenário extra importante:** estudante erra o diagnóstico de um conceito com missão de reforço, depois acerta **três missões diferentes** de primeira e sem ajuda. Esperado: `0 + 25 + 25 + 25 = 75`, com três acertos independentes.
+O cenário de reforço já pode ser reproduzido em C4. Errar a questão de condicionais no diagnóstico e acertar as três missões de C4 de primeira e sem ajuda resulta em 75 pontos e três acertos independentes.
 
-## 4. Checklist de testes técnicos
+## 4. Validação técnica
+
+### Testes da demonstração
+
+Execute `npm test` em `frontend/`.
+
+- Os dez conceitos e suas dependências, a pontuação única por item, o efeito de dicas e tentativas e o critério de domínio. [Testes do modelo do aluno](../frontend/src/test/learning.test.ts)
+- A correção local do diagnóstico, a soma de pontos entre diagnóstico e missões, o limite de 100 e a recomendação de revisão abaixo de 50. Os perfis automatizados de C4 incluem acerto total, erro total e erro no diagnóstico seguido por três acertos independentes. [Testes do diagnóstico e treinamento](../frontend/src/test/diagnostic.test.ts)
+- A navegação entre Início, Diagnóstico, Pergunte ao Tutor e Meu Progresso, com preservação da pontuação e da conversa. [Testes de navegação](../frontend/src/test/app-routing.test.tsx)
+
+`npm run typecheck`, `npm run lint` e `npm run build` verificam a tipagem, o código e o empacotamento. Na raiz, `python -m pytest` verifica a importação do pacote Python. [Ambiente e comandos](../README.md#desenvolvimento-local)
+
+### Roteiro de verificação no navegador
+
+1. No Início, selecione **Descobrir meu nível**. Registre uma resposta, pause e retome. Confira se a questão seguinte está disponível.
+2. Na trilha, abra uma missão, erre a resposta e peça uma pista. Pause, retome e acerte. Confira os 15 pontos e o registro de uso de ajuda.
+3. Abra **Pergunte ao Tutor**, envie uma pergunta e confira **Meu Progresso**. Verifique se a nota se mantém e se a conversa aparece ao voltar ao chat.
+4. Reabra a missão que já pontuou e acerte de novo. A pontuação deve permanecer igual.
+5. Confirme **Reiniciar demonstração** e verifique o retorno ao Início e a limpeza dos registros. Em uma tela estreita, confira também o acesso aos modos pelo menu recolhível.
+
+### Checklist de aceite do MVP
 
 - [ ] Grafo não possui ciclos ou pré-requisitos inválidos.
 - [ ] Cada questão possui ID único e gabarito correto.
@@ -69,7 +89,7 @@ Preparar uma apresentação de aproximadamente **15 minutos** que mostre:
 2. Grafo e pré-requisitos.
 3. Modelo do aluno, regra de pontuação e limiar de domínio.
 4. Uma missão com erro e resposta pedagógica.
-5. Atualização observável do grafo e recomendação seguinte.
+5. Atualização observável do estado do conceito na trilha e recomendação seguinte.
 6. Diferença entre Pergunte ao Tutor e Missões Interativas.
 7. Três perfis de teste e limitações reconhecidas.
 
