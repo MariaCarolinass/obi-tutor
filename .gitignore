@@ -219,10 +219,13 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Streamlit
-.streamlit/secrets.toml
-
 # Temporary files
 *.tmp
 *.swp
 *~
+
+# Frontend
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.tanstack/
+!/frontend/src/lib/
