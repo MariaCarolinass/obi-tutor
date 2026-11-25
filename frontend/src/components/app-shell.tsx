@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
   BookOpen,
+  Bot,
   ChartNoAxesCombined,
   Check,
   ChevronRight,
@@ -17,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLearning } from "@/components/learning-context";
 import { concepts, hasActivity, status } from "@/lib/learning";
+import "../study.css";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
@@ -142,7 +144,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
           <span className="demo-badge">Modo demonstração</span>
         </header>
-        <main>{children}</main>
+        <main className={pathname === "/" ? undefined : "study-page"}>{children}</main>
         <footer className="page-footer">
           <span>
             OBI Tutor · Projeto desenvolvido na Universidade Federal do Rio Grande do Norte.
@@ -215,6 +217,7 @@ export function PageHeading({
 export function StatusBadge({ value }: { value: ReturnType<typeof status> }) {
   return (
     <span
+      data-status={value}
       className={`status-badge ${value === "Dominado" ? "mastered" : value === "Não avaliado" ? "unrated" : "learning"}`}
     >
       {value === "Dominado" ? <Check size={12} /> : <span />}
@@ -225,7 +228,7 @@ export function StatusBadge({ value }: { value: ReturnType<typeof status> }) {
 export function TutorIcon() {
   return (
     <span className="tutor-icon">
-      <Lightbulb size={21} aria-hidden="true" />
+      <Bot size={21} aria-hidden="true" />
     </span>
   );
 }

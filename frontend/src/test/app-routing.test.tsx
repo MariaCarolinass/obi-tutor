@@ -21,7 +21,9 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   fireEvent.click(await screen.findByRole("link", { name: "Conversar com o tutor" }));
   const chat = await screen.findByRole("log");
-  expect(within(chat).getByText(/pensar juntos no próximo passo/)).toBeVisible();
+  expect(within(chat).getByText("Olimpio")).toBeVisible();
+  expect(screen.getByText("Seu tutor para a OBI", { exact: true })).toBeVisible();
+  expect(within(chat).getByText(/Sou o Olimpio.*modalidade Programação/)).toBeVisible();
   const question = "Como funciona uma lista?";
   fireEvent.change(screen.getByRole("textbox", { name: "Sua pergunta" }), {
     target: { value: question },
@@ -45,6 +47,7 @@ it("opens the first challenge and shows the next recommendation inside session p
   fireEvent.click(await screen.findByRole("link", { name: "Começar com o tutor" }));
   expect(await screen.findByRole("heading", { name: "As peças de um problema" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
+  expect(screen.getByRole("heading", { name: "Conte com o Olimpio" })).toBeVisible();
   fireEvent.click(screen.getByRole("radio", { name: /rodada_1 \+ rodada_2/ }));
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(screen.getByText(/Boa descoberta! \+25 pontos/)).toBeVisible();
@@ -90,6 +93,7 @@ it("guides the warmup with a hint and distinct feedback without starting a score
   expect(reply).toBeEmptyDOMElement();
 
   fireEvent.click(screen.getByRole("button", { name: "Pedir uma pista" }));
+  expect(within(reply).getByText("Olimpio")).toBeVisible();
   expect(reply).toHaveTextContent("Comece com total igual a 0");
   fireEvent.click(within(options).getByRole("button", { name: "13" }));
   expect(reply).toHaveTextContent("Ainda falta a última volta");

@@ -43,7 +43,7 @@ function Trail() {
       <PageHeading
         eyebrow="DESAFIOS INSPIRADOS NA OLIMPÍADA"
         title="Treinar para a OBI"
-        description="Escolha um conceito e vá direto ao desafio. Python é a ferramenta; o raciocínio é o caminho."
+        description="Escolha um conceito e vá direto ao desafio. Python é a ferramenta. O raciocínio é o caminho."
       />
       <div className="legend">
         <span>Seu momento</span>
@@ -65,6 +65,7 @@ function Trail() {
             >
               <div className="concept-card-top">
                 <span
+                  data-status={value}
                   className={`path-node ${value === "Dominado" ? "" : value === "Não avaliado" ? "unrated" : "learning"}`}
                 >
                   {value === "Dominado" ? <Check size={17} /> : <Code2 size={17} />}
@@ -82,7 +83,9 @@ function Trail() {
                   value={record?.score ?? 0}
                   aria-label={`Progresso em ${c.name}`}
                 />
-                <strong>{record?.evaluated ? `${record.score} / 100` : "—"}</strong>
+                <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
+                  {record?.evaluated ? `${record.score} / 100` : "—"}
+                </strong>
               </div>
               <div className="prerequisites">
                 <Network size={12} />

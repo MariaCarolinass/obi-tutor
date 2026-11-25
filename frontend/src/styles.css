@@ -49,16 +49,17 @@
   --muted-foreground: #625a4b;
   --accent: #fff0c3;
   --border: #e7dfcd;
-  --success: oklch(0.53 0.12 162);
-  --success-soft: oklch(0.955 0.028 159);
+  --success: #146948;
+  --success-soft: #e5f4ec;
+  --tutor-accent: #8b0000;
   --warning: #785016;
   --warning-soft: #fff3d1;
   --destructive: oklch(0.57 0.16 28);
   --hero: #fff5d6;
-  --code-bg: #232722;
+  --code-bg: #2a2022;
   --code-text: #f3f0e5;
-  --code-muted: #a9aca0;
-  --code-string: oklch(0.8 0.1 160);
+  --code-muted: #b4a6a8;
+  --code-string: #f2aeb2;
   --code-keyword: oklch(0.77 0.11 308);
   --code-number: oklch(0.83 0.1 80);
   --code-function: oklch(0.79 0.1 240);
@@ -586,6 +587,11 @@ h3 {
 .status-badge.learning {
   background: var(--accent);
   color: var(--primary);
+}
+.status-badge[data-status="Em progresso"],
+.path-node[data-status="Em progresso"] {
+  background: #e6f0ff;
+  color: #20518c;
 }
 .status-badge.unrated {
   background: var(--muted);
@@ -1205,7 +1211,7 @@ h3 {
 .chat-header > span {
   margin-left: auto;
   font-size: 9px;
-  color: var(--success);
+  color: var(--tutor-accent);
 }
 .messages {
   height: 480px;

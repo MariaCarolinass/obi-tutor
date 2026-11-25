@@ -143,9 +143,9 @@
 
 .home-example .code-block {
   margin: 0 13px;
-  border: 1px solid #42473d;
+  border: 1px solid #514044;
   border-radius: 8px;
-  background: #1b1f1b;
+  background: #21191a;
   font-size: clamp(12px, 1.05vw, 14px);
 }
 
@@ -185,15 +185,15 @@
   min-width: 44px;
   min-height: 40px;
   padding: 0 8px;
-  border: 1px solid #52594c;
+  border: 1px solid #625055;
   border-radius: 7px;
-  background: #1b1f1b;
+  background: #21191a;
   color: var(--code-text);
   font-family: var(--font-mono);
 }
 
 .home-example-options button:hover {
-  background: #353a30;
+  background: #402d32;
 }
 
 .home-example-options button[aria-pressed="true"] {
@@ -225,7 +225,7 @@
   margin-top: 12px;
   padding: 11px 12px;
   border-radius: 8px;
-  background: #32382e;
+  background: #3e2a2e;
   line-height: 1.5;
 }
 

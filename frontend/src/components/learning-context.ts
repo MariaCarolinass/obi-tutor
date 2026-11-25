@@ -1,6 +1,8 @@
 import { createContext, useContext } from "react";
 import type { LearningState, Mission } from "@/lib/learning";
 
+export const tutorName = "Olimpio";
+
 export type Message = { role: "tutor" | "student"; text: string; code?: string };
 
 type LearningSession = {

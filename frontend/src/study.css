@@ -1,0 +1,454 @@
+.study-page {
+  --study-body: 1rem;
+  --study-small: 0.875rem;
+  --study-caption: 0.8125rem;
+  --study-radius: 15px;
+  --study-padding: clamp(16px, 2.3vw, 28px);
+}
+
+.study-page .page-heading {
+  margin-bottom: 24px;
+  padding: var(--study-padding);
+  border: 1px solid var(--border);
+  border-radius: var(--study-radius);
+  background: linear-gradient(110deg, var(--hero), var(--card));
+}
+
+.study-page h1,
+.study-page .diagnostic-invitation h1 {
+  font-size: clamp(1.75rem, 3.05vw, 2.75rem);
+  font-weight: 750;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.study-page .eyebrow {
+  font-size: 0.75rem;
+}
+
+.study-page
+  :is(
+    .page-heading p,
+    .mission-prompt,
+    .answer-option,
+    .message-body > p,
+    .chat-form textarea,
+    .diagnostic-invitation > p
+  ) {
+  font-size: var(--study-body);
+  line-height: 1.6;
+}
+
+.study-page .page-heading p {
+  max-width: 66ch;
+}
+
+.study-page
+  :is(
+    .concept-card p,
+    .prerequisite-advice p,
+    .mission-help > p,
+    .help-content,
+    .feedback p,
+    .notice,
+    .progress-note,
+    .progress-summary p,
+    .recommendation p,
+    .diagnostic-result p,
+    .modal p,
+    .empty-state p
+  ) {
+  font-size: var(--study-small);
+  line-height: 1.65;
+}
+
+.study-page
+  :is(
+    .concept-code,
+    .concept-actions span,
+    .concept-mission-row small,
+    .concept-mission-row > div > span,
+    .legend > span:first-child,
+    .prerequisites,
+    .tiny-tag,
+    .option-letter,
+    .mission-progress p,
+    .mission-progress small,
+    .integration-strip,
+    .message-body > small,
+    .chat-header > span,
+    .chat-disclaimer,
+    .chat-suggestions > p,
+    .diagnostic-invitation .diagnostic-footnote,
+    .diagnostic-result-grid li > span
+  ) {
+  font-size: var(--study-caption);
+}
+
+.study-page
+  :is(
+    .concept-actions button,
+    .concept-mission-row a,
+    .prerequisite-advice button,
+    .mission-controls button,
+    .help-actions button,
+    .chat-context-actions button,
+    .chat-context-actions a,
+    .chat-suggestions button,
+    .diagnostic-question-controls button,
+    .diagnostic-invitation .button-row > *,
+    .modal .button-row > *
+  ) {
+  font-size: var(--study-small);
+  min-height: 40px;
+  height: auto;
+  white-space: normal;
+}
+
+.study-page
+  :is(
+    .concept-card,
+    .mission-question,
+    .mission-help,
+    .chat-main,
+    .chat-suggestions,
+    .diagnostic-invitation,
+    .diagnostic-question,
+    .diagnostic-recommendation,
+    .progress-summary
+  ),
+.study-page .diagnostic-result-grid section {
+  min-width: 0;
+  padding: var(--study-padding);
+  border: 1px solid var(--border);
+  border-radius: var(--study-radius);
+  background: var(--card);
+}
+
+.study-page
+  :is(
+    .concept-card h3,
+    .mission-help h3,
+    .chat-header h3,
+    .chat-suggestions h3,
+    .diagnostic-result-grid h3,
+    .concept-mission-row h3
+  ) {
+  font-size: 1.125rem;
+  line-height: 1.35;
+}
+
+.study-page .concept-card-top {
+  flex-wrap: wrap;
+}
+
+.study-page .concept-card-top > div {
+  min-width: min(100%, 145px);
+}
+
+.study-page .concept-card.mastered {
+  border-color: color-mix(in srgb, var(--success), var(--border) 72%);
+}
+
+.study-page .concept-card .path-node.unrated {
+  background: var(--accent);
+  color: var(--primary);
+}
+
+.study-page .status-badge,
+.study-page .concept-card-top .status-badge {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+}
+
+.study-page .concept-score strong {
+  font-size: var(--study-small);
+}
+
+.study-page .concept-actions {
+  flex-wrap: wrap;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.study-page progress {
+  height: 9px;
+}
+
+.study-page .back-link {
+  min-height: 32px;
+  font-size: var(--study-small);
+}
+
+.study-page :is(.mission-layout, .chat-layout) {
+  grid-template-columns: minmax(0, 1fr) minmax(235px, 30%);
+  gap: clamp(14px, 2vw, 26px);
+  align-items: start;
+}
+
+.study-page .mission-question h2 {
+  font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+  line-height: 1.2;
+}
+
+.study-page .mission-meta {
+  flex-wrap: wrap;
+}
+
+.study-page :is(.mission-help, .chat-suggestions, .diagnostic-recommendation, .progress-summary) {
+  background: var(--hero);
+}
+
+.study-page :is(.help-content, .feedback) {
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.study-page .help-content {
+  background: var(--card);
+}
+
+.study-page .help-content h4 {
+  font-size: var(--study-body);
+}
+
+.study-page .code-block {
+  font-size: var(--study-small);
+}
+
+.study-page .code-label {
+  font-size: var(--study-caption);
+}
+
+.study-page .options {
+  min-width: 0;
+}
+
+.study-page .answer-option {
+  min-height: 50px;
+  border-radius: 10px;
+  overflow-wrap: anywhere;
+}
+
+.study-page .answer-option input {
+  flex-shrink: 0;
+}
+
+.study-page .answer-option:focus-within {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.study-page .answer-option:hover {
+  border-color: var(--primary);
+}
+
+.study-page .chat-main {
+  padding: 0;
+  overflow: hidden;
+}
+
+.study-page .chat-header {
+  padding: 16px;
+  background: var(--hero);
+}
+
+.study-page .chat-header p {
+  font-size: var(--study-caption);
+}
+
+.study-page .messages {
+  height: clamp(340px, 52dvh, 580px);
+  padding: var(--study-padding);
+  gap: 18px;
+}
+
+.study-page .message-body {
+  min-width: 0;
+  max-width: min(90%, 66ch);
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--background);
+  overflow-wrap: anywhere;
+}
+
+.study-page .message.student .message-body {
+  background: var(--accent);
+}
+
+.study-page .chat-form {
+  padding: 14px;
+}
+
+.study-page .chat-form textarea {
+  min-width: 0;
+  height: 62px;
+}
+
+.study-page .chat-form button {
+  flex-shrink: 0;
+}
+
+.study-page .chat-disclaimer {
+  padding: 0 14px 14px;
+}
+
+.study-page .diagnostic-invitation {
+  max-width: 900px;
+  background: linear-gradient(120deg, var(--hero), var(--card));
+}
+
+.study-page .diagnostic-details {
+  gap: 10px;
+  font-size: var(--study-small);
+}
+
+.study-page .diagnostic-details span {
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card);
+}
+
+.study-page .diagnostic-question {
+  max-width: none;
+  margin-top: 16px;
+}
+
+.study-page .diagnostic-question-progress,
+.study-page .diagnostic-question-progress > span,
+.study-page .diagnostic-result-grid li {
+  font-size: var(--study-small);
+}
+
+.study-page .diagnostic-question-progress {
+  flex-wrap: wrap;
+}
+
+.study-page .diagnostic-result-grid {
+  gap: 16px;
+}
+
+.study-page .progress-summary h2,
+.study-page .diagnostic-result-top h2,
+.study-page .recommendation h3 {
+  font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+}
+
+.study-page .table-wrap:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.study-page .progress-table {
+  min-width: 660px;
+}
+
+.study-page .progress-table th {
+  background: var(--accent);
+  color: var(--foreground);
+  font-weight: 700;
+}
+
+.study-page .progress-table :is(th, td, a, .table-score strong) {
+  font-size: var(--study-small);
+}
+
+.study-page .progress-table td:first-child > span {
+  font-size: var(--study-caption);
+}
+
+.study-page .table-score strong {
+  width: 52px;
+}
+
+.progress-mobile-label {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .study-page :is(.mission-layout, .chat-layout) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .study-page .chat-suggestions {
+    display: block;
+  }
+}
+
+@media (max-width: 640px) {
+  .study-page .table-wrap {
+    border: 0;
+  }
+
+  .study-page .progress-table {
+    display: block;
+    min-width: 0;
+    background: transparent;
+  }
+
+  .study-page .progress-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .study-page .progress-table tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .study-page .progress-table tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--card);
+  }
+
+  .study-page .progress-table td {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .study-page .progress-table td:nth-child(2) {
+    min-width: 0;
+  }
+
+  .study-page .progress-table td:first-child {
+    grid-column: 1 / -1;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .study-page .progress-table td:last-child {
+    align-self: end;
+  }
+
+  .study-page .progress-mobile-label {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+  }
+
+  .study-page .message .tutor-icon {
+    display: none;
+  }
+
+  .study-page .message-body {
+    max-width: 100%;
+  }
+
+  .study-page .chat-header {
+    flex-wrap: wrap;
+  }
+}

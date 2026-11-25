@@ -3,6 +3,7 @@ import { useState } from "react";
 import {
   ArrowRight,
   ArrowDown,
+  Bot,
   ClipboardCheck,
   Code2,
   Lightbulb,
@@ -10,7 +11,7 @@ import {
 } from "lucide-react";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
-import { useLearning } from "@/components/learning-context";
+import { tutorName, useLearning } from "@/components/learning-context";
 import { ObiGuide } from "@/components/obi-guide";
 import { Button } from "@/components/ui/button";
 import { concepts, hasActivity, recommendation, status, trainingMissions } from "@/lib/learning";
@@ -59,7 +60,7 @@ function TutorExample() {
       <figcaption>
         <TutorIcon />
         <div>
-          <strong>OBI Tutor</strong>
+          <strong>{tutorName}</strong>
           <p>Vamos conferir juntos os pontos de três rodadas.</p>
           <p id="home-example-question">Qual número este código imprime?</p>
         </div>
@@ -103,7 +104,7 @@ function TutorExample() {
             <div>
               <TutorIcon />
               <p>
-                <strong>OBI Tutor</strong>
+                <strong>{tutorName}</strong>
                 {reply}
               </p>
             </div>
@@ -129,8 +130,8 @@ const studyPaths = [
   },
   {
     to: "/tutor",
-    icon: MessageSquareCode,
-    title: "Pergunte ao tutor",
+    icon: Bot,
+    title: `Pergunte ao ${tutorName}`,
     description: "Tire dúvidas de Python e veja exemplos para entender o código.",
   },
 ] as const;
