@@ -173,12 +173,6 @@ function Index() {
           <a className="home-guide-link" href="#sobre-a-obi">
             Saiba como funciona a OBI <ArrowDown size={16} aria-hidden="true" />
           </a>
-          {started && (
-            <p className="home-next-mission">
-              <Lightbulb size={16} aria-hidden="true" />
-              Próximo desafio · {recommended.title}
-            </p>
-          )}
         </div>
 
         <TutorExample />
@@ -191,6 +185,10 @@ function Index() {
             <p>
               {completed} {completed === 1 ? "missão concluída" : "missões concluídas"} · {mastered}{" "}
               {mastered === 1 ? "conceito dominado" : "conceitos dominados"}
+            </p>
+            <p className="home-next-mission">
+              <Lightbulb size={16} aria-hidden="true" />
+              Próximo desafio · {recommended.title}
             </p>
           </div>
           <Link to="/progresso">

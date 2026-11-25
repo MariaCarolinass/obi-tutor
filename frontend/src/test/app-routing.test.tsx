@@ -38,13 +38,21 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   expect(await screen.findByText(question)).toBeVisible();
 });
 
-it("leads a new student straight to the first recommended challenge", async () => {
+it("opens the first challenge and shows the next recommendation inside session progress", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
   render(<RouterProvider router={router} />);
 
   fireEvent.click(await screen.findByRole("link", { name: "Começar com o tutor" }));
   expect(await screen.findByRole("heading", { name: "As peças de um problema" })).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
+  fireEvent.click(screen.getByRole("radio", { name: /rodada_1 \+ rodada_2/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(screen.getByText(/Boa descoberta! \+25 pontos/)).toBeVisible();
+
+  const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+  fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
+  const progress = await screen.findByRole("region", { name: "Seu progresso nesta sessão" });
+  expect(within(progress).getByText("Próximo desafio · Lendo o placar")).toBeVisible();
 });
 
 it("shows the OBI guide and links to official rules, preparation and participation", async () => {
