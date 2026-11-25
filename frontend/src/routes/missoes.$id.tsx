@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
-import { useLearning } from "@/components/learning-context";
+import { tutorName, useLearning } from "@/components/learning-context";
 import { concepts, trainingMissions, status, type Mission } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
@@ -111,6 +111,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
           <div className="mission-meta">
             <span className="eyebrow mb-0">{mission.type}</span>
             <span className="tiny-tag">{concept?.short} · Iniciante</span>
+            <span className="tiny-tag">1º e 2º anos do Ensino Médio</span>
           </div>
           <h2>{mission.title}</h2>
           <p className="mission-prompt">{mission.prompt}</p>
@@ -228,7 +229,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
         </section>
         <aside className="mission-help">
           <TutorIcon />
-          <h3>Não precisa resolver sozinho.</h3>
+          <h3>Conte com o {tutorName}</h3>
           <p>
             {(attempt?.errors ?? 0) >= 2
               ? "Podemos seguir por outro caminho. Escolha o que faz sentido para você."
@@ -286,7 +287,9 @@ function MissionActivity({ mission }: { mission: Mission }) {
           <div className="mission-progress">
             <p>
               <span>{concept?.short}</span>
-              <strong>{record?.evaluated ? `${record.score} / 100` : "—"}</strong>
+              <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
+                {record?.evaluated ? `${record.score} / 100` : "—"}
+              </strong>
             </p>
             <progress max="100" value={record?.score ?? 0} aria-label="Progresso no conceito" />
             <small>

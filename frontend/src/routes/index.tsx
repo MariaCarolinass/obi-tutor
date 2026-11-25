@@ -2,168 +2,223 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   ArrowRight,
-  BookOpen,
-  CheckCheck,
-  CircleHelp,
+  ArrowDown,
+  Bot,
   ClipboardCheck,
+  Code2,
   Lightbulb,
-  Target,
-  X,
+  MessageSquareCode,
 } from "lucide-react";
+import { TutorIcon } from "@/components/app-shell";
+import { CodeBlock } from "@/components/code-block";
+import { tutorName, useLearning } from "@/components/learning-context";
+import { ObiGuide } from "@/components/obi-guide";
 import { Button } from "@/components/ui/button";
-import { useLearning } from "@/components/learning-context";
 import { concepts, hasActivity, recommendation, status, trainingMissions } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
-import learningArt from "@/assets/obi-learning.webp";
+import "../home.css";
 
 export const Route = createFileRoute("/")({
   head: () =>
     pageMeta(
-      "Prepare-se para a OBI",
-      "Preparação introdutória para a Olimpíada Brasileira de Informática: desafios de raciocínio e programação com orientação de um tutor demonstrativo.",
+      "Treine para a OBI com seu tutor",
+      "Prepare-se para a modalidade Programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
     ),
   component: Index,
 });
+
+const sampleCode = `pontos = [5, 8, 12]
+total = 0
+
+for valor in pontos:
+    total += valor
+
+print(total)`;
+
+const sampleOptions = [
+  {
+    value: 12,
+    reply:
+      "12 é o último valor da lista. O laço soma todos os valores. Como fica o total a cada volta?",
+  },
+  {
+    value: 13,
+    reply: "13 é a soma de 5 e 8. Ainda falta a última volta. Quanto dá quando você soma 12?",
+  },
+  {
+    value: 25,
+    reply: "Acertou! O total começa em 0 e passa por 5, 13 e 25. O print(total) mostra 25.",
+  },
+] as const;
+
+function TutorExample() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [reply, setReply] = useState("");
+
+  return (
+    <figure className="home-example">
+      <figcaption>
+        <TutorIcon />
+        <div>
+          <strong>{tutorName}</strong>
+          <p>Vamos conferir juntos os pontos de três rodadas.</p>
+          <p id="home-example-question">Qual número este código imprime?</p>
+        </div>
+      </figcaption>
+      <CodeBlock code={sampleCode} label="aquecimento.py" />
+      <div className="home-example-actions">
+        <div className="home-example-controls">
+          <div
+            className="home-example-options"
+            role="group"
+            aria-labelledby="home-example-question"
+          >
+            {sampleOptions.map(({ value, reply }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={selected === value}
+                onClick={() => {
+                  setSelected(value);
+                  setReply(reply);
+                }}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="home-example-hint"
+            onClick={() => {
+              setReply(
+                "Comece com total igual a 0. Some 5 na primeira volta e 8 na segunda. Qual valor ainda falta somar?",
+              );
+            }}
+          >
+            Pedir uma pista
+          </button>
+        </div>
+        <div className="home-example-reply" role="status">
+          {reply && (
+            <div>
+              <TutorIcon />
+              <p>
+                <strong>{tutorName}</strong>
+                {reply}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </figure>
+  );
+}
+
+const studyPaths = [
+  {
+    to: "/diagnostico",
+    icon: ClipboardCheck,
+    title: "Fazer o diagnóstico",
+    description: "Responda a cinco questões para receber uma sugestão de estudo.",
+  },
+  {
+    to: "/trilha",
+    icon: Code2,
+    title: "Explorar a trilha",
+    description: "Escolha um conceito e pratique com desafios de programação.",
+  },
+  {
+    to: "/tutor",
+    icon: Bot,
+    title: `Pergunte ao ${tutorName}`,
+    description: "Tire dúvidas de Python e veja exemplos para entender o código.",
+  },
+] as const;
+
 function Index() {
   const { state } = useLearning();
-  const [aboutOpen, setAboutOpen] = useState(false);
   const started = hasActivity(state);
   const recommended = recommendation(state);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const completed = trainingMissions.filter((m) => state.completed.includes(m.id)).length;
+
   return (
-    <>
-      <section className="home-intro">
-        <div className="eyebrow">OBI TUTOR · RACIOCÍNIO, PROGRAMAÇÃO E DESCOBERTAS</div>
-        <h1>
-          Prepare-se para a OBI
-          <br />
-          com um tutor inteligente.
-        </h1>
-        <p>
-          Desenvolva seu raciocínio, pratique programação e receba orientação personalizada para
-          resolver desafios inspirados na Olimpíada Brasileira de Informática.
-        </p>
-        <div className="button-row">
-          <Button asChild size="lg">
-            <Link to="/diagnostico">
-              <ClipboardCheck />
-              Descobrir meu nível
-              <ArrowRight />
-            </Link>
-          </Button>
-          <Button variant="outline" asChild size="lg">
-            <Link to="/trilha">
-              <Target />
-              Começar a treinar
-            </Link>
-          </Button>
-        </div>
-        <Button variant="link" className="about-obi" onClick={() => setAboutOpen(true)}>
-          <CircleHelp />O que é a OBI?
-        </Button>
-      </section>
-      <section className="home-learning-band">
-        <img src={learningArt} alt="Tutor azul ao lado de um notebook para praticar programação" />
-        <div>
-          <span className="eyebrow">SUA PRÓXIMA DESCOBERTA</span>
-          <h2>
-            Um desafio de cada vez.
-            <br />
-            Com orientação no caminho.
-          </h2>
-          <p>
-            Preparação introdutória para a modalidade Programação, com Python e raciocínio lógico.
+    <div className="home-page">
+      <section className="home-hero" aria-labelledby="home-title">
+        <div className="home-intro">
+          <p className="home-kicker">
+            <Code2 size={17} aria-hidden="true" /> Olimpíada Brasileira de Informática
           </p>
-          <Link to="/tutor">
-            Converse com seu tutor
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
-      {started && (
-        <section className="home-session">
-          <div className="section-title">
-            <h2>Seu próximo passo</h2>
-            <Link to="/progresso">
-              Ver meu progresso
-              <ArrowRight size={13} />
-            </Link>
-          </div>
-          <div className="home-session-row">
-            <div>
-              <span className="recommendation-top">
-                <Lightbulb size={15} /> SUGESTÃO DO TUTOR
-              </span>
-              <h3>{recommended.title}</h3>
-              <p>{concepts.find((c) => c.id === recommended.concept)?.name}</p>
-            </div>
-            <Button asChild>
+          <h1 id="home-title">
+            Treine para a <mark>OBI</mark> <span>com seu tutor.</span>
+          </h1>
+          <p className="home-description">
+            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>,
+            voltados ao 1º e ao 2º ano do Ensino Médio. Se travar, peça uma pista ao Olimpio.
+          </p>
+          <div className="home-actions">
+            <Button asChild size="lg">
               <Link to="/missoes/$id" params={{ id: recommended.id }}>
-                Continuar treinando
-                <ArrowRight />
+                {started ? "Continuar com o tutor" : "Começar com o tutor"}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button variant="outline" asChild size="lg">
+              <Link to="/tutor">
+                <MessageSquareCode aria-hidden="true" />
+                Conversar com o tutor
               </Link>
             </Button>
           </div>
-          <div className="session-totals">
-            <span>
-              <Target size={14} />
-              {completed} desafios concluídos
-            </span>
-            <span>
-              <CheckCheck size={14} />
-              {mastered} conceitos dominados
-            </span>
+          <a className="home-guide-link" href="#sobre-a-obi">
+            Saiba como funciona a OBI <ArrowDown size={16} aria-hidden="true" />
+          </a>
+        </div>
+
+        <TutorExample />
+      </section>
+
+      {started && (
+        <section className="home-progress" aria-labelledby="home-progress-title">
+          <div>
+            <h2 id="home-progress-title">Seu progresso nesta sessão</h2>
+            <p>
+              {completed} {completed === 1 ? "missão concluída" : "missões concluídas"} · {mastered}{" "}
+              {mastered === 1 ? "conceito dominado" : "conceitos dominados"}
+            </p>
+            <p className="home-next-mission">
+              <Lightbulb size={16} aria-hidden="true" />
+              Próximo desafio · {recommended.title}
+            </p>
           </div>
+          <Link to="/progresso">
+            Ver meu progresso <ArrowRight size={16} aria-hidden="true" />
+          </Link>
         </section>
       )}
-      {aboutOpen && (
-        <div className="modal-overlay">
-          <section className="modal" role="dialog" aria-modal="true" aria-labelledby="obi-title">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="modal-close"
-              aria-label="Fechar explicação"
-              onClick={() => setAboutOpen(false)}
-            >
-              <X />
-            </Button>
-            <span className="icon-tile">
-              <BookOpen />
-            </span>
-            <h2 id="obi-title">O que é a OBI?</h2>
-            <p>
-              A Olimpíada Brasileira de Informática é uma competição educacional que incentiva o
-              raciocínio lógico e a resolução de problemas.
-            </p>
-            <div className="obi-modal-content">
-              <h3>Modalidade Iniciação</h3>
-              <p>Propõe problemas de lógica e raciocínio, sem exigir programação.</p>
-              <h3>Modalidade Programação</h3>
-              <p>Propõe problemas que são resolvidos por meio de programas de computador.</p>
-              <h3>Onde o OBI Tutor entra?</h3>
-              <p>
-                Este Sistema Tutor Inteligente demonstrativo oferece orientação conforme suas
-                tentativas e seu progresso. Trabalhamos com{" "}
-                <strong>conteúdos introdutórios da modalidade Programação</strong>, utilizando
-                Python e desafios de raciocínio lógico.
-              </p>
-              <div className="notice">
-                <CircleHelp size={16} />
-                <span>
-                  Projeto acadêmico independente, não oficial da OBI. Não contempla todas as
-                  modalidades e níveis nem promete preparação completa.
+
+      <section className="home-paths" aria-labelledby="home-paths-title">
+        <h2 id="home-paths-title">
+          {started ? "O que você quer estudar?" : "Como você quer começar?"}
+        </h2>
+        <ul className="home-path-grid">
+          {studyPaths.map(({ to, icon: Icon, title, description }) => (
+            <li key={to}>
+              <Link to={to} className="home-path-card">
+                <span className="home-path-icon">
+                  <Icon size={22} aria-hidden="true" />
                 </span>
-              </div>
-            </div>
-            <Button onClick={() => setAboutOpen(false)}>
-              Entendi
-              <ArrowRight />
-            </Button>
-          </section>
-        </div>
-      )}
-    </>
+                <ArrowRight className="home-path-arrow" size={19} aria-hidden="true" />
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <ObiGuide />
+    </div>
   );
 }

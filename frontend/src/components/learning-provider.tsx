@@ -6,11 +6,11 @@ import {
   registerHint,
   type Mission,
 } from "@/lib/learning";
-import { LearningContext, type Message } from "./learning-context";
+import { LearningContext, tutorName, type Message } from "./learning-context";
 
 const welcome: Message = {
   role: "tutor",
-  text: "Olá! Eu sou seu parceiro de aprendizagem. Qual conceito vamos explorar hoje? Você pode perguntar, pedir um exemplo ou praticar no seu ritmo.",
+  text: `Oi! Sou o ${tutorName}, seu tutor para a OBI. Estou aqui para ajudar você a se preparar para a modalidade Programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`,
 };
 function tutorReply(text: string): Message {
   const question = text.toLowerCase();

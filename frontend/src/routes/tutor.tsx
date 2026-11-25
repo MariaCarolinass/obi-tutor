@@ -4,7 +4,7 @@ import { ArrowRight, BookOpen, Send, Sparkles } from "lucide-react";
 import { PageHeading, TutorIcon } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/code-block";
-import { useLearning } from "@/components/learning-context";
+import { tutorName, useLearning } from "@/components/learning-context";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/tutor")({
@@ -47,15 +47,15 @@ function Tutor() {
       <PageHeading
         eyebrow="PENSE JUNTO. DESCUBRA NO SEU RITMO."
         title="Toda boa ideia começa com uma pergunta."
-        description="Seu espaço para tirar dúvidas, explorar exemplos e encontrar um novo jeito de entender."
+        description="Pratique para a OBI. Tire dúvidas e explore exemplos em Python."
       />
       <div className="chat-layout">
         <section className="chat-main">
           <header className="chat-header">
             <TutorIcon />
             <div>
-              <h3>Seu tutor de Python</h3>
-              <p>Uma conversa para aprender, não para julgar.</p>
+              <h3>{tutorName}</h3>
+              <p>Seu tutor para a OBI</p>
             </div>
             <span>Demonstração</span>
           </header>
@@ -70,7 +70,7 @@ function Tutor() {
               <div className={`message ${m.role}`} key={i}>
                 {m.role === "tutor" && <TutorIcon />}
                 <div className="message-body">
-                  <small>{m.role === "tutor" ? "OBI Tutor" : "Você"}</small>
+                  <small>{m.role === "tutor" ? tutorName : "Você"}</small>
                   <p>{m.text}</p>
                   {m.code && <CodeBlock code={m.code} />}{" "}
                   {m.role === "tutor" && i === messages.length - 1 && (

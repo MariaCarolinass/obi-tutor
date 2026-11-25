@@ -37,11 +37,11 @@ function Progress() {
           </p>
         </div>
         <div>
-          <progress max="10" value={mastered} />
+          <progress max="10" value={mastered} aria-label="Conceitos dominados" />
         </div>
       </section>
-      <div className="table-wrap">
-        <table className="progress-table">
+      <div className="table-wrap" role="region" aria-label="Progresso por conceito" tabIndex={0}>
+        <table className="progress-table" role="table">
           <thead>
             <tr>
               <th>Conceito</th>
@@ -66,8 +66,13 @@ function Progress() {
                     {c.name}
                   </td>
                   <td>
+                    <span className="progress-mobile-label" aria-hidden="true">
+                      Pontuação
+                    </span>
                     <div className="table-score">
-                      <strong>{record?.evaluated ? `${record.score}/100` : "—"}</strong>
+                      <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
+                        {record?.evaluated ? `${record.score}/100` : "—"}
+                      </strong>
                       <progress
                         max="100"
                         value={record?.score ?? 0}
@@ -76,9 +81,17 @@ function Progress() {
                     </div>
                   </td>
                   <td>
+                    <span className="progress-mobile-label" aria-hidden="true">
+                      Seu momento
+                    </span>
                     <StatusBadge value={value} />
                   </td>
-                  <td>{record?.independent.length ?? 0} acertos</td>
+                  <td>
+                    <span className="progress-mobile-label" aria-hidden="true">
+                      Acertos independentes
+                    </span>
+                    {record?.independent.length ?? 0} acertos
+                  </td>
                   <td>
                     {mission ? (
                       <Link to="/missoes/$id" params={{ id: mission.id }}>
