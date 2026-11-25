@@ -11,10 +11,10 @@ import {
   Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PageHeading } from "@/components/app-shell";
+import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { useLearning } from "@/components/learning-context";
-import { concepts, diagnosticQuestions, recommendation } from "@/lib/learning";
+import { concepts, diagnosticQuestions, recommendation, status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/diagnostico")({
@@ -55,53 +55,40 @@ function Diagnostic() {
               </p>
             </div>
           </div>
-          <div className="diagnostic-result-grid">
-            <section>
-              <h3>
-                <BookOpen size={17} />
-                Conhecimentos identificados
-              </h3>
-              {known.length ? (
-                <ul>
-                  {known.map((q) => (
-                    <li key={q.id}>
-                      <Check size={14} />
-                      {concepts.find((c) => c.id === q.concept)?.name}
-                      <span>+{state.attempts[q.id]?.points ?? 0} pontos</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>
-                  Ainda não identificamos acertos neste diagnóstico. Começar pelo básico é um bom
-                  caminho, e o tutor pode ajudar.
-                </p>
-              )}
-            </section>
-            <section>
-              <h3>
-                <Lightbulb size={17} />
-                Vale reforçar
-              </h3>
-              {reinforce.length ? (
-                <ul>
-                  {reinforce.map((q) => (
-                    <li key={q.id}>{concepts.find((c) => c.id === q.concept)?.name}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p>
-                  Uma boa primeira base nos cinco assuntos! Agora, pratique novos desafios para
-                  consolidar o conhecimento.
-                </p>
-              )}
-            </section>
-          </div>
+          <section className="diagnostic-profile" aria-labelledby="diagnostic-profile-title">
+            <h3 id="diagnostic-profile-title">Seu nível por conceito</h3>
+            <p>Veja sua estimativa na sessão e como você se saiu em cada questão.</p>
+            <ul>
+              {diagnosticQuestions.map((q) => {
+                const correct = state.diagnosticAnswers[q.id];
+                return (
+                  <li key={q.id}>
+                    <div>
+                      <strong>{concepts.find((c) => c.id === q.concept)?.name}</strong>
+                      <p>
+                        {correct ? (
+                          <>
+                            Acerto no diagnóstico ·{" "}
+                            <span className="text-success">
+                              +{state.attempts[q.id]?.points ?? 0} pontos
+                            </span>
+                          </>
+                        ) : (
+                          "Vale reforçar"
+                        )}
+                      </p>
+                    </div>
+                    <StatusBadge value={status(state.records[q.concept])} />
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
           <div className="notice">
             <Info size={16} />
             <span>
-              Um único acerto não significa domínio. Este diagnóstico não classifica você nos níveis
-              oficiais da OBI e avalia apenas conteúdos introdutórios.
+              O domínio é confirmado com prática e acertos independentes. Os níveis oficiais de
+              inscrição na OBI seguem critérios de escolaridade.
             </span>
           </div>
           <div className="diagnostic-recommendation">
@@ -142,8 +129,8 @@ function Diagnostic() {
           por onde começar?
         </h1>
         <p>
-          Cinco perguntas sobre raciocínio e fundamentos de programação para sugerir seu primeiro
-          passo. Sem pressão e sem penalização por erros.
+          Cinco perguntas introdutórias de raciocínio e programação, voltadas ao 1º e ao 2º ano do
+          Ensino Médio. Ao final, veja seu nível por conceito e receba uma sugestão de desafio.
         </p>
         <div className="diagnostic-details">
           <span>

@@ -1845,51 +1845,6 @@ h3 {
   line-height: 1.7;
   margin-top: 7px;
 }
-.diagnostic-result-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-bottom: 26px;
-}
-.diagnostic-result-grid h3 {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  font-size: 13px;
-  margin-bottom: 14px;
-}
-.diagnostic-result-grid h3 svg {
-  color: var(--primary);
-}
-.diagnostic-result-grid ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.diagnostic-result-grid li {
-  font-size: 11px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  line-height: 1.8;
-  border-bottom: 1px solid var(--border);
-  padding: 10px 0;
-}
-.diagnostic-result-grid li > svg {
-  color: var(--success);
-  flex-shrink: 0;
-}
-.diagnostic-result-grid li > span {
-  margin-left: auto;
-  color: var(--success);
-  font-size: 9px;
-  white-space: nowrap;
-}
-.diagnostic-result-grid p {
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--muted-foreground);
-}
 .diagnostic-recommendation {
   padding-top: 10px;
 }
@@ -1901,12 +1856,6 @@ h3 {
   line-height: 1.8;
   margin-top: 10px;
   color: var(--muted-foreground);
-}
-@media (max-width: 900px) {
-  .diagnostic-result-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
 }
 @media (max-width: 640px) {
   .concept-mission-row {

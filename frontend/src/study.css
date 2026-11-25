@@ -79,8 +79,7 @@
     .chat-header > span,
     .chat-disclaimer,
     .chat-suggestions > p,
-    .diagnostic-invitation .diagnostic-footnote,
-    .diagnostic-result-grid li > span
+    .diagnostic-invitation .diagnostic-footnote
   ) {
   font-size: var(--study-caption);
 }
@@ -117,7 +116,7 @@
     .diagnostic-recommendation,
     .progress-summary
   ),
-.study-page .diagnostic-result-grid section {
+.study-page .diagnostic-profile {
   min-width: 0;
   padding: var(--study-padding);
   border: 1px solid var(--border);
@@ -131,7 +130,7 @@
     .mission-help h3,
     .chat-header h3,
     .chat-suggestions h3,
-    .diagnostic-result-grid h3,
+    .diagnostic-profile h3,
     .concept-mission-row h3
   ) {
   font-size: 1.125rem;
@@ -319,8 +318,7 @@
 }
 
 .study-page .diagnostic-question-progress,
-.study-page .diagnostic-question-progress > span,
-.study-page .diagnostic-result-grid li {
+.study-page .diagnostic-question-progress > span {
   font-size: var(--study-small);
 }
 
@@ -328,8 +326,27 @@
   flex-wrap: wrap;
 }
 
-.study-page .diagnostic-result-grid {
-  gap: 16px;
+.study-page .diagnostic-profile {
+  margin-bottom: 20px;
+}
+
+.diagnostic-profile ul {
+  margin-top: 14px;
+}
+
+.diagnostic-profile li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-block: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.study-page .diagnostic-profile li p {
+  margin-top: 2px;
+  color: var(--muted-foreground);
 }
 
 .study-page .progress-summary h2,

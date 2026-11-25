@@ -43,7 +43,7 @@ function Trail() {
       <PageHeading
         eyebrow="DESAFIOS INSPIRADOS NA OLIMPÍADA"
         title="Treinar para a OBI"
-        description="Escolha um conceito e vá direto ao desafio. Python é a ferramenta. O raciocínio é o caminho."
+        description="Pratique fundamentos de Python para a OBI com desafios introdutórios voltados ao 1º e ao 2º ano do Ensino Médio."
       />
       <div className="legend">
         <span>Seu momento</span>

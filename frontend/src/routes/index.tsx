@@ -154,8 +154,8 @@ function Index() {
             Treine para a <mark>OBI</mark> <span>com seu tutor.</span>
           </h1>
           <p className="home-description">
-            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>. Se
-            travar, peça uma pista ou converse com o tutor para entender como continuar.
+            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>,
+            voltados ao 1º e ao 2º ano do Ensino Médio. Se travar, peça uma pista ao Olimpio.
           </p>
           <div className="home-actions">
             <Button asChild size="lg">

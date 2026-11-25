@@ -111,6 +111,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
           <div className="mission-meta">
             <span className="eyebrow mb-0">{mission.type}</span>
             <span className="tiny-tag">{concept?.short} · Iniciante</span>
+            <span className="tiny-tag">1º e 2º anos do Ensino Médio</span>
           </div>
           <h2>{mission.title}</h2>
           <p className="mission-prompt">{mission.prompt}</p>

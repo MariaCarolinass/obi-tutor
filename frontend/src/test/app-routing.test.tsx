@@ -106,6 +106,29 @@ it("guides the warmup with a hint and distinct feedback without starting a score
   expect(screen.getByRole("link", { name: "Começar com o tutor" })).toBeVisible();
 });
 
+it("shows the learner model status and diagnostic result for each assessed concept", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/diagnostico"] }));
+  render(<RouterProvider router={router} />);
+
+  fireEvent.click(await screen.findByRole("button", { name: "Iniciar diagnóstico" }));
+  const answers = [/O nome de quem fez mais pontos/, /^A 7$/, /^C 7$/, /Praticar$/, /3 vezes$/];
+  for (const [index, name] of answers.entries()) {
+    fireEvent.click(await screen.findByRole("radio", { name }));
+    fireEvent.click(
+      screen.getByRole("button", { name: index === 4 ? "Ver meu resultado" : "Próxima questão" }),
+    );
+  }
+
+  const profile = await screen.findByRole("region", { name: "Seu nível por conceito" });
+  const [reading, inputOutput] = within(profile).getAllByRole("listitem");
+  expect(within(profile).getAllByRole("listitem")).toHaveLength(5);
+  expect(reading).toHaveTextContent("Acerto no diagnóstico");
+  expect(reading).toHaveTextContent("+30 pontos");
+  expect(reading).toHaveTextContent("Inicial");
+  expect(inputOutput).toHaveTextContent("Vale reforçar");
+  expect(inputOutput).toHaveTextContent("Inicial");
+});
+
 it("redirects the old diagnostic URL into the single diagnostic flow", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/diag-1"] }));
   render(<RouterProvider router={router} />);

@@ -68,14 +68,17 @@ export function ObiGuide() {
         <article className="home-obi-topic">
           <h3>Níveis, fases e inscrição</h3>
           <p>
-            A modalidade Programação tem níveis definidos pela escolaridade. A competição tem fases
-            Local, Estadual e Nacional. As duas primeiras são realizadas na escola onde você se
-            inscreveu. Procure o responsável pela OBI na sua escola para confirmar seu nível e fazer
-            a inscrição.
+            Na modalidade Programação, o Nível 1 aceita estudantes até o 1º ano do Ensino Médio, e o
+            Nível 2, até o 3º. A competição tem fases Local, Estadual e Nacional. As duas primeiras
+            acontecem na escola da inscrição. Procure o responsável pela OBI na sua escola para
+            confirmar em qual nível pode participar.
           </p>
           <div className="home-obi-links">
             <SourceLink href="https://olimpiada.ic.unicamp.br/info/como_participar_aluno/">
               Como participar
+            </SourceLink>
+            <SourceLink href="https://olimpiada.ic.unicamp.br/info/apresentacao/">
+              Modalidades e níveis da OBI
             </SourceLink>
           </div>
         </article>
