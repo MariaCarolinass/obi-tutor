@@ -4,21 +4,21 @@
 
 O tutor deve oferecer um próximo passo útil ao estudante, sem insistir em perguntas socráticas sucessivas nem distribuir elogios genéricos. O objetivo é apoiar o raciocínio e a autonomia.
 
-O agente **não é a autoridade sobre a pontuação**: regras de aprendizagem estimada, seleção de questões e correção por gabarito pertencem ao sistema.
+As regras de aprendizagem estimada, a seleção de questões e a correção por gabarito pertencem ao sistema. O tutor orienta o estudante.
 
 ## 2. Dois modos complementares
 
 ### Pergunte ao Tutor
 
-O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. O agente pode explicar, levantar hipóteses sobre um erro e recomendar testes. **Não deve afirmar que executou o código** quando apenas o analisou.
+O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. Na demonstração, palavras da mensagem determinam qual resposta preparada o chat exibe. Os exemplos cobrem condicionais, laços, listas e identificação de erros.
 
-Perguntas livres **não atualizam** o domínio numérico. O modo pode utilizar o conceito em foco e o conhecimento já registrado para contextualizar a orientação.
+Perguntas livres **não atualizam** o domínio numérico. No MVP, o tutor poderá usar o conceito em foco e o progresso registrado para explicar um trecho, levantar hipóteses sobre um erro ou sugerir testes. Ao analisar um trecho, deve deixar claro que a orientação se baseia no texto recebido.
 
 ### Missões Interativas
 
 O sistema apresenta um problema objetivo de previsão de saída, identificação de bug ou complemento de código. O estudante responde. A aplicação verifica o gabarito, registra tentativas e utiliza o modelo do aluno para pontuar.
 
-As missões podem ter até **duas dicas preparadas**. Uma resposta correta após dica recebe a pontuação definida no modelo do aluno, sem equivaler a um acerto independente.
+O catálogo do MVP pode ter até **duas dicas preparadas** por questão. Cada missão da demonstração tem uma pista, um exemplo menor, uma revisão do conceito e uma explicação direta. Um acerto após pedir ajuda na própria missão segue a regra de **+15 pontos**, respeita o limite do conceito e deixa a contagem de acertos independentes intacta. [Modelo do aluno](modelo-do-aluno.md)
 
 ## 3. Laços pedagógicos
 
@@ -28,6 +28,8 @@ As missões podem ter até **duas dicas preparadas**. Uma resposta correta após
 | Interno | Como ajudar no exercício atual? | Erros, tentativas, dicas, tipo de dificuldade e escolha do estudante |
 
 O tutor pode recomendar revisão quando houver pré-requisito com menos de 50 pontos. A recomendação **não bloqueia** a autonomia do aluno.
+
+Na demonstração, a recomendação prioriza dificuldades registradas no diagnóstico quando há uma missão pendente no conceito. Também pode sugerir um pré-requisito direto abaixo de 50 pontos quando ele tem uma atividade pendente. O catálogo atual delimita as recomendações disponíveis. [Recomendações no frontend](../frontend/src/lib/learning.ts)
 
 ## 4. Rota de Desbloqueio
 
@@ -42,7 +44,7 @@ O tutor pode recomendar revisão quando houver pré-requisito com menos de 50 po
 
 Não inferir emoções ocultas a partir de uma nota. As intervenções respondem a **ações observáveis e preferências expressas**.
 
-## 5. Exemplos de conversa
+## 5. Exemplos de conversa previstos
 
 **Pergunte ao Tutor**
 
@@ -70,7 +72,9 @@ O gabarito é validado pela aplicação. O agente não atribui pontos livremente
 
 Essas teorias justificam decisões de projeto, mas **não comprovam a eficácia do protótipo**.
 
-## 7. Comportamento esperado do LLM
+## 7. Integração de LLM prevista para o MVP
+
+A demonstração atual apresenta orientações preparadas no próprio frontend. A disponibilidade de uma API será tratada quando a integração de LLM for implementada.
 
 Receber somente o contexto necessário: conceito em foco, enunciado ativo quando houver, resumo pertinente do estado do aluno, tipo de intervenção permitida e mensagem atual. Responder de forma breve, apropriada ao estudante e sem inventar validações.
 

@@ -21,7 +21,17 @@ O domínio cobre interpretação de problemas e fundamentos de programação em 
 
 O sentido de uma dependência é **pré-requisito -> conceito dependente**. Um exemplo: C6 requer condições e repetição. C10 combina contagem, listas e verificação de casos-limite.
 
-## 3. Banco de exercícios previsto
+## 3. Catálogo de exercícios
+
+### Demonstração atual
+
+- O **diagnóstico opcional** tem cinco questões, uma para cada conceito de C1 a C5.
+- O **treinamento** tem sete missões. C4 tem três, e C1, C2, C3 e C5 têm uma cada.
+- A **trilha** exibe os dez conceitos e seus pré-requisitos. C6 a C10 estão disponíveis para consulta.
+
+O catálogo demonstrativo usa IDs estáveis e gabaritos locais em TypeScript. [Catálogo atual](../frontend/src/lib/learning.ts)
+
+### Catálogo previsto para o MVP
 
 | Tipo | Quantidade | Finalidade |
 | --- | ---: | --- |
@@ -62,4 +72,6 @@ O grupo pode usar desafios de integração que combinem conceitos, mas **cada it
 
 ## 7. Observação sobre cobertura
 
-Com apenas dois exercícios regulares por conceito, quem erra o diagnóstico pode não atingir o limiar de domínio na primeira sessão. Por isso, existem **três missões extras de reforço para conceitos centrais da demonstração**. Não prometer que todos os conceitos terão três missões regulares enquanto o banco ainda não as tiver.
+Quem erra o diagnóstico e acerta duas missões regulares de primeira e sem ajuda chega a 50 pontos. O MVP prevê três missões extras de reforço, uma para cada conceito central selecionado, para abrir uma nova oportunidade de avaliação.
+
+Na demonstração atual, C4 é o único conceito com atividades suficientes para atingir o limiar de 70 pontos. Um erro no diagnóstico seguido por três acertos de primeira e sem ajuda em C4 resulta em 75 pontos e três acertos independentes. [Modelo do aluno](modelo-do-aluno.md)

@@ -9,7 +9,9 @@ Para cada conceito `C1` a `C10`, manter:
 - `acertos_independentes`: quantidade de itens distintos acertados **de primeira e sem dica**.
 - `itens_pontuados`: conjunto de IDs de questões que já receberam pontuação.
 
-Na sessão, registrar ainda conceito atual, modo ativo, número de tentativas na questão, dicas utilizadas, respostas e histórico de conversa. Um conceito **não avaliado** não deve ser apresentado como conhecimento comprovadamente nulo.
+Na sessão do MVP, registrar ainda conceito atual, modo ativo, tentativas na questão, dicas utilizadas, respostas e histórico de conversa. A interface deve indicar que um conceito está **não avaliado** até receber uma resposta objetiva.
+
+Na demonstração, o navegador mantém o estado de cada conceito, os resultados do diagnóstico, as missões concluídas, os erros e o uso de ajuda por item e o histórico do chat. A alternativa em edição e o feedback visível ficam na tela da atividade. [Estado e pontuação no frontend](../frontend/src/lib/learning.ts)
 
 ## 2. Eventos e atualização
 
@@ -26,7 +28,9 @@ A pontuação é limitada ao intervalo **0 a 100**, de acordo com:
 
 `nova_pontuacao = min(100, max(0, pontuacao_atual + delta))`
 
-**Prioridade:** se houve dica e mais de uma tentativa, o acerto vale **+15**, conforme o pré-projeto. Se houve nova tentativa sem dica, vale **+10**. A atualização do item ocorre **uma única vez quando sua avaliação termina**. Reenvios posteriores não concedem pontos.
+Se houve dica e mais de uma tentativa, o acerto vale **+15**, conforme o pré-projeto. Se houve nova tentativa sem dica, vale **+10**. Na demonstração, a pista, o exemplo menor, a revisão do conceito e a explicação direta, quando pedidos na missão antes do acerto, registram uso de ajuda no item.
+
+A primeira resposta registrada encerra cada questão do diagnóstico. Nas missões, os erros contam como tentativas e é possível tentar novamente até acertar. A primeira resposta correta aplica a pontuação da missão, limitada pelos 100 pontos do conceito. Repetições posteriores servem para revisão e valem zero.
 
 Uma resposta correta no diagnóstico, por ser dada de primeira e sem dica, também conta como um acerto independente. Acertos após dica ou após nova tentativa não contam como independentes.
 
@@ -53,7 +57,7 @@ O valor 70 é um **limiar heurístico de funcionamento do protótipo**, não uma
 | Missão 2 correta de primeira | 50 | 2 |
 | Missão 3 de reforço correta de primeira | 75 | 3 |
 
-Resultado: **dominado**. A terceira missão precisa ser **um item novo**, disponível nos conceitos com reforço planejado.
+Resultado **Dominado**. A terceira missão precisa ser um item novo. É possível reproduzir esse exemplo em C4 na demonstração atual.
 
 **Exemplo B: pontuação alta, mas apoio frequente**
 
