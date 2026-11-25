@@ -28,7 +28,7 @@ O **laço externo** seleciona o próximo conceito ou exercício. O **laço inter
 
 ## 4. Experiências
 
-**Pergunte ao Tutor** oferece um chat para dúvidas e exemplos de Python. Na demonstração, a aplicação seleciona respostas predefinidas a partir da mensagem do estudante. A conversa não altera a pontuação.
+**Pergunte ao Tutor** oferece um chat com o Olimpio para tirar dúvidas de Python e explorar exemplos de preparação para a OBI. Na demonstração, a aplicação seleciona respostas predefinidas a partir da mensagem do estudante. A conversa não altera a pontuação.
 
 **Missões Interativas** oferece diagnóstico opcional e desafios com gabarito local. A aplicação registra tentativas, oferece ajuda e concede pontos uma única vez por item.
 
@@ -36,8 +36,8 @@ O estudante pode alternar os modos na mesma sessão.
 
 ## 5. Fluxo funcional
 
-1. Abrir o Início e escolher entre fazer o diagnóstico, começar a treinar ou acessar o tutor pelo menu.
-2. Responder ao diagnóstico opcional e consultar a recomendação inicial, ou seguir direto para a trilha.
+1. No Início, abrir a missão recomendada, fazer o diagnóstico opcional, explorar a trilha ou conversar com o Olimpio.
+2. Ao concluir o diagnóstico, consultar o resultado por conceito avaliado e a missão recomendada.
 3. Escolher um conceito ou seguir uma sugestão. A trilha indica dependências e atividades disponíveis.
 4. Na missão, verificar uma resposta, pedir ajuda ou tentar outra abordagem.
 5. Consultar o progresso atualizado por conceito e escolher o próximo passo.
@@ -52,10 +52,11 @@ A pausa e a navegação preservam o progresso registrado enquanto a sessão esti
 - React, TypeScript, TanStack Router e Vite executam a interface migrada do Lovable no navegador. [Frontend](../frontend/)
 - O grafo C1 a C10, o catálogo demonstrativo, o gabarito, a pontuação e as recomendações são locais. [Lógica em TypeScript](../frontend/src/lib/learning.ts)
 - O provedor de sessão mantém pontuações, conclusões, resultados do diagnóstico, erros e ajuda usada por atividade, além do histórico do chat. Recarregar a página ou confirmar **Reiniciar demonstração** descarta esse estado. [Provedor de sessão](../frontend/src/components/learning-provider.tsx)
+- O pacote Python contém uma implementação do modelo do aluno com testes próprios. A demonstração web usa a implementação em TypeScript. [Modelo do aluno em Python](../obi_tutor/models/modelo_aluno.py)
 
 ### Evolução prevista para o MVP
 
-- O pacote Python está reservado para a lógica planejada. Os arquivos JSON previstos descrevem conceitos, dependências, questões, gabaritos, explicações e dicas do catálogo completo. [Pacote Python](../obi_tutor/)
+- Os arquivos JSON previstos descrevem conceitos, dependências, questões, gabaritos, explicações e dicas do catálogo completo.
 - A integração de LLM poderá formular explicações, contextualizar orientações e usar o conceito em foco. As regras locais continuam responsáveis pelo gabarito, pela pontuação e pelo estado de domínio.
 - Se a API ficar indisponível, a aplicação deve manter o fluxo principal e usar uma orientação preparada. [Modelo pedagógico](modelo-pedagogico.md)
 

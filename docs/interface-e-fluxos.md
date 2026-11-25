@@ -4,17 +4,19 @@
 
 A interface web tem um menu lateral no desktop e um menu recolhível no celular. O estudante pode alternar entre treinar e conversar com o tutor durante a sessão.
 
-- **Início** (`/`) apresenta o projeto e oferece **Descobrir meu nível** e **Começar a treinar**.
-- **Diagnóstico** (`/diagnostico`) oferece cinco questões opcionais e uma recomendação inicial após a conclusão.
+- **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Começar com o tutor** ou **Continuar com o tutor** abre a missão recomendada. **Conversar com o tutor** abre o chat com o Olimpio. A página também dá acesso ao diagnóstico, à trilha e ao guia sobre a modalidade Programação da OBI.
+- **Diagnóstico** (`/diagnostico`) oferece cinco questões opcionais, um resultado por conceito avaliado e uma missão recomendada.
 - **Treinar para a OBI** (`/trilha`) apresenta os conceitos, pré-requisitos e atividades disponíveis. As missões abrem em `/missoes/<id>`.
-- **Pergunte ao Tutor** (`/tutor`) reúne a conversa demonstrativa e sugestões de perguntas.
+- **Pergunte ao Tutor** (`/tutor`) reúne a conversa demonstrativa com o Olimpio e sugestões de perguntas.
 - **Meu Progresso** (`/progresso`) exibe a pontuação, o estado e os acertos independentes de cada conceito.
 
 ## 2. Diagnóstico e Missões Interativas
 
 ### Diagnóstico opcional
 
-No Início, **Descobrir meu nível** abre a tela do diagnóstico. O estudante pode iniciá-lo, pausá-lo ou seguir direto para a trilha. Na retomada, a interface abre a primeira questão ainda sem resposta registrada. Ao concluir as cinco questões, o estudante vê os acertos, os conceitos a reforçar e uma missão sugerida.
+No Início, **Fazer o diagnóstico** abre a tela do diagnóstico. O estudante pode iniciá-lo, pausá-lo ou seguir direto para a trilha. Na retomada, a interface abre a primeira questão ainda sem resposta registrada.
+
+Ao concluir as cinco questões, o estudante vê o total de acertos e uma missão sugerida. Em **Seu nível por conceito**, cada conceito avaliado mostra o resultado da questão, os pontos ganhos em caso de acerto e o estado atual do conceito na sessão. Essa estimativa orienta a prática. Os níveis oficiais de inscrição na OBI seguem critérios de escolaridade.
 
 ### Treinamento
 
@@ -34,6 +36,8 @@ A interpretação contextual de código e o uso do conceito em foco no chat est�
 ## 4. Trilha e painel de progresso
 
 A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. **Meu Progresso** reúne pontuações, acertos independentes, estados e uma recomendação para continuar.
+
+Após registrar atividade, o painel **Seu progresso nesta sessão**, no Início, exibe os totais de missões concluídas e conceitos dominados, além do próximo desafio recomendado.
 
 Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**. A interface usa um traço no campo de pontuação de um conceito ainda não avaliado. Após uma resposta incorreta sem pontuação anterior, o conceito aparece como **Inicial**, com zero pontos. [Modelo do aluno](modelo-do-aluno.md)
 

@@ -18,7 +18,7 @@ A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, ex
 - Início, Diagnóstico, Treinar para a OBI, Pergunte ao Tutor e Meu Progresso em React, TypeScript, TanStack Router e Vite.
 - Uma trilha com os dez conceitos, cinco questões de diagnóstico opcional e sete missões de prática.
 - Gabaritos e pontuação calculados no navegador. Um conceito é exibido como **Dominado** quando tem pelo menos 70 pontos e dois acertos independentes em questões distintas.
-- Chat com respostas predefinidas. O progresso e a conversa ficam em memória no navegador enquanto a sessão está ativa.
+- Chat com o Olimpio, tutor demonstrativo da OBI com respostas predefinidas. O progresso e a conversa ficam em memória no navegador enquanto a sessão está ativa.
 
 O MVP prevê um catálogo de 33 itens e uma integração de LLM para formular orientações, com resposta local de contingência. Autenticação, armazenamento persistente, execução de código enviado pelo aluno, RAG, scraping de provas, geração ilimitada de questões, ranking e voz ficam fora do escopo. [Visão geral do MVP](docs/visao-geral.md)
 
@@ -63,7 +63,7 @@ npm run build
 
 ### Pacote Python
 
-O pacote `obi_tutor/` está reservado para a lógica planejada do MVP. Seu teste atual verifica a importação do pacote. Para executá-lo, use **Python 3.10+** em um ambiente virtual e rode a partir da raiz.
+O pacote `obi_tutor/` já contém uma implementação do modelo do aluno. A demonstração web usa sua implementação em TypeScript no navegador. Para rodar os testes Python de importação e do modelo do aluno, use **Python 3.10+** em um ambiente virtual e execute a partir da raiz.
 
 ```bash
 python -m pip install -r requirements.txt

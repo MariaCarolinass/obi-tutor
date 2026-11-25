@@ -42,17 +42,18 @@ Execute `npm test` em `frontend/`.
 
 - Os dez conceitos e suas dependências, a pontuação única por item, o efeito de dicas e tentativas e o critério de domínio. [Testes do modelo do aluno](../frontend/src/test/learning.test.ts)
 - A correção local do diagnóstico, a soma de pontos entre diagnóstico e missões, o limite de 100 e a recomendação de revisão abaixo de 50. Os perfis automatizados de C4 incluem acerto total, erro total e erro no diagnóstico seguido por três acertos independentes. [Testes do diagnóstico e treinamento](../frontend/src/test/diagnostic.test.ts)
-- A navegação entre Início, Diagnóstico, Pergunte ao Tutor e Meu Progresso, com preservação da pontuação e da conversa. [Testes de navegação](../frontend/src/test/app-routing.test.tsx)
+- A navegação entre Início, Diagnóstico, Pergunte ao Tutor e Meu Progresso, com preservação da pontuação e da conversa, a atualização do próximo desafio após uma missão e a exibição do resultado por conceito no diagnóstico. [Testes de navegação](../frontend/src/test/app-routing.test.tsx)
 
-`npm run typecheck`, `npm run lint` e `npm run build` verificam a tipagem, o código e o empacotamento. Na raiz, `python -m pytest` verifica a importação do pacote Python. [Ambiente e comandos](../README.md#desenvolvimento-local)
+`npm run typecheck`, `npm run lint` e `npm run build` verificam a tipagem, o código e o empacotamento. Na raiz, `python -m pytest` verifica a importação do pacote Python e as regras da implementação do modelo do aluno em Python. [Ambiente e comandos](../README.md#desenvolvimento-local)
 
 ### Roteiro de verificação no navegador
 
-1. No Início, selecione **Descobrir meu nível**. Registre uma resposta, pause e retome. Confira se a questão seguinte está disponível.
-2. Na trilha, abra uma missão, erre a resposta e peça uma pista. Pause, retome e acerte. Confira os 15 pontos e o registro de uso de ajuda.
-3. Abra **Pergunte ao Tutor**, envie uma pergunta e confira **Meu Progresso**. Verifique se a nota se mantém e se a conversa aparece ao voltar ao chat.
-4. Reabra a missão que já pontuou e acerte de novo. A pontuação deve permanecer igual.
-5. Confirme **Reiniciar demonstração** e verifique o retorno ao Início e a limpeza dos registros. Em uma tela estreita, confira também o acesso aos modos pelo menu recolhível.
+1. Em uma sessão nova, selecione **Começar com o tutor** no Início. Conclua a primeira missão e volte ao Início. Confira se **Seu progresso nesta sessão** mostra uma missão concluída e indica o próximo desafio.
+2. No Início, selecione **Fazer o diagnóstico**. Registre uma resposta, pause e retome. Confira se a questão seguinte está disponível. Ao concluir, confira o total de acertos e os cinco resultados em **Seu nível por conceito**.
+3. Na trilha, abra uma missão ainda não concluída, erre a resposta e peça uma pista. Pause, retome e acerte. Confira os 15 pontos e o registro de uso de ajuda.
+4. No Início, abra **Conversar com o tutor**, envie uma pergunta ao Olimpio e confira **Meu Progresso**. Verifique se a nota se mantém e se a conversa aparece ao voltar ao chat.
+5. Reabra a missão que já pontuou e acerte de novo. A pontuação deve permanecer igual.
+6. Confirme **Reiniciar demonstração** e verifique o retorno ao Início e a limpeza dos registros. Em uma tela estreita, confira também o acesso aos modos pelo menu recolhível.
 
 ### Checklist de aceite do MVP
 
