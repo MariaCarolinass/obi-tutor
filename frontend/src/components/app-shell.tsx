@@ -144,7 +144,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         </header>
         <main>{children}</main>
         <footer className="page-footer">
-          <span>OBI Tutor · Projeto desenvolvido na Universidade Federal do Rio Grande do Norte.</span>
+          <span>
+            OBI Tutor · Projeto desenvolvido na Universidade Federal do Rio Grande do Norte.
+          </span>
         </footer>
       </div>
       {confirmReset && (
