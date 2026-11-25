@@ -1,15 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
-  ChevronDown,
+  ArrowDown,
   ClipboardCheck,
   Code2,
   Lightbulb,
   MessageSquareCode,
-  Terminal,
 } from "lucide-react";
+import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { useLearning } from "@/components/learning-context";
+import { ObiGuide } from "@/components/obi-guide";
 import { Button } from "@/components/ui/button";
 import { concepts, hasActivity, recommendation, status, trainingMissions } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
@@ -18,7 +20,7 @@ import "../home.css";
 export const Route = createFileRoute("/")({
   head: () =>
     pageMeta(
-      "Treine para a OBI com Python",
+      "Treine para a OBI com seu tutor",
       "Prepare-se para a modalidade Programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
     ),
   component: Index,
@@ -31,6 +33,86 @@ for valor in pontos:
     total += valor
 
 print(total)`;
+
+const sampleOptions = [
+  {
+    value: 12,
+    reply:
+      "12 é o último valor da lista. O laço soma todos os valores. Como fica o total a cada volta?",
+  },
+  {
+    value: 13,
+    reply: "13 é a soma de 5 e 8. Ainda falta a última volta. Quanto dá quando você soma 12?",
+  },
+  {
+    value: 25,
+    reply: "Acertou! O total começa em 0 e passa por 5, 13 e 25. O print(total) mostra 25.",
+  },
+] as const;
+
+function TutorExample() {
+  const [selected, setSelected] = useState<number | null>(null);
+  const [reply, setReply] = useState("");
+
+  return (
+    <figure className="home-example">
+      <figcaption>
+        <TutorIcon />
+        <div>
+          <strong>OBI Tutor</strong>
+          <p>Vamos conferir juntos os pontos de três rodadas.</p>
+          <p id="home-example-question">Qual número este código imprime?</p>
+        </div>
+      </figcaption>
+      <CodeBlock code={sampleCode} label="aquecimento.py" />
+      <div className="home-example-actions">
+        <div className="home-example-controls">
+          <div
+            className="home-example-options"
+            role="group"
+            aria-labelledby="home-example-question"
+          >
+            {sampleOptions.map(({ value, reply }) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={selected === value}
+                onClick={() => {
+                  setSelected(value);
+                  setReply(reply);
+                }}
+              >
+                {value}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="home-example-hint"
+            onClick={() => {
+              setReply(
+                "Comece com total igual a 0. Some 5 na primeira volta e 8 na segunda. Qual valor ainda falta somar?",
+              );
+            }}
+          >
+            Pedir uma pista
+          </button>
+        </div>
+        <div className="home-example-reply" role="status">
+          {reply && (
+            <div>
+              <TutorIcon />
+              <p>
+                <strong>OBI Tutor</strong>
+                {reply}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </figure>
+  );
+}
 
 const studyPaths = [
   {
@@ -65,29 +147,32 @@ function Index() {
       <section className="home-hero" aria-labelledby="home-title">
         <div className="home-intro">
           <p className="home-kicker">
-            <Code2 size={17} aria-hidden="true" /> Modalidade Programação
+            <Code2 size={17} aria-hidden="true" /> Olimpíada Brasileira de Informática
           </p>
           <h1 id="home-title">
-            Treine para a OBI <span>com Python.</span>
+            Treine para a <mark>OBI</mark> <span>com seu tutor.</span>
           </h1>
           <p className="home-description">
-            O OBI Tutor ajuda você a se preparar para a Olimpíada Brasileira de Informática. Resolva
-            desafios guiados, peça pistas e acompanhe seu progresso.
+            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>. Se
+            travar, peça uma pista ou converse com o tutor para entender como continuar.
           </p>
           <div className="home-actions">
             <Button asChild size="lg">
               <Link to="/missoes/$id" params={{ id: recommended.id }}>
-                {started ? "Continuar meu treino" : "Fazer meu primeiro desafio"}
+                {started ? "Continuar com o tutor" : "Começar com o tutor"}
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
             <Button variant="outline" asChild size="lg">
-              <Link to="/diagnostico">
-                <ClipboardCheck aria-hidden="true" />
-                Descobrir meu nível
+              <Link to="/tutor">
+                <MessageSquareCode aria-hidden="true" />
+                Conversar com o tutor
               </Link>
             </Button>
           </div>
+          <a className="home-guide-link" href="#sobre-a-obi">
+            Saiba como funciona a OBI <ArrowDown size={16} aria-hidden="true" />
+          </a>
           {started && (
             <p className="home-next-mission">
               <Lightbulb size={16} aria-hidden="true" />
@@ -96,22 +181,7 @@ function Index() {
           )}
         </div>
 
-        <figure className="home-example">
-          <figcaption>
-            <Terminal size={17} aria-hidden="true" />
-            Preveja a saída
-          </figcaption>
-          <CodeBlock code={sampleCode} label="aquecimento.py" />
-          <details className="home-example-answer">
-            <summary>
-              Ver a saída
-              <ChevronDown size={17} aria-hidden="true" />
-            </summary>
-            <p>
-              <samp>25</samp>O laço soma 5, 8 e 12.
-            </p>
-          </details>
-        </figure>
+        <TutorExample />
       </section>
 
       {started && (
@@ -149,17 +219,7 @@ function Index() {
         </ul>
       </section>
 
-      <details className="home-about">
-        <summary>
-          O que é a OBI?
-          <ChevronDown size={17} aria-hidden="true" />
-        </summary>
-        <p>
-          A Olimpíada Brasileira de Informática é uma competição para estudantes. Na modalidade
-          Programação, os participantes resolvem problemas escrevendo programas de computador.
-        </p>
-        <a href="https://olimpiada.ic.unicamp.br/info/apresentacao/">Conheça a OBI</a>
-      </details>
+      <ObiGuide />
     </div>
   );
 }
