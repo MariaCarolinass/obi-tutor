@@ -3,12 +3,13 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import { expect, it } from "vitest";
 import { getRouter } from "@/router";
 
-it("renders the migrated home and preserves learning and chat when navigating", async () => {
+it("offers diagnostic from the home page and preserves learning and chat when navigating", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
   render(<RouterProvider router={router} />);
 
-  expect(await screen.findByRole("heading", { name: /Prepare-se para a OBI/ })).toBeVisible();
-  expect(screen.getByRole("img", { name: /Tutor azul/ })).toBeInTheDocument();
+  expect(
+    await screen.findByRole("heading", { name: "Treine para a OBI com Python." }),
+  ).toBeVisible();
   fireEvent.click(screen.getByRole("link", { name: "Descobrir meu nível" }));
   fireEvent.click(await screen.findByRole("button", { name: "Iniciar diagnóstico" }));
   fireEvent.click(screen.getByRole("radio", { name: /O nome de quem fez mais pontos/ }));
@@ -32,6 +33,14 @@ it("renders the migrated home and preserves learning and chat when navigating", 
 
   fireEvent.click(within(nav).getByRole("link", { name: "Pergunte ao tutor" }));
   expect(await screen.findByText(question)).toBeVisible();
+});
+
+it("leads a new student straight to the first recommended challenge", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
+  render(<RouterProvider router={router} />);
+
+  fireEvent.click(await screen.findByRole("link", { name: "Fazer meu primeiro desafio" }));
+  expect(await screen.findByRole("heading", { name: "As peças de um problema" })).toBeVisible();
 });
 
 it("redirects the old diagnostic URL into the single diagnostic flow", async () => {

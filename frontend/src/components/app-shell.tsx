@@ -1,20 +1,17 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   ArrowUpRight,
   BookOpen,
-  Bot,
   ChartNoAxesCombined,
   Check,
   ChevronRight,
   Code2,
-  FlaskConical,
   Home,
+  Lightbulb,
   Menu,
   MessageCircle,
   RotateCcw,
-  Sparkles,
-  Target,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +20,7 @@ import { concepts, hasActivity, status } from "@/lib/learning";
 
 const nav = [
   { to: "/", label: "Início", icon: Home },
-  { to: "/trilha", label: "Treinar para a OBI", icon: Target },
+  { to: "/trilha", label: "Treinar para a OBI", icon: Code2 },
   { to: "/tutor", label: "Pergunte ao tutor", icon: MessageCircle },
   { to: "/progresso", label: "Meu progresso", icon: ChartNoAxesCombined },
 ] as const;
@@ -33,49 +30,77 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { state, reset } = useLearning();
   const [open, setOpen] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const closeButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (open) closeButton.current?.focus();
+  }, [open]);
+
+  const closeMenu = () => {
+    setOpen(false);
+    menuButton.current?.focus();
+  };
+
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const title =
     nav.find((n) => n.to === pathname)?.label ??
     (pathname === "/diagnostico" ? "Diagnóstico inicial" : "Treinar para a OBI");
   return (
     <div className="app-shell">
-      <aside className={`sidebar ${open ? "is-open" : ""}`}>
+      <aside
+        id="app-sidebar"
+        className={`sidebar ${open ? "is-open" : ""}`}
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && open) closeMenu();
+        }}
+      >
         <Link to="/" className="brand" onClick={() => setOpen(false)}>
           <span className="brand-mark">
-            <Code2 size={25} />
+            <Lightbulb size={25} aria-hidden="true" />
           </span>
           <span>
             OBI <strong>Tutor</strong>
-            <small>Seu próximo passo para a OBI</small>
+            <small>Treino de programação</small>
           </span>
         </Link>
-        <div className="nav-label">ESPAÇO DE APRENDIZAGEM</div>
+        <Button
+          ref={closeButton}
+          variant="ghost"
+          size="icon"
+          className="sidebar-close"
+          aria-label="Fechar menu"
+          onClick={closeMenu}
+        >
+          <X aria-hidden="true" />
+        </Button>
         <nav aria-label="Navegação principal">
-          {nav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className={`nav-link ${pathname === n.to || (n.to === "/trilha" && pathname.startsWith("/missoes")) ? "active" : ""}`}
-              onClick={() => setOpen(false)}
-            >
-              <n.icon size={19} />
-              <span>{n.label}</span>
-              {(pathname === n.to || (n.to === "/trilha" && pathname.startsWith("/missoes"))) && (
-                <ChevronRight size={15} />
-              )}
-            </Link>
-          ))}
+          {nav.map((n) => {
+            const active =
+              pathname === n.to || (n.to === "/trilha" && pathname.startsWith("/missoes"));
+            return (
+              <Link
+                key={n.to}
+                to={n.to}
+                className={`nav-link ${active ? "active" : ""}`}
+                aria-current={active ? "page" : undefined}
+                onClick={() => setOpen(false)}
+              >
+                <n.icon size={19} aria-hidden="true" />
+                <span>{n.label}</span>
+                {active && <ChevronRight size={15} aria-hidden="true" />}
+              </Link>
+            );
+          })}
         </nav>
         <div className="sidebar-bottom">
           {hasActivity(state) && (
             <div className="journey-summary">
               <span className="mini-icon">
-                <Sparkles size={17} />
+                <ChartNoAxesCombined size={17} aria-hidden="true" />
               </span>
-              <strong>Um passo de cada vez</strong>
-              <p>Seu aprendizado, no seu ritmo.</p>
+              <strong>Seu progresso</strong>
               <div className="progress-track">
-                <progress max="10" value={mastered} />
+                <progress max="10" value={mastered} aria-label="Conceitos dominados" />
               </div>
               <small>
                 {mastered} de 10 conceitos dominados <span>{mastered * 10}%</span>
@@ -89,40 +114,36 @@ export function AppShell({ children }: { children: ReactNode }) {
             <RotateCcw />
             Reiniciar demonstração
           </Button>
-          <div className="sidebar-footer">
-            <FlaskConical size={14} /> Protótipo acadêmico <span>v1.0</span>
-          </div>
         </div>
       </aside>
-      {open && <div className="sidebar-overlay" onClick={() => setOpen(false)} />}
+      {open && <div className="sidebar-overlay" onClick={closeMenu} />}
       <div className="app-main">
         <header className="topbar">
           <div className="breadcrumb">
             <Button
+              ref={menuButton}
               variant="ghost"
               size="icon"
               className="mobile-menu"
               aria-label="Abrir menu"
-              onClick={() => setOpen(!open)}
+              aria-controls="app-sidebar"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
             >
-              <Menu />
+              <Menu aria-hidden="true" />
             </Button>
-            <span>Meu espaço</span>
-            <ChevronRight size={14} />
-            <strong>{title}</strong>
+            <Link to="/" className="mobile-brand">
+              <span className="brand-mark">
+                <Lightbulb size={19} aria-hidden="true" />
+              </span>
+              OBI Tutor
+            </Link>
+            <strong className="topbar-location">{title}</strong>
           </div>
-          <div className="topbar-right">
-            <span className="demo-badge">
-              <span /> Modo demonstração
-            </span>
-            <div className="student-avatar" aria-label="Perfil de estudante">
-              E
-            </div>
-          </div>
+          <span className="demo-badge">Modo demonstração</span>
         </header>
         <main>{children}</main>
         <footer className="page-footer">
-          <span>Feito para aprender. Pensado para você.</span>
           <span>OBI Tutor · Projeto acadêmico independente</span>
         </footer>
       </div>
@@ -202,7 +223,7 @@ export function StatusBadge({ value }: { value: ReturnType<typeof status> }) {
 export function TutorIcon() {
   return (
     <span className="tutor-icon">
-      <Bot size={21} />
+      <Lightbulb size={21} aria-hidden="true" />
     </span>
   );
 }

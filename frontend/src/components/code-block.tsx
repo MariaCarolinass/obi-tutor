@@ -1,19 +1,21 @@
-export function CodeBlock({ code }: { code: string }) {
+export function CodeBlock({ code, label = "Python" }: { code: string; label?: string }) {
   return (
     <div className="code-block">
       <div className="code-label">
-        <span className="code-dots">
+        <span className="code-dots" aria-hidden="true">
           <i />
           <i />
           <i />
         </span>
-        <span>Python</span>
+        <span>{label}</span>
       </div>
       <pre>
         <code>
           {code.split("\n").map((line, index) => (
-            <div className="code-line" key={index}>
-              <span className="line-number">{index + 1}</span>
+            <span className="code-line" key={index}>
+              <span className="line-number" aria-hidden="true">
+                {index + 1}
+              </span>
               <span>
                 {line
                   .split(
@@ -40,7 +42,7 @@ export function CodeBlock({ code }: { code: string }) {
                     </span>
                   ))}
               </span>
-            </div>
+            </span>
           ))}
         </code>
       </pre>

@@ -1,169 +1,165 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
 import {
   ArrowRight,
-  BookOpen,
-  CheckCheck,
-  CircleHelp,
+  ChevronDown,
   ClipboardCheck,
+  Code2,
   Lightbulb,
-  Target,
-  X,
+  MessageSquareCode,
+  Terminal,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CodeBlock } from "@/components/code-block";
 import { useLearning } from "@/components/learning-context";
+import { Button } from "@/components/ui/button";
 import { concepts, hasActivity, recommendation, status, trainingMissions } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
-import learningArt from "@/assets/obi-learning.webp";
+import "../home.css";
 
 export const Route = createFileRoute("/")({
   head: () =>
     pageMeta(
-      "Prepare-se para a OBI",
-      "Preparação introdutória para a Olimpíada Brasileira de Informática: desafios de raciocínio e programação com orientação de um tutor demonstrativo.",
+      "Treine para a OBI com Python",
+      "Prepare-se para a modalidade Programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
     ),
   component: Index,
 });
+
+const sampleCode = `pontos = [5, 8, 12]
+total = 0
+
+for valor in pontos:
+    total += valor
+
+print(total)`;
+
+const studyPaths = [
+  {
+    to: "/diagnostico",
+    icon: ClipboardCheck,
+    title: "Fazer o diagnóstico",
+    description: "Responda a cinco questões para receber uma sugestão de estudo.",
+  },
+  {
+    to: "/trilha",
+    icon: Code2,
+    title: "Explorar a trilha",
+    description: "Escolha um conceito e pratique com desafios de programação.",
+  },
+  {
+    to: "/tutor",
+    icon: MessageSquareCode,
+    title: "Pergunte ao tutor",
+    description: "Tire dúvidas de Python e veja exemplos para entender o código.",
+  },
+] as const;
+
 function Index() {
   const { state } = useLearning();
-  const [aboutOpen, setAboutOpen] = useState(false);
   const started = hasActivity(state);
   const recommended = recommendation(state);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const completed = trainingMissions.filter((m) => state.completed.includes(m.id)).length;
+
   return (
-    <>
-      <section className="home-intro">
-        <div className="eyebrow">OBI TUTOR · RACIOCÍNIO, PROGRAMAÇÃO E DESCOBERTAS</div>
-        <h1>
-          Prepare-se para a OBI
-          <br />
-          com um tutor inteligente.
-        </h1>
-        <p>
-          Desenvolva seu raciocínio, pratique programação e receba orientação personalizada para
-          resolver desafios inspirados na Olimpíada Brasileira de Informática.
-        </p>
-        <div className="button-row">
-          <Button asChild size="lg">
-            <Link to="/diagnostico">
-              <ClipboardCheck />
-              Descobrir meu nível
-              <ArrowRight />
-            </Link>
-          </Button>
-          <Button variant="outline" asChild size="lg">
-            <Link to="/trilha">
-              <Target />
-              Começar a treinar
-            </Link>
-          </Button>
-        </div>
-        <Button variant="link" className="about-obi" onClick={() => setAboutOpen(true)}>
-          <CircleHelp />O que é a OBI?
-        </Button>
-      </section>
-      <section className="home-learning-band">
-        <img src={learningArt} alt="Tutor azul ao lado de um notebook para praticar programação" />
-        <div>
-          <span className="eyebrow">SUA PRÓXIMA DESCOBERTA</span>
-          <h2>
-            Um desafio de cada vez.
-            <br />
-            Com orientação no caminho.
-          </h2>
-          <p>
-            Preparação introdutória para a modalidade Programação, com Python e raciocínio lógico.
+    <div className="home-page">
+      <section className="home-hero" aria-labelledby="home-title">
+        <div className="home-intro">
+          <p className="home-kicker">
+            <Code2 size={17} aria-hidden="true" /> Modalidade Programação
           </p>
-          <Link to="/tutor">
-            Converse com seu tutor
-            <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
-      {started && (
-        <section className="home-session">
-          <div className="section-title">
-            <h2>Seu próximo passo</h2>
-            <Link to="/progresso">
-              Ver meu progresso
-              <ArrowRight size={13} />
-            </Link>
-          </div>
-          <div className="home-session-row">
-            <div>
-              <span className="recommendation-top">
-                <Lightbulb size={15} /> SUGESTÃO DO TUTOR
-              </span>
-              <h3>{recommended.title}</h3>
-              <p>{concepts.find((c) => c.id === recommended.concept)?.name}</p>
-            </div>
-            <Button asChild>
+          <h1 id="home-title">
+            Treine para a OBI <span>com Python.</span>
+          </h1>
+          <p className="home-description">
+            O OBI Tutor ajuda você a se preparar para a Olimpíada Brasileira de Informática. Resolva
+            desafios guiados, peça pistas e acompanhe seu progresso.
+          </p>
+          <div className="home-actions">
+            <Button asChild size="lg">
               <Link to="/missoes/$id" params={{ id: recommended.id }}>
-                Continuar treinando
-                <ArrowRight />
+                {started ? "Continuar meu treino" : "Fazer meu primeiro desafio"}
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+            <Button variant="outline" asChild size="lg">
+              <Link to="/diagnostico">
+                <ClipboardCheck aria-hidden="true" />
+                Descobrir meu nível
               </Link>
             </Button>
           </div>
-          <div className="session-totals">
-            <span>
-              <Target size={14} />
-              {completed} desafios concluídos
-            </span>
-            <span>
-              <CheckCheck size={14} />
-              {mastered} conceitos dominados
-            </span>
+          {started && (
+            <p className="home-next-mission">
+              <Lightbulb size={16} aria-hidden="true" />
+              Próximo desafio · {recommended.title}
+            </p>
+          )}
+        </div>
+
+        <figure className="home-example">
+          <figcaption>
+            <Terminal size={17} aria-hidden="true" />
+            Preveja a saída
+          </figcaption>
+          <CodeBlock code={sampleCode} label="aquecimento.py" />
+          <details className="home-example-answer">
+            <summary>
+              Ver a saída
+              <ChevronDown size={17} aria-hidden="true" />
+            </summary>
+            <p>
+              <samp>25</samp>O laço soma 5, 8 e 12.
+            </p>
+          </details>
+        </figure>
+      </section>
+
+      {started && (
+        <section className="home-progress" aria-labelledby="home-progress-title">
+          <div>
+            <h2 id="home-progress-title">Seu progresso nesta sessão</h2>
+            <p>
+              {completed} {completed === 1 ? "missão concluída" : "missões concluídas"} · {mastered}{" "}
+              {mastered === 1 ? "conceito dominado" : "conceitos dominados"}
+            </p>
           </div>
+          <Link to="/progresso">
+            Ver meu progresso <ArrowRight size={16} aria-hidden="true" />
+          </Link>
         </section>
       )}
-      {aboutOpen && (
-        <div className="modal-overlay">
-          <section className="modal" role="dialog" aria-modal="true" aria-labelledby="obi-title">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="modal-close"
-              aria-label="Fechar explicação"
-              onClick={() => setAboutOpen(false)}
-            >
-              <X />
-            </Button>
-            <span className="icon-tile">
-              <BookOpen />
-            </span>
-            <h2 id="obi-title">O que é a OBI?</h2>
-            <p>
-              A Olimpíada Brasileira de Informática é uma competição educacional que incentiva o
-              raciocínio lógico e a resolução de problemas.
-            </p>
-            <div className="obi-modal-content">
-              <h3>Modalidade Iniciação</h3>
-              <p>Propõe problemas de lógica e raciocínio, sem exigir programação.</p>
-              <h3>Modalidade Programação</h3>
-              <p>Propõe problemas que são resolvidos por meio de programas de computador.</p>
-              <h3>Onde o OBI Tutor entra?</h3>
-              <p>
-                Este Sistema Tutor Inteligente demonstrativo oferece orientação conforme suas
-                tentativas e seu progresso. Trabalhamos com{" "}
-                <strong>conteúdos introdutórios da modalidade Programação</strong>, utilizando
-                Python e desafios de raciocínio lógico.
-              </p>
-              <div className="notice">
-                <CircleHelp size={16} />
-                <span>
-                  Projeto acadêmico independente, não oficial da OBI. Não contempla todas as
-                  modalidades e níveis nem promete preparação completa.
+
+      <section className="home-paths" aria-labelledby="home-paths-title">
+        <h2 id="home-paths-title">
+          {started ? "O que você quer estudar?" : "Como você quer começar?"}
+        </h2>
+        <ul className="home-path-grid">
+          {studyPaths.map(({ to, icon: Icon, title, description }) => (
+            <li key={to}>
+              <Link to={to} className="home-path-card">
+                <span className="home-path-icon">
+                  <Icon size={22} aria-hidden="true" />
                 </span>
-              </div>
-            </div>
-            <Button onClick={() => setAboutOpen(false)}>
-              Entendi
-              <ArrowRight />
-            </Button>
-          </section>
-        </div>
-      )}
-    </>
+                <ArrowRight className="home-path-arrow" size={19} aria-hidden="true" />
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <details className="home-about">
+        <summary>
+          O que é a OBI?
+          <ChevronDown size={17} aria-hidden="true" />
+        </summary>
+        <p>
+          A Olimpíada Brasileira de Informática é uma competição para estudantes. Na modalidade
+          Programação, os participantes resolvem problemas escrevendo programas de computador.
+        </p>
+        <a href="https://olimpiada.ic.unicamp.br/info/apresentacao/">Conheça a OBI</a>
+      </details>
+    </div>
   );
 }
