@@ -13,7 +13,7 @@
       "tipo": "diagnostico",
       "formato": "Diagnostico Conceitual",
       "dificuldade": "facil",
-      "enunciado": "Em uma tarefa da OBI sobre distribuição de medalhas, o enunciado diz: 'Cada equipe recebe 1 medalha de ouro se fizer pelo menos 80 pontos, ou 1 medalha de prata se fizer entre 50 e 79 pontos. Pontuações abaixo de 50 não recebem medalha.' Se uma equipe fizer exatamente 80 pontos, qual é o resultado correto segundo a regra?",
+      "enunciado": "Em uma competição fictícia, a regra de distribuição de medalhas diz: 'Cada equipe recebe 1 medalha de ouro se fizer pelo menos 80 pontos, ou 1 medalha de prata se fizer entre 50 e 79 pontos. Pontuações abaixo de 50 não recebem medalha.' Se uma equipe fizer exatamente 80 pontos, qual é o resultado correto segundo a regra?",
       "codigo_python": null,
       "alternativas": [
         { "id": "A", "texto": "Recebe 1 medalha de ouro." },
@@ -181,7 +181,7 @@
       "tipo": "diagnostico",
       "formato": "Detetive de Bugs",
       "dificuldade": "medio",
-      "enunciado": "Um estudante escreveu a função abaixo para encontrar o maior número de uma lista de inteiros (que pode conter números negativos). Para qual caso-limite o código falha?",
+      "enunciado": "Um estudante escreveu a função abaixo para encontrar o maior número de uma lista de inteiros (que pode conter números negativos). Considere apenas listas não vazias. Para qual caso-limite o código falha?",
       "codigo_python": "def maior_valor(lista):\n    maior = 0\n    for x in lista:\n        if x > maior:\n            maior = x\n    return maior",
       "alternativas": [
         { "id": "A", "texto": "Quando todos os números da lista são negativos, como [-10, -4, -7]." },
@@ -223,7 +223,7 @@
       "tipo": "missao",
       "formato": "Detetive de Bugs",
       "dificuldade": "facil",
-      "enunciado": "Na prova da OBI, o problema 'Estacionamento' diz: 'A primeira hora custa R$ 10. Cada hora adicional, ou fração de hora, custa R$ 4.' Um aluno implementou o código abaixo, mas errou ao testar com t = 3 horas. Qual regra do enunciado foi violada?",
+      "enunciado": "Em um desafio de programação sobre um estacionamento, vale a seguinte regra: 'A primeira hora custa R$ 10. Cada hora adicional, ou fração de hora, custa R$ 4.' Um aluno implementou o código abaixo, mas errou ao testar com t = 3 horas. Qual regra do enunciado foi violada?",
       "codigo_python": "t = 3\nvalor = t * 4\nprint(valor)",
       "alternativas": [
         { "id": "A", "texto": "O código cobrou R$ 4 por todas as horas, ignorando que a primeira hora custa R$ 10." },
@@ -265,7 +265,7 @@
       "tipo": "missao",
       "formato": "Detetive de Bugs",
       "dificuldade": "facil",
-      "enunciado": "Um problema da OBI pede para ler o placar de dois times (dois inteiros na mesma linha separados por espaço, ex: '3 1') e imprimir a soma de gols. O código abaixo gera erro em tempo de execução. Por quê?",
+      "enunciado": "Um desafio pede para ler o placar de dois times (dois inteiros na mesma linha separados por espaço, ex: '3 1') e imprimir a soma de gols. O código abaixo gera erro em tempo de execução. Por quê?",
       "codigo_python": "a, b = int(input().split())\nprint(a + b)",
       "alternativas": [
         { "id": "A", "texto": "int() não converte uma lista diretamente; é preciso converter cada item, como map(int, input().split())." },
@@ -295,7 +295,7 @@
         { "id": "D", "texto": "input('N')" }
       ],
       "gabarito": "B",
-      "explicacao": "Em juízes automáticos como o da OBI, a saída deve corresponder caractere por caractere ao formato especificado ('N'), sem mensagens decorativas.",
+      "explicacao": "A saída solicitada neste desafio contém apenas a letra 'N' em uma linha. A chamada print('N') produz essa saída.",
       "dicas": [
         "Juízes online comparam exatamente o texto impresso na tela.",
         "Use print() com apenas o caractere solicitado no enunciado."
@@ -349,7 +349,7 @@
       "tipo": "missao",
       "formato": "Detetive de Bugs",
       "dificuldade": "medio",
-      "enunciado": "Para avançar à próxima fase da OBI, o competidor precisa de nota >= 70 para 'Ouro', nota >= 50 para 'Prata' e abaixo de 50 fica 'Eliminado'. Por que o código abaixo classifica erradamente quem tira 85 como 'Prata'?",
+      "enunciado": "Em um torneio fictício, notas a partir de 70 recebem 'Ouro', notas de 50 a 69 recebem 'Prata' e notas abaixo de 50 recebem 'Eliminado'. Por que o código abaixo mostra 'Prata' para a nota 85?",
       "codigo_python": "nota = 85\nif nota >= 50:\n    print('Prata')\nelif nota >= 70:\n    print('Ouro')\nelse:\n    print('Eliminado')",
       "alternativas": [
         { "id": "A", "texto": "A condição mais ampla (nota >= 50) foi testada antes da mais restrita (nota >= 70)." },
@@ -370,8 +370,8 @@
       "tipo": "missao",
       "formato": "Complete o Código",
       "dificuldade": "medio",
-      "enunciado": "Três varetas de comprimentos a, b e c formam um triângulo somente se cada lado for estritamente menor que a soma dos outros dois. Complete a condição para verificar se o triângulo é válido.",
-      "codigo_python": "a, b, c = 3, 4, 5\nif ________________________________________:\n    print('VALIDO')\nelse:\n    print('INVALIDO')",
+      "enunciado": "Três varetas de comprimentos positivos a, b e c formam um triângulo se cada lado for estritamente menor que a soma dos outros dois. Complete a condição para qualquer entrada. Com 3, 4 e 5, a saída deve ser 'VALIDO'. Com 1, 2 e 3, deve ser 'INVALIDO'.",
+      "codigo_python": "a, b, c = map(int, input().split())\nif ________________________________________:\n    print('VALIDO')\nelse:\n    print('INVALIDO')",
       "alternativas": [
         { "id": "A", "texto": "a < b + c or b < a + c or c < a + b" },
         { "id": "B", "texto": "a < b + c and b < a + c and c < a + b" },
@@ -379,7 +379,7 @@
         { "id": "D", "texto": "a + b + c > 0" }
       ],
       "gabarito": "B",
-      "explicacao": "A desigualdade triangular exige que todas as três condições sejam verdadeiras simultaneamente (and) e estritamente menores (<).",
+      "explicacao": "As três comparações com '<' precisam ser verdadeiras ao mesmo tempo, por isso usamos 'and'. Com 1, 2 e 3, a última comparação é 3 < 1 + 2, que é falsa.",
       "dicas": [
         "Se apenas uma desigualdade falhar (ex: 1, 2 e 10), o triângulo já não fecha.",
         "Use 'and' para garantir que os três lados respeitem a regra."
@@ -391,7 +391,7 @@
       "tipo": "missao",
       "formato": "Preveja a Saída",
       "dificuldade": "medio",
-      "enunciado": "Um algoritmo reduz pela metade (divisão inteira) a distância até um alvo a cada passo enquanto ela for maior que 1. O que será impresso?",
+      "enunciado": "Um algoritmo reduz pela metade (divisão inteira) a distância até um alvo a cada passo enquanto ela for maior que 1. Em que ordem os valores são impressos?",
       "codigo_python": "dist = 16\nwhile dist > 1:\n    print(dist, end=' ')\n    dist = dist // 2",
       "alternativas": [
         { "id": "A", "texto": "16 8 4 2" },
@@ -581,7 +581,7 @@
       "formato": "Complete o Código",
       "dificuldade": "dificil",
       "enunciado": "Para encontrar o menor elemento de uma lista não vazia 'leituras' (que pode conter valores negativos, zero ou números muito grandes), qual é a inicialização mais segura para a variável 'menor'?",
-      "codigo_python": "leituras = [-120, -45, -300, -10]\nmenor = ______________\nfor val in leituras:\n    if val < menor:\n        menor = val\nprint(menor)",
+      "codigo_python": "# Experimente também com [4, 8, 12]\nleituras = [-120, -45, -300, -10]\nmenor = ______________\nfor val in leituras:\n    if val < menor:\n        menor = val\nprint(menor)",
       "alternativas": [
         { "id": "A", "texto": "0" },
         { "id": "B", "texto": "-100" },
@@ -601,7 +601,7 @@
       "tipo": "missao",
       "formato": "Preveja a Saída",
       "dificuldade": "dificil",
-      "enunciado": "Na OBI, deseja-se descobrir a maior sequência consecutiva de dias com temperatura acima de 30 graus. Analise o código e determine a saída para a lista dada.",
+      "enunciado": "Um desafio pede a maior sequência consecutiva de dias com temperatura acima de 30 graus. Analise o código e determine a saída para a lista dada.",
       "codigo_python": "temps = [31, 33, 28, 32, 34, 35, 29]\natual = 0\nrecorde = 0\nfor t in temps:\n    if t > 30:\n        atual += 1\n        if atual > recorde:\n            recorde = atual\n    else:\n        atual = 0\nprint(recorde)",
       "alternativas": [
         { "id": "A", "texto": "2" },
@@ -643,7 +643,7 @@
       "tipo": "reforco",
       "formato": "Complete o Código",
       "dificuldade": "medio",
-      "enunciado": "Em uma competição de robótica, um protótipo só é homologado se tiver peso até 500g (inclusive) E altura estritamente menor que 30cm, OU se possuir autorização especial (autorizado == True). Complete a expressão condicional correta.",
+      "enunciado": "Em uma competição de robótica, um protótipo só é homologado se tiver peso até 500g (inclusive) E altura estritamente menor que 30cm, OU se possuir autorização especial (autorizado == True). Complete a expressão. Com 500 g, 30 cm e sem autorização, a saída deve ser 'REPROVADO'.",
       "codigo_python": "peso = 500\naltura = 28\nautorizado = False\nif ______________________________________________________:\n    print('HOMOLOGADO')\nelse:\n    print('REPROVADO')",
       "alternativas": [
         { "id": "A", "texto": "(peso <= 500 and altura < 30) or autorizado" },
@@ -652,7 +652,7 @@
         { "id": "D", "texto": "peso <= 500 or altura < 30 or autorizado" }
       ],
       "gabarito": "A",
-      "explicacao": "'Até 500g (inclusive)' é peso <= 500; 'estritamente menor que 30cm' é altura < 30. Ambas devem ocorrer juntas (and), ou basta autorizado ser True (or).",
+      "explicacao": "'Até 500g (inclusive)' é peso <= 500; 'estritamente menor que 30cm' é altura < 30. As duas comparações precisam valer juntas ('and'), ou basta ter autorização ('or'). Sem autorização, altura de 30 cm reprova o protótipo.",
       "dicas": [
         "Separe os limites inclusivos (<=) dos estritos (<).",
         "Agrupe com parênteses as duas medidas físicas antes de combinar com 'or autorizado'."
@@ -664,7 +664,7 @@
       "tipo": "reforco",
       "formato": "Preveja a Saída",
       "dificuldade": "medio",
-      "enunciado": "Um drone sobe 3 metros por segundo, mas a cada segundo impar de voo sofre uma rajada de vento que o faz descer 1 metro. Observe o laço de 4 segundos e indique a altura final.",
+      "enunciado": "Um drone sobe 3 metros por segundo, mas a cada segundo ímpar de voo sofre uma rajada de vento que o faz descer 1 metro. Observe o laço de 4 segundos e indique a altura final.",
       "codigo_python": "altura = 0\nfor seg in range(1, 5):\n    altura += 3\n    if seg % 2 == 1:\n        altura -= 1\nprint(altura)",
       "alternativas": [
         { "id": "A", "texto": "8" },
