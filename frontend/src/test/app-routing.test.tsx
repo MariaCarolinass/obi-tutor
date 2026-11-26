@@ -64,7 +64,7 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   expect(await screen.findByText(question)).toBeVisible();
 });
 
-it("opens the first challenge and shows the next recommendation inside session progress", async () => {
+it("shows the next recommendation and lets the student reset the session", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
   render(<RouterProvider router={router} />);
 
@@ -84,6 +84,15 @@ it("opens the first challenge and shows the next recommendation inside session p
   expect(
     within(progress).getByText("Próximo desafio · Complete o Código · Enunciados · 2"),
   ).toBeVisible();
+  expect(screen.queryByText("Modo demonstração")).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Reiniciar demonstração" }));
+  const dialog = screen.getByRole("dialog", { name: "Começar de novo?" });
+  fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar demonstração" }));
+  expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
+  expect(
+    screen.queryByRole("region", { name: "Seu progresso nesta sessão" }),
+  ).not.toBeInTheDocument();
 });
 
 it("shows the OBI guide and links to official rules, preparation and participation", async () => {

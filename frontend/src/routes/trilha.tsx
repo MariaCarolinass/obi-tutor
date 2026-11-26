@@ -102,7 +102,7 @@ function Trail() {
                 <span>
                   {count
                     ? `${count} ${count === 1 ? "desafio disponível" : "desafios disponíveis"}`
-                    : "Sem desafio demonstrativo"}
+                    : "Sem desafios disponíveis"}
                 </span>
                 <Button
                   variant="outline"
@@ -205,7 +205,7 @@ function Trail() {
             ) : (
               <div className="empty-state">
                 <Target size={24} className="mx-auto text-muted-foreground" />
-                <h3 className="mt-3">Ainda sem desafio demonstrativo</h3>
+                <h3 className="mt-3">Sem desafios disponíveis para este conceito</h3>
                 <p className="mt-2">
                   O conceito permanece disponível para consulta. Escolha outro conceito para
                   praticar.

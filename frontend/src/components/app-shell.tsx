@@ -156,7 +156,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link>
             <strong className="topbar-location">{title}</strong>
           </div>
-          <span className="demo-badge">Modo demonstração</span>
         </header>
         <main className={pathname === "/" ? undefined : "study-page"}>{children}</main>
         <footer className="page-footer">
