@@ -32,7 +32,7 @@ def gerar_texto(instrucoes, mensagem):
     dados = {
         "systemInstruction": {"parts": [{"text": instrucoes}]},
         "contents": [{"role": "user", "parts": [{"text": mensagem}]}],
-        "generationConfig": {"maxOutputTokens": 400},
+        "generationConfig": {"maxOutputTokens": 256},
     }
     try:
         pedido = Request(

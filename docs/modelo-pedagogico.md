@@ -10,9 +10,9 @@ As regras de aprendizagem estimada, a seleção de questões e a correção por 
 
 ### Pergunte ao Tutor
 
-O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. O tutor usa a mensagem e, quando pertinente, o conceito e o enunciado da última missão visitada. Quando a integração de LLM está disponível, ela formula a resposta. A contingência usa uma explicação com exemplo preparado do conceito relacionado à dúvida.
+O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. O tutor usa a mensagem atual e os últimos turnos de conteúdo para interpretar pedidos como “não entendi” ou “explica de outro jeito”. Quando o estudante se refere à missão, o tutor usa seu enunciado. O Olimpio responde brevemente a agradecimentos e confirmações de compreensão e leva em conta os pedidos de respostas mais curtas nos turnos seguintes. A contingência usa uma explicação ou um exemplo preparado do conceito relacionado à dúvida.
 
-Perguntas livres **não atualizam** o domínio numérico. O tutor usa o conceito em foco para contextualizar explicações e o progresso para recomendar missões. Ao analisar um trecho, deve deixar claro que a orientação se baseia no texto recebido.
+Perguntas livres **não atualizam** o domínio numérico. O tutor usa o conceito em foco para contextualizar explicações e o progresso para recomendar missões. Ao orientar sobre código enviado, descreve o que o trecho faria e esclarece dúvidas sobre a execução quando o estudante perguntar.
 
 ### Missões Interativas
 
@@ -74,6 +74,6 @@ Essas teorias justificam decisões de projeto, mas **não comprovam a eficácia 
 
 ## 7. Integração opcional de LLM
 
-Na demonstração privada, o backend pode enviar a pergunta atual, o conceito e o enunciado relevante à API do Gemini. O modelo recebe instruções para explicar em português e usar apenas análise textual ao orientar sobre código. A correção, as recomendações e a pontuação são calculadas pelas regras do backend.
+Na demonstração privada, o backend pode enviar a pergunta atual, até dois turnos anteriores de conteúdo, o conceito e o enunciado relevante à API do Gemini. O modelo recebe instruções para responder em português, ir direto à dúvida e manter a explicação breve. A correção, as recomendações e a pontuação são calculadas pelas regras do backend.
 
 Quando a API falha, retorna uma resposta vazia ou ultrapassa o tempo de espera, o Olimpio apresenta orientação preparada. A aplicação permanece utilizável sem chave de API. [Contrato de integração](integracao.md#tutor-e-contingência)

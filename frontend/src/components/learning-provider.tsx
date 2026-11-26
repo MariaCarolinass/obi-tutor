@@ -30,7 +30,9 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ended, setEnded] = useState(false);
-  const pending = useRef(false);
+  const pending = useRef(0);
+  const queue = useRef<Promise<unknown>>(Promise.resolve());
+  const nextChatId = useRef(0);
   const opening = useRef<Promise<Session> | null>(null);
   const latest = useRef({ id: 0, retry: "" });
   const activeQuestion = useRef<string | undefined>(undefined);
@@ -58,27 +60,31 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  async function run<T>(operation: () => Promise<T>) {
-    if (pending.current) return undefined;
-    pending.current = true;
+  function run<T>(operation: () => Promise<T>, enqueue = false) {
+    if (pending.current && !enqueue) return Promise.resolve(undefined);
+    pending.current += 1;
     setBusy(true);
-    setError("");
-    try {
-      return await operation();
-    } catch (err) {
-      const message =
-        err instanceof Error && err.message.startsWith("A sessão expirou")
-          ? err.message
-          : "Não foi possível concluir a ação. Tente novamente.";
-      setError(message);
-      return undefined;
-    } finally {
-      pending.current = false;
-      setBusy(false);
-    }
+    const result = queue.current.then(async () => {
+      setError("");
+      try {
+        return await operation();
+      } catch (err) {
+        const message =
+          err instanceof Error && err.message.startsWith("A sessão expirou")
+            ? err.message
+            : "Não foi possível concluir a ação. Tente novamente.";
+        setError(message);
+        return undefined;
+      } finally {
+        pending.current -= 1;
+        if (pending.current === 0) setBusy(false);
+      }
+    });
+    queue.current = result;
+    return result;
   }
 
-  async function action<T>(body: object, onSuccess?: (result: T) => void) {
+  async function action<T>(body: object, enqueue = false) {
     if (!session) return undefined;
     return run(async () => {
       const retry = JSON.stringify(body);
@@ -93,29 +99,37 @@ export function LearningProvider({ children }: { children: ReactNode }) {
       );
       latest.current.retry = "";
       setSession({ ...session, state });
-      onSuccess?.(result);
       return result;
-    });
+    }, enqueue);
   }
 
   const answer = (questionId: string, optionId: string) =>
     action<Answer>({ action: "answer", questionId, optionId });
   const help = async (questionId: string, kind: Help) =>
     (await action<{ message: string }>({ action: "help", questionId, kind }))?.message;
-  const send = async (text: string) => {
+  const send = (text: string) => {
     const trimmed = text.trim();
-    if (!trimmed) return false;
+    if (!session || !trimmed || trimmed.length > 2000) return false;
     const questionId = activeQuestion.current;
-    const result = await action<Omit<Message, "role">>(
-      { action: "chat", text: trimmed, questionId },
-      (reply) =>
-        setMessages((history) => [
-          ...history,
-          { role: "student", text: trimmed },
-          { role: "tutor", ...reply },
-        ]),
+    const id = nextChatId.current++;
+    setMessages((history) => [
+      ...history,
+      { role: "student", text: trimmed },
+      { role: "tutor", text: "Aguardando resposta…", pendingId: id },
+    ]);
+    void action<Omit<Message, "role">>({ action: "chat", text: trimmed, questionId }, true).then(
+      (reply) => {
+        const message: Message = reply
+          ? { role: "tutor", ...reply }
+          : {
+              role: "tutor",
+              text: "A resposta falhou. Você pode reenviar a pergunta.",
+              quiet: true,
+            };
+        setMessages((history) => history.map((item) => (item.pendingId === id ? message : item)));
+      },
     );
-    return !!result;
+    return true;
   };
 
   const end = async () =>

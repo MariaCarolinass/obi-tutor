@@ -1,6 +1,6 @@
 import { spawn, type ChildProcess } from "node:child_process";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterAll, beforeAll, expect, it, vi } from "vitest";
 import { getRouter } from "@/router";
 
@@ -228,4 +228,60 @@ it("offers a different mission when the student asks to switch activities", asyn
   fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
   const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
   expect(within(c1).getByText("25/100")).toBeVisible();
+});
+
+it("shows the message immediately and queues the shortcuts while a reply is pending", async () => {
+  const realFetch = globalThis.fetch;
+  let finishFirstReply = () => {};
+  const firstReply = new Promise<void>((resolve) => {
+    finishFirstReply = resolve;
+  });
+  const questions: string[] = [];
+  const intercepted = vi.spyOn(globalThis, "fetch").mockImplementation(async (url, options) => {
+    const payload = JSON.parse(String(options?.body ?? "{}"));
+    if (payload.action === "chat") {
+      questions.push(payload.text);
+      if (questions.length === 1) await firstReply;
+    }
+    return realFetch(url, options);
+  });
+
+  try {
+    const router = getRouter(createMemoryHistory({ initialEntries: ["/tutor"] }));
+    render(<RouterProvider router={router} />);
+
+    const input = await screen.findByRole("textbox", { name: "Sua pergunta" });
+    const log = screen.getByRole("log");
+    fireEvent.change(input, { target: { value: "Como funciona um for?" } });
+    fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));
+    expect(within(log).getByText("Como funciona um for?")).toBeVisible();
+    expect(within(log).getByText("Aguardando resposta…")).toBeVisible();
+    expect(input).toHaveValue("");
+
+    const example = screen.getByRole("button", { name: "Ver exemplo" });
+    const rephrase = screen.getByRole("button", { name: "Explicar de outro jeito" });
+    expect(example).toBeEnabled();
+    expect(rephrase).toBeEnabled();
+    fireEvent.click(example);
+    fireEvent.click(rephrase);
+    expect(within(log).getAllByText("Aguardando resposta…")).toHaveLength(3);
+    expect(within(log).getByText("Pode explicar de outro jeito?")).toBeVisible();
+
+    await waitFor(() => expect(questions).toHaveLength(1));
+    finishFirstReply();
+    await waitFor(() => expect(within(log).queryByText("Aguardando resposta…")).toBeNull());
+    expect(questions).toEqual([
+      "Como funciona um for?",
+      "Pode mostrar um exemplo menor do conceito?",
+      "Pode explicar de outro jeito?",
+    ]);
+    expect(within(log).getAllByText(/range\(2\)/)).toHaveLength(2);
+
+    fireEvent.change(input, { target: { value: "Obrigado!" } });
+    fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));
+    expect(await within(log).findByText("De nada!")).toBeVisible();
+  } finally {
+    finishFirstReply();
+    intercepted.mockRestore();
+  }
 });

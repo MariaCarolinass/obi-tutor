@@ -223,7 +223,7 @@ def test_gemini_le_chave_do_env_e_recebe_apenas_contexto_e_duvida(api, monkeypat
 
     monkeypatch.setattr("obi_tutor.services.gemini.urlopen", simular)
     sessao, agir = abrir(api)
-    resposta = agir("chat", text="Pode explicar o conceito?", questionId="MISS-C4-01")
+    resposta = agir("chat", text="Pode explicar esta missão?", questionId="MISS-C4-01")
     assert resposta["result"]["text"] == "Compare os dois limites da condição."
     assert resposta["state"] == sessao["state"]
 
@@ -294,3 +294,46 @@ def test_chat_oferece_trilha_quando_todas_as_missoes_estao_concluidas(api):
     resposta = agir("chat", text="Estou entediada")
     assert resposta["result"]["offerChange"]
     assert "missionId" not in resposta["result"]
+
+
+def test_chat_retem_o_assunto_sem_voltar_para_a_missao_anterior(api, monkeypatch):
+    perguntas = []
+
+    def simular(instrucoes, mensagem):
+        perguntas.append((instrucoes, json.loads(mensagem)))
+        return "Olá! Use um exemplo pequeno."
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", simular)
+    sessao, agir = abrir(api)
+    foco = "MISS-C4-01"
+
+    primeira = agir("chat", text="Como funciona um if?", questionId=foco)
+    assert primeira["result"]["text"] == "Use um exemplo pequeno."
+    agir("chat", text="Pode explicar de outro jeito?", questionId=foco)
+    agir("chat", text="Eu não sei nada sobre laços de repetição", questionId=foco)
+    curta = agir("chat", text="Você me dá respostas muito longas, que chato", questionId=foco)
+    retomada = agir("chat", text="Não entendi", questionId=foco)
+    compreendeu = agir("chat", text="Agora eu já sei", questionId=foco)
+    agradeceu = agir("chat", text="Obrigado!", questionId=foco)
+
+    assert len(perguntas) == 4
+    assert curta["result"] == {"text": "Entendi. Vou responder mais curto.", "quiet": True}
+    assert compreendeu["result"]["quiet"]
+    assert agradeceu["result"] == {"text": "De nada!", "quiet": True}
+    assert perguntas[1][1]["turnos_recentes"][0]["pergunta"] == "Como funciona um if?"
+    instrucoes, ultima = perguntas[-1]
+    assert "no máximo duas frases" in instrucoes
+    assert ultima["contexto"] == {"conceito": "Laços de repetição"}
+    assert [t["pergunta"] for t in ultima["turnos_recentes"]] == [
+        "Pode explicar de outro jeito?", "Eu não sei nada sobre laços de repetição",
+    ]
+    assert retomada["result"]["missionId"] == "MISS-C5-01"
+    assert agradeceu["state"] == sessao["state"]
+
+
+def test_chat_em_contingencia_explica_com_exemplo_do_ultimo_assunto(api):
+    _, agir = abrir(api)
+    agir("chat", text="Como funciona um for?", questionId="MISS-C4-01")
+    resposta = agir("chat", text="Não entendi", questionId="MISS-C4-01")
+    assert "range(2)" in resposta["result"]["text"]
+    assert resposta["result"]["missionId"] == "MISS-C5-01"
