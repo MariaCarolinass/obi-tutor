@@ -23,15 +23,9 @@ O sentido de uma dependência é **pré-requisito -> conceito dependente**. Um e
 
 ## 3. Catálogo de exercícios
 
-### Demonstração atual
+### Catálogo integrado
 
-- O **diagnóstico opcional** tem cinco questões, uma para cada conceito de C1 a C5.
-- O **treinamento** tem sete missões. C4 tem três, e C1, C2, C3 e C5 têm uma cada.
-- A **trilha** exibe os dez conceitos e seus pré-requisitos. C6 a C10 estão disponíveis para consulta.
-
-O catálogo demonstrativo usa IDs estáveis e gabaritos locais em TypeScript. [Catálogo atual](../frontend/src/lib/learning.ts)
-
-### Catálogo previsto para o MVP
+A trilha exibe os dez conceitos e seus pré-requisitos. O diagnóstico é opcional e tem um item por conceito. Os IDs e gabaritos são carregados pelo backend. [Catálogo de questões](../obi_tutor/dados/questoes.json) · [Grafo](../obi_tutor/dados/conceitos.json)
 
 | Tipo | Quantidade | Finalidade |
 | --- | ---: | --- |
@@ -72,6 +66,6 @@ O grupo pode usar desafios de integração que combinem conceitos, mas **cada it
 
 ## 7. Observação sobre cobertura
 
-Quem erra o diagnóstico e acerta duas missões regulares de primeira e sem ajuda chega a 50 pontos. O MVP prevê três missões extras de reforço, uma para cada conceito central selecionado, para abrir uma nova oportunidade de avaliação.
+Quem erra o diagnóstico e acerta duas missões regulares de primeira e sem ajuda chega a 50 pontos. O catálogo inclui missões de reforço em C4, C5 e C6 para oferecer uma nova oportunidade de avaliação.
 
-Na demonstração atual, C4 é o único conceito com atividades suficientes para atingir o limiar de 70 pontos. Um erro no diagnóstico seguido por três acertos de primeira e sem ajuda em C4 resulta em 75 pontos e três acertos independentes. [Modelo do aluno](modelo-do-aluno.md)
+Em C4, C5 e C6, um erro no diagnóstico seguido por três acertos de primeira e sem ajuda resulta em 75 pontos e três acertos independentes. Nos demais conceitos, quem erra o diagnóstico pode chegar a 50 pontos com as duas missões atuais. [Modelo do aluno](modelo-do-aluno.md)

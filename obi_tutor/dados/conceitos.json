@@ -1,0 +1,95 @@
+[
+  {
+    "id": "C1",
+    "name": "Interpretação de enunciados",
+    "short": "Enunciados",
+    "prerequisites": [],
+    "description": "Identifique os dados, as restrições e o resultado esperado de um problema."
+  },
+  {
+    "id": "C2",
+    "name": "Entradas, saídas e casos de teste",
+    "short": "Entradas e saídas",
+    "prerequisites": [
+      "C1"
+    ],
+    "description": "Leia dados com input(), apresente resultados com print() e compare casos de teste."
+  },
+  {
+    "id": "C3",
+    "name": "Variáveis e operações",
+    "short": "Variáveis",
+    "prerequisites": [
+      "C2"
+    ],
+    "description": "Armazene valores e combine operações para transformar os dados."
+  },
+  {
+    "id": "C4",
+    "name": "Condicionais e comparações",
+    "short": "Condicionais",
+    "prerequisites": [
+      "C3"
+    ],
+    "description": "Use if, elif e else para tomar decisões a partir de condições."
+  },
+  {
+    "id": "C5",
+    "name": "Laços de repetição",
+    "short": "Repetições",
+    "prerequisites": [
+      "C3"
+    ],
+    "description": "Repita instruções com for e while e reconheça quando o laço termina."
+  },
+  {
+    "id": "C6",
+    "name": "Contadores e acumuladores",
+    "short": "Contadores",
+    "prerequisites": [
+      "C4",
+      "C5"
+    ],
+    "description": "Conte ocorrências e acumule resultados durante as repetições."
+  },
+  {
+    "id": "C7",
+    "name": "Listas e percursos",
+    "short": "Listas",
+    "prerequisites": [
+      "C5"
+    ],
+    "description": "Organize valores em listas e percorra seus elementos."
+  },
+  {
+    "id": "C8",
+    "name": "Teste de mesa",
+    "short": "Teste de mesa",
+    "prerequisites": [
+      "C4",
+      "C5"
+    ],
+    "description": "Acompanhe os valores das variáveis passo a passo, sem executar o código."
+  },
+  {
+    "id": "C9",
+    "name": "Casos-limite e validação",
+    "short": "Casos-limite",
+    "prerequisites": [
+      "C2",
+      "C8"
+    ],
+    "description": "Investigue valores extremos e verifique se sua solução respeita as restrições."
+  },
+  {
+    "id": "C10",
+    "name": "Resolução de problema combinado",
+    "short": "Problemas combinados",
+    "prerequisites": [
+      "C6",
+      "C7",
+      "C9"
+    ],
+    "description": "Combine diferentes conceitos para construir uma solução completa."
+  }
+]

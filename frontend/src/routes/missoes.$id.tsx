@@ -1,5 +1,5 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -17,24 +17,39 @@ import { Button } from "@/components/ui/button";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
-import { concepts, trainingMissions, status, type Mission } from "@/lib/learning";
+import { status, type Answer, type Help, type Mission } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/missoes/$id")({
   beforeLoad: ({ params }) => {
-    if (params.id === "diag-1") throw redirect({ to: "/diagnostico", replace: true });
+    if (params.id.startsWith("diag-") || params.id.startsWith("DIAG-")) {
+      throw redirect({ to: "/diagnostico", replace: true });
+    }
+    const previousIds: Record<string, string> = {
+      "reading-1": "MISS-C1-01",
+      "io-1": "MISS-C2-01",
+      "var-1": "MISS-C3-01",
+      "if-1": "MISS-C4-01",
+      "if-2": "MISS-C4-02",
+      "if-3": "REF-C4-01",
+      "for-1": "MISS-C5-01",
+    };
+    if (Object.hasOwn(previousIds, params.id)) {
+      throw redirect({
+        to: "/missoes/$id",
+        params: { id: previousIds[params.id]! },
+        replace: true,
+      });
+    }
   },
-  head: ({ params }) => {
-    const m = trainingMissions.find((m) => m.id === params.id);
-    return pageMeta(
-      m?.title ?? "Missão indisponível",
-      m?.prompt ?? "Explore as missões de programação Python disponíveis no OBI Tutor.",
-    );
-  },
+  head: () => pageMeta("Missão interativa", "Pratique Python com um desafio do OBI Tutor."),
   component: MissionPage,
 });
 function MissionPage() {
   const { id } = Route.useParams();
+  const {
+    catalog: { trainingMissions },
+  } = useLearning();
   const mission = trainingMissions.find((m) => m.id === id);
   return mission ? (
     <MissionActivity key={id} mission={mission} />
@@ -44,7 +59,7 @@ function MissionPage() {
         <Target />
       </span>
       <h2>Essa missão não está disponível</h2>
-      <p>Escolha uma das atividades demonstrativas para continuar.</p>
+      <p>Escolha uma das atividades da trilha para continuar.</p>
       <div className="button-row">
         <Button asChild>
           <Link to="/trilha">Explorar missões</Link>
@@ -54,29 +69,40 @@ function MissionPage() {
   );
 }
 function MissionActivity({ mission }: { mission: Mission }) {
-  const { state, answer, hint } = useLearning();
-  const [selected, setSelected] = useState<number | null>(null);
-  const [feedback, setFeedback] = useState<"wrong" | "correct" | "review" | null>(null);
-  const [help, setHelp] = useState<"hint" | "simple" | "concept" | "direct" | null>(null);
+  const {
+    state,
+    answer,
+    help,
+    focus,
+    busy,
+    catalog: { concepts, trainingMissions },
+  } = useLearning();
+  const [selected, setSelected] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<Answer | null>(null);
+  const [guidance, setGuidance] = useState<{ kind: Help; message: string } | null>(null);
   const [paused, setPaused] = useState(false);
   const [pauseMenu, setPauseMenu] = useState(false);
+  useEffect(() => focus(mission.id), [focus, mission.id]);
+
   const concept = concepts.find((c) => c.id === mission.concept);
   const record = state.records[mission.concept];
   const attempt = state.attempts[mission.id];
-  const solved = feedback === "correct" || feedback === "review";
-  const points = feedback === "correct" ? (attempt?.points ?? 0) : 0;
-  const next = trainingMissions.find(
-    (m) => m.concept === mission.concept && m.id !== mission.id && !state.completed.includes(m.id),
-  );
-  const askHelp = (kind: "hint" | "simple" | "concept" | "direct") => {
-    hint(mission.id);
-    setHelp(kind);
+  const solved = feedback?.correct === true;
+  const points = feedback?.points ?? 0;
+  const next =
+    trainingMissions.find(
+      (m) =>
+        m.concept === mission.concept && m.id !== mission.id && !state.completed.includes(m.id),
+    ) ??
+    trainingMissions.find((m) => m.id === state.recommendation.missionId && m.id !== mission.id);
+  const askHelp = async (kind: Help) => {
+    const message = await help(mission.id, kind);
+    if (message) setGuidance({ kind, message });
   };
-  const verify = () => {
+  const verify = async () => {
     if (selected === null) return;
-    const correct = selected === mission.answer;
-    answer(mission, correct);
-    setFeedback(correct ? (attempt?.awarded ? "review" : "correct") : "wrong");
+    const response = await answer(mission.id, selected);
+    if (response) setFeedback(response);
   };
   if (paused)
     return (
@@ -110,53 +136,54 @@ function MissionActivity({ mission }: { mission: Mission }) {
         <section className="mission-question">
           <div className="mission-meta">
             <span className="eyebrow mb-0">{mission.type}</span>
-            <span className="tiny-tag">{concept?.short} · Iniciante</span>
+            <span className="tiny-tag">
+              {concept?.short} · {mission.difficulty}
+            </span>
             <span className="tiny-tag">1º e 2º anos do Ensino Médio</span>
           </div>
           <h2>{mission.title}</h2>
           <p className="mission-prompt">{mission.prompt}</p>
-          <CodeBlock code={mission.code} />
-          <fieldset className="options" disabled={solved}>
+          {mission.code && <CodeBlock code={mission.code} />}
+          <fieldset className="options" disabled={solved || busy}>
             <legend className="sr-only">Escolha uma resposta</legend>
             {mission.options.map((option, i) => (
-              <label className={`answer-option ${selected === i ? "selected" : ""}`} key={option}>
+              <label
+                className={`answer-option ${selected === option.id ? "selected" : ""}`}
+                key={option.id}
+              >
                 <input
                   type="radio"
                   name="answer"
-                  checked={selected === i}
+                  checked={selected === option.id}
                   onChange={() => {
-                    setSelected(i);
+                    setSelected(option.id);
                     setFeedback(null);
                   }}
                 />
                 <span className="option-letter">{String.fromCharCode(65 + i)}</span>
-                <span>{option}</span>
+                <span className="answer-text">{option.texto}</span>
               </label>
             ))}
           </fieldset>
           {!solved && (
             <div className="mission-controls">
-              <Button disabled={selected === null} onClick={verify}>
+              <Button disabled={busy || selected === null} onClick={verify}>
                 <CheckCircle2 />
                 Verificar resposta
               </Button>
-              <Button variant="outline" onClick={() => askHelp("hint")}>
+              <Button variant="outline" disabled={busy} onClick={() => void askHelp("hint")}>
                 <Lightbulb />
                 Preciso de uma dica
               </Button>
             </div>
           )}
-          {feedback === "wrong" && (
+          {feedback?.correct === false && (
             <div role="status" className="feedback">
               <h3>
                 <CircleHelp size={17} />
                 Ainda não é essa. Vamos pensar juntos?
               </h3>
-              <p>
-                {(attempt?.errors ?? 0) >= 2
-                  ? "Que tal mudar a abordagem? Você pode revisar o conceito, ver um exemplo mais simples ou pedir uma explicação direta ao lado."
-                  : "Releia a pergunta e acompanhe o código linha por linha. Use a pista se quiser testar outra ideia."}
-              </p>
+              <p>{feedback.message}</p>
               <Button
                 variant="outline"
                 onClick={() => {
@@ -176,13 +203,15 @@ function MissionActivity({ mission }: { mission: Mission }) {
                 Boa descoberta!{" "}
                 {points > 0 ? `+${points} pontos` : "Você reforçou seu conhecimento."}
               </h3>
-              <p>{mission.explanation}</p>
+              <p>{feedback?.message}</p>
               <p className="mt-2">
-                {points === 0
-                  ? "Esta questão já concedeu pontos nesta sessão ou o conceito atingiu 100 pontos."
-                  : attempt?.hinted
-                    ? "Você usou ajuda e chegou à solução. Isso também é aprender!"
-                    : "Seu progresso foi atualizado. Continue explorando!"}{" "}
+                {feedback?.review
+                  ? "Você já concluiu esta questão nesta sessão."
+                  : points === 0
+                    ? "O conceito já atingiu 100 pontos."
+                    : attempt?.hinted
+                      ? "Você usou ajuda e chegou à solução. Isso também é aprender!"
+                      : "Seu progresso foi atualizado. Continue explorando!"}{" "}
                 {status(record) === "Dominado" ? "Conceito dominado!" : ""}
               </p>
               <div className="button-row">
@@ -236,52 +265,53 @@ function MissionActivity({ mission }: { mission: Mission }) {
               : "Uma pista, um exemplo ou uma explicação. Você escolhe como continuar."}
           </p>
           <div className="help-actions">
-            <Button variant="outline" onClick={() => askHelp("hint")}>
+            <Button variant="outline" disabled={busy} onClick={() => void askHelp("hint")}>
               <Lightbulb />
               Quero uma dica
             </Button>
-            <Button variant="outline" onClick={() => askHelp("simple")}>
+            <Button variant="outline" disabled={busy} onClick={() => void askHelp("simple")}>
               <Compass />
               Mostrar um exemplo mais simples
             </Button>
-            <Button variant="outline" onClick={() => askHelp("concept")}>
+            <Button variant="outline" disabled={busy} onClick={() => void askHelp("concept")}>
               <BookOpen />
               Explicar o conceito
             </Button>
-            <Button variant="outline" onClick={() => askHelp("direct")}>
+            <Button variant="outline" disabled={busy} onClick={() => void askHelp("direct")}>
               <CircleHelp />
               Receber uma explicação direta
             </Button>
             {(attempt?.errors ?? 0) >= 2 && (
               <Button variant="ghost" asChild>
-                <Link to="/trilha">
-                  Tentar outra missão
-                  <ArrowRight />
-                </Link>
+                {feedback?.alternativeId ? (
+                  <Link to="/missoes/$id" params={{ id: feedback.alternativeId }}>
+                    Tentar outra missão <ArrowRight />
+                  </Link>
+                ) : (
+                  <Link to="/trilha">
+                    Escolher outra missão <ArrowRight />
+                  </Link>
+                )}
               </Button>
             )}
+            <Button variant="ghost" asChild>
+              <Link to="/tutor">
+                Conversar com o Olimpio <ArrowRight />
+              </Link>
+            </Button>
           </div>
-          {help && (
+          {guidance && (
             <div role="status" className="help-content">
               <h4>
-                {help === "hint"
+                {guidance.kind === "hint"
                   ? "Uma pista para você"
-                  : help === "simple"
+                  : guidance.kind === "simple"
                     ? "Vamos começar pelo simples"
-                    : help === "direct"
+                    : guidance.kind === "direct"
                       ? "O raciocínio completo"
                       : "Revisando o conceito"}
               </h4>
-              <p>
-                {help === "hint"
-                  ? mission.hint
-                  : help === "concept"
-                    ? `${concept?.description} Leia cada instrução e acompanhe os valores antes de escolher sua resposta.`
-                    : help === "direct"
-                      ? mission.explanation
-                      : "Observe este exemplo menor e depois volte ao desafio."}
-              </p>
-              {help === "simple" && <CodeBlock code={mission.simpler} />}
+              <p>{guidance.message}</p>
             </div>
           )}
           <div className="mission-progress">
@@ -293,7 +323,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
             </p>
             <progress max="100" value={record?.score ?? 0} aria-label="Progresso no conceito" />
             <small>
-              {status(record)} · {record?.independent.length ?? 0} acertos independentes
+              {status(record)} · {record?.independent ?? 0} acertos independentes
               <br />
               {attempt?.errors ?? 0} tentativas incorretas ·{" "}
               {attempt?.hinted ? "Ajuda utilizada" : "Sem dica utilizada"}

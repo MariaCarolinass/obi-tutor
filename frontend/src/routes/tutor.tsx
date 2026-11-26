@@ -1,9 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, BookOpen, Send, Sparkles } from "lucide-react";
+import tutorIllustration from "@/assets/obi-learning-red.webp";
 import { PageHeading, TutorIcon } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
-import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
 import { pageMeta } from "@/lib/page-meta";
 
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/tutor")({
   head: () =>
     pageMeta(
       "Pergunte ao tutor",
-      "Converse com o tutor demonstrativo sobre condicionais, laços, listas e raciocínio em Python.",
+      "Converse com o tutor sobre condicionais, laços, listas e raciocínio em Python.",
     ),
   component: Tutor,
 });
@@ -23,25 +23,17 @@ const suggestions = [
   "Pode mostrar um exemplo mais simples?",
 ];
 function Tutor() {
-  const { messages, send } = useLearning();
+  const { messages, send, busy, end, state } = useLearning();
   const [text, setText] = useState("");
   const history = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const element = history.current;
     if (element) element.scrollTop = element.scrollHeight;
   }, [messages]);
-  const submit = () => {
-    if (!text.trim()) return;
-    send(text);
-    setText("");
+  const submit = async () => {
+    if (!text.trim() || busy) return;
+    if (await send(text)) setText((draft) => (draft === text ? "" : draft));
   };
-  const latest = messages.at(-1)?.code ?? "";
-  const exercise =
-    latest.includes("notas") || latest.includes("for n")
-      ? "for-1"
-      : latest.includes("senha")
-        ? "if-2"
-        : "if-1";
   return (
     <>
       <PageHeading
@@ -57,7 +49,6 @@ function Tutor() {
               <h3>{tutorName}</h3>
               <p>Seu tutor para a OBI</p>
             </div>
-            <span>Demonstração</span>
           </header>
           <div
             className="messages"
@@ -72,18 +63,31 @@ function Tutor() {
                 <div className="message-body">
                   <small>{m.role === "tutor" ? tutorName : "Você"}</small>
                   <p>{m.text}</p>
-                  {m.code && <CodeBlock code={m.code} />}{" "}
-                  {m.role === "tutor" && i === messages.length - 1 && (
+                  {m.role === "tutor" && i === messages.length - 1 && m.offerEnd && (
+                    <div className="chat-context-actions">
+                      <Button disabled={busy} variant="outline" onClick={() => void end()}>
+                        Encerrar sessão
+                      </Button>
+                      <Button variant="ghost" asChild>
+                        <Link to="/">Pausar e voltar ao início</Link>
+                      </Button>
+                    </div>
+                  )}
+                  {m.role === "tutor" && i === messages.length - 1 && !m.offerEnd && (
                     <div className="chat-context-actions">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => send("Ver exemplo de if em Python")}
+                        disabled={busy}
+                        onClick={() => void send("Pode mostrar um exemplo menor do conceito?")}
                       >
                         Ver exemplo
                       </Button>
                       <Button variant="outline" size="sm" asChild>
-                        <Link to="/missoes/$id" params={{ id: exercise }}>
+                        <Link
+                          to="/missoes/$id"
+                          params={{ id: m.missionId ?? state.recommendation.missionId }}
+                        >
                           Resolver exercício
                           <ArrowRight />
                         </Link>
@@ -91,7 +95,8 @@ function Tutor() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => send("Pode explicar de outro jeito?")}
+                        disabled={busy}
+                        onClick={() => void send("Pode explicar de outro jeito?")}
                       >
                         Explicar de outro jeito
                       </Button>
@@ -105,28 +110,34 @@ function Tutor() {
             className="chat-form"
             onSubmit={(e) => {
               e.preventDefault();
-              submit();
+              void submit();
             }}
           >
             <textarea
               aria-label="Sua pergunta"
               placeholder="O que você gostaria de entender melhor?"
+              maxLength={2000}
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  submit();
+                  void submit();
                 }
               }}
             />
-            <Button type="submit" size="icon" disabled={!text.trim()} aria-label="Enviar pergunta">
+            <Button
+              type="submit"
+              size="icon"
+              disabled={busy || !text.trim()}
+              aria-label="Enviar pergunta"
+            >
               <Send />
             </Button>
           </form>
           <p className="chat-disclaimer">
-            Respostas demonstrativas pré-definidas · Sem IA externa · Não executa código nem altera
-            pontos.
+            {busy ? "Olimpio está preparando uma resposta. " : ""}O tutor analisa o texto da sua
+            pergunta. Evite enviar dados pessoais.
           </p>
         </section>
         <aside className="chat-suggestions">
@@ -135,7 +146,7 @@ function Tutor() {
             Por onde começar?
           </h3>
           {suggestions.map((s) => (
-            <Button variant="outline" key={s} onClick={() => send(s)}>
+            <Button variant="outline" key={s} disabled={busy} onClick={() => void send(s)}>
               <BookOpen />
               {s}
             </Button>
@@ -144,6 +155,14 @@ function Tutor() {
             Você pode pedir uma ajuda direta ou escolher uma abordagem diferente. A decisão de como
             aprender continua sendo sua.
           </p>
+          <img
+            className="chat-tutor-illustration"
+            src={tutorIllustration}
+            alt="Olimpio, o robô tutor, ao lado de um notebook com código"
+            width={720}
+            height={540}
+            loading="lazy"
+          />
         </aside>
       </div>
     </>

@@ -1,7 +1,31 @@
+import { spawn, type ChildProcess } from "node:child_process";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { expect, it } from "vitest";
+import { afterAll, beforeAll, expect, it, vi } from "vitest";
 import { getRouter } from "@/router";
+
+let backend: ChildProcess;
+beforeAll(async () => {
+  const env = { ...process.env, OLIMPIO_TUTOR_OBI: "" };
+  backend = spawn("python3", ["-m", "obi_tutor.api", "--port", "0"], { cwd: "..", env });
+  const base = await new Promise<string>((resolve, reject) => {
+    backend.on("error", reject);
+    backend.on("exit", (code) => reject(new Error(`O backend de teste encerrou (${code}).`)));
+    backend.stderr?.on("data", (error: Buffer) => {
+      if (error.toString().includes("Traceback")) reject(new Error(error.toString()));
+    });
+    backend.stdout?.on("data", (output: Buffer) => {
+      const address = output.toString().match(/http:\/\/127\.0\.0\.1:[0-9]+/)?.[0];
+      if (address) resolve(address);
+    });
+  });
+  const http = globalThis.fetch;
+  vi.stubGlobal("fetch", (url: string, init?: RequestInit) => http(new URL(url, base), init));
+});
+afterAll(() => {
+  backend?.kill();
+  vi.unstubAllGlobals();
+});
 
 it("offers diagnostic from the home page and preserves learning and chat when navigating", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
@@ -13,9 +37,9 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   expect(screen.getByText("Olimpíada Brasileira de Informática", { exact: true })).toBeVisible();
   fireEvent.click(screen.getByRole("link", { name: /^Fazer o diagnóstico/ }));
   fireEvent.click(await screen.findByRole("button", { name: "Iniciar diagnóstico" }));
-  fireEvent.click(screen.getByRole("radio", { name: /O nome de quem fez mais pontos/ }));
+  fireEvent.click(screen.getByRole("radio", { name: /Recebe 1 medalha de ouro\./ }));
   fireEvent.click(screen.getByRole("button", { name: "Próxima questão" }));
-  expect(await screen.findByText("Questão 2 de 5")).toBeVisible();
+  expect(await screen.findByText("Questão 2 de 10")).toBeVisible();
 
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
@@ -29,7 +53,7 @@ it("offers diagnostic from the home page and preserves learning and chat when na
     target: { value: question },
   });
   fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));
-  expect(within(chat).getByText(/Uma lista guarda vários valores/)).toBeVisible();
+  expect(await within(chat).findByText(/Organize valores em listas/)).toBeVisible();
 
   fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
   const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
@@ -40,22 +64,35 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   expect(await screen.findByText(question)).toBeVisible();
 });
 
-it("opens the first challenge and shows the next recommendation inside session progress", async () => {
+it("shows the next recommendation and lets the student reset the session", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
   render(<RouterProvider router={router} />);
 
   fireEvent.click(await screen.findByRole("link", { name: "Começar com o tutor" }));
-  expect(await screen.findByRole("heading", { name: "As peças de um problema" })).toBeVisible();
+  expect(
+    await screen.findByRole("heading", { name: "Detetive de Bugs · Enunciados · 1" }),
+  ).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
   expect(screen.getByRole("heading", { name: "Conte com o Olimpio" })).toBeVisible();
-  fireEvent.click(screen.getByRole("radio", { name: /rodada_1 \+ rodada_2/ }));
+  fireEvent.click(screen.getAllByRole("radio")[0]!);
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
-  expect(screen.getByText(/Boa descoberta! \+25 pontos/)).toBeVisible();
+  expect(await screen.findByText(/Boa descoberta! \+25 pontos/)).toBeVisible();
 
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   const progress = await screen.findByRole("region", { name: "Seu progresso nesta sessão" });
-  expect(within(progress).getByText("Próximo desafio · Lendo o placar")).toBeVisible();
+  expect(
+    within(progress).getByText("Próximo desafio · Complete o Código · Enunciados · 2"),
+  ).toBeVisible();
+  expect(screen.queryByText("Modo demonstração")).not.toBeInTheDocument();
+
+  fireEvent.click(screen.getByRole("button", { name: "Reiniciar sessão" }));
+  const dialog = screen.getByRole("dialog", { name: "Começar de novo?" });
+  fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar sessão" }));
+  expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
+  expect(
+    screen.queryByRole("region", { name: "Seu progresso nesta sessão" }),
+  ).not.toBeInTheDocument();
 });
 
 it("shows the OBI guide and links to official rules, preparation and participation", async () => {
@@ -111,17 +148,17 @@ it("shows the learner model status and diagnostic result for each assessed conce
   render(<RouterProvider router={router} />);
 
   fireEvent.click(await screen.findByRole("button", { name: "Iniciar diagnóstico" }));
-  const answers = [/O nome de quem fez mais pontos/, /^A 7$/, /^C 7$/, /Praticar$/, /3 vezes$/];
-  for (const [index, name] of answers.entries()) {
-    fireEvent.click(await screen.findByRole("radio", { name }));
+  for (let index = 0; index < 10; index++) {
+    await screen.findByText(`Questão ${index + 1} de 10`);
+    fireEvent.click(screen.getAllByRole("radio")[0]!);
     fireEvent.click(
-      screen.getByRole("button", { name: index === 4 ? "Ver meu resultado" : "Próxima questão" }),
+      screen.getByRole("button", { name: index === 9 ? "Ver meu resultado" : "Próxima questão" }),
     );
   }
 
   const profile = await screen.findByRole("region", { name: "Seu nível por conceito" });
   const [reading, inputOutput] = within(profile).getAllByRole("listitem");
-  expect(within(profile).getAllByRole("listitem")).toHaveLength(5);
+  expect(within(profile).getAllByRole("listitem")).toHaveLength(10);
   expect(reading).toHaveTextContent("Acerto no diagnóstico");
   expect(reading).toHaveTextContent("+30 pontos");
   expect(reading).toHaveTextContent("Inicial");
@@ -134,4 +171,25 @@ it("redirects the old diagnostic URL into the single diagnostic flow", async () 
   render(<RouterProvider router={router} />);
   expect(await screen.findByRole("button", { name: "Iniciar diagnóstico" })).toBeVisible();
   expect(router.state.location.pathname).toBe("/diagnostico");
+});
+
+it("keeps mission help in the scoring session and lets the student end it", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/MISS-C4-01"] }));
+  render(<RouterProvider router={router} />);
+  fireEvent.click(await screen.findByRole("button", { name: "Preciso de uma dica" }));
+  expect(await screen.findByRole("heading", { name: "Uma pista para você" })).toBeVisible();
+  fireEvent.click(screen.getAllByRole("radio")[0]!);
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(await screen.findByText(/Boa descoberta! \+15 pontos/)).toBeVisible();
+  fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
+  const input = await screen.findByRole("textbox", { name: "Sua pergunta" });
+  fireEvent.change(input, { target: { value: "Pode mostrar um exemplo menor?" } });
+  fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));
+  expect(await screen.findByText(/idade >= 16/)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: /^Encerrar sessão$/ }));
+  const dialog = screen.getByRole("dialog");
+  fireEvent.click(within(dialog).getByRole("button", { name: "Encerrar sessão" }));
+  expect(await screen.findByRole("heading", { name: "Sessão encerrada" })).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Iniciar nova sessão" }));
+  expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
 });

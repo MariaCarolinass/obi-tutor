@@ -15,13 +15,7 @@ import {
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { useLearning } from "@/components/learning-context";
-import {
-  concepts,
-  trainingMissions,
-  status,
-  weakPrerequisites,
-  type Concept,
-} from "@/lib/learning";
+import { status, type Concept } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/trilha")({
@@ -33,10 +27,14 @@ export const Route = createFileRoute("/trilha")({
   component: Trail,
 });
 function Trail() {
-  const { state } = useLearning();
+  const {
+    state,
+    catalog: { concepts, trainingMissions },
+  } = useLearning();
   const [selected, setSelected] = useState<Concept | null>(null);
   const [reviewed, setReviewed] = useState(false);
-  const weak = selected ? weakPrerequisites(state, selected.id) : [];
+  const weakIds = selected ? state.weakPrerequisites[selected.id] : [];
+  const weak = concepts.filter((c) => weakIds?.includes(c.id));
   const activities = trainingMissions.filter((m) => m.concept === selected?.id);
   return (
     <>
@@ -104,7 +102,7 @@ function Trail() {
                 <span>
                   {count
                     ? `${count} ${count === 1 ? "desafio disponível" : "desafios disponíveis"}`
-                    : "Sem desafio demonstrativo"}
+                    : "Sem desafios disponíveis"}
                 </span>
                 <Button
                   variant="outline"
@@ -191,7 +189,7 @@ function Trail() {
                         <span>
                           {state.completed.includes(m.id)
                             ? "Concluído · repetir sem novos pontos"
-                            : "Iniciante · cerca de 5 min"}
+                            : m.difficulty}
                         </span>
                       </div>
                       <Button size="sm" asChild>
@@ -207,7 +205,7 @@ function Trail() {
             ) : (
               <div className="empty-state">
                 <Target size={24} className="mx-auto text-muted-foreground" />
-                <h3 className="mt-3">Ainda sem desafio demonstrativo</h3>
+                <h3 className="mt-3">Sem desafios disponíveis para este conceito</h3>
                 <p className="mt-2">
                   O conceito permanece disponível para consulta. Escolha outro conceito para
                   praticar.

@@ -42,6 +42,15 @@ class TestModeloAluno(unittest.TestCase):
 
         self.assertEqual(self.aluno.obter_pontuacao("C1"), 0)
         self.assertEqual(self.aluno.obter_estado("C1"), "Inicial")
+
+    def test_erro_na_missao_permite_pontuar_ao_acertar_depois(self):
+        erro = self.criar_atividade("Q1", False)
+        acerto = self.criar_atividade("Q1", True, tentativas=2)
+
+        self.assertEqual(self.aluno.registrar_atividade(**erro), 0)
+        self.assertEqual(self.aluno.get_conceitos()["C1"]["itens_pontuados"], [])
+        self.assertEqual(self.aluno.registrar_atividade(**acerto), 10)
+        self.assertEqual(self.aluno.registrar_atividade(**acerto), 0)
     
     def test_acerto_no_diagnostico_recebe_30_pontos(self):
         atividade = self.criar_atividade(

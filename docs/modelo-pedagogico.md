@@ -10,15 +10,15 @@ As regras de aprendizagem estimada, a seleção de questões e a correção por 
 
 ### Pergunte ao Tutor
 
-O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. Na demonstração, palavras da mensagem determinam qual resposta preparada o chat exibe. Os exemplos cobrem condicionais, laços, listas e identificação de erros.
+O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. O tutor usa a mensagem e, quando pertinente, o conceito e o enunciado da última missão visitada. Quando a integração de LLM está disponível, ela formula a resposta. A contingência usa uma explicação com exemplo preparado do conceito relacionado à dúvida.
 
-Perguntas livres **não atualizam** o domínio numérico. No MVP, o tutor poderá usar o conceito em foco e o progresso registrado para explicar um trecho, levantar hipóteses sobre um erro ou sugerir testes. Ao analisar um trecho, deve deixar claro que a orientação se baseia no texto recebido.
+Perguntas livres **não atualizam** o domínio numérico. O tutor usa o conceito em foco para contextualizar explicações e o progresso para recomendar missões. Ao analisar um trecho, deve deixar claro que a orientação se baseia no texto recebido.
 
 ### Missões Interativas
 
 O sistema apresenta um problema objetivo de previsão de saída, identificação de bug ou complemento de código. O estudante responde. A aplicação verifica o gabarito, registra tentativas e utiliza o modelo do aluno para pontuar.
 
-O catálogo do MVP pode ter até **duas dicas preparadas** por questão. Cada missão da demonstração tem uma pista, um exemplo menor, uma revisão do conceito e uma explicação direta. Um acerto após pedir ajuda na própria missão segue a regra de **+15 pontos**, respeita o limite do conceito e deixa a contagem de acertos independentes intacta. [Modelo do aluno](modelo-do-aluno.md)
+O catálogo do MVP pode ter até **duas dicas preparadas** por questão. As missões oferecem pistas do catálogo, um exemplo menor, uma revisão do conceito e a explicação direta. As pistas do item são exibidas em sequência conforme o estudante pede ajuda. Um acerto após pedir ajuda na própria missão segue a regra de **+15 pontos**, respeita o limite do conceito e deixa a contagem de acertos independentes intacta. [Modelo do aluno](modelo-do-aluno.md)
 
 ## 3. Laços pedagógicos
 
@@ -29,7 +29,7 @@ O catálogo do MVP pode ter até **duas dicas preparadas** por questão. Cada mi
 
 O tutor pode recomendar revisão quando houver pré-requisito com menos de 50 pontos. A recomendação **não bloqueia** a autonomia do aluno.
 
-Na demonstração, a recomendação prioriza dificuldades registradas no diagnóstico quando há uma missão pendente no conceito. Também pode sugerir um pré-requisito direto abaixo de 50 pontos quando ele tem uma atividade pendente. O catálogo atual delimita as recomendações disponíveis. [Recomendações no frontend](../frontend/src/lib/learning.ts)
+Na demonstração, a recomendação prioriza dificuldades registradas no diagnóstico quando há uma missão pendente no conceito. Também pode sugerir um pré-requisito direto abaixo de 50 pontos quando ele tem uma atividade pendente. O catálogo atual delimita as recomendações disponíveis. [Recomendações no backend](../obi_tutor/pedagogia.py)
 
 ## 4. Rota de Desbloqueio
 
@@ -72,10 +72,8 @@ O gabarito é validado pela aplicação. O agente não atribui pontos livremente
 
 Essas teorias justificam decisões de projeto, mas **não comprovam a eficácia do protótipo**.
 
-## 7. Integração de LLM prevista para o MVP
+## 7. Integração opcional de LLM
 
-A demonstração atual apresenta orientações preparadas no próprio frontend. A disponibilidade de uma API será tratada quando a integração de LLM for implementada.
+Na demonstração privada, o backend pode enviar a pergunta atual, o conceito e o enunciado relevante à API do Gemini. O modelo recebe instruções para explicar em português e usar apenas análise textual ao orientar sobre código. A correção, as recomendações e a pontuação são calculadas pelas regras do backend.
 
-Receber somente o contexto necessário: conceito em foco, enunciado ativo quando houver, resumo pertinente do estado do aluno, tipo de intervenção permitida e mensagem atual. Responder de forma breve, apropriada ao estudante e sem inventar validações.
-
-Se a API falhar, a aplicação deve manter o fluxo principal e apresentar orientação preparada. A ausência do LLM não pode invalidar o gabarito nem corromper a pontuação.
+Quando a API falha, retorna uma resposta vazia ou ultrapassa o tempo de espera, o Olimpio apresenta orientação preparada. A aplicação permanece utilizável sem chave de API. [Contrato de integração](integracao.md#tutor-e-contingência)

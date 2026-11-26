@@ -14,28 +14,33 @@ import { Button } from "@/components/ui/button";
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { useLearning } from "@/components/learning-context";
-import { concepts, diagnosticQuestions, recommendation, status } from "@/lib/learning";
+import { status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/diagnostico")({
   head: () =>
     pageMeta(
       "Diagnóstico inicial",
-      "Descubra por onde começar sua preparação introdutória para a OBI com cinco perguntas sobre raciocínio e fundamentos de programação.",
+      "Descubra por onde começar sua preparação introdutória para a OBI com dez perguntas sobre raciocínio e fundamentos de programação.",
     ),
   component: Diagnostic,
 });
 function Diagnostic() {
-  const { state, diagnose } = useLearning();
+  const {
+    state,
+    answer,
+    busy,
+    catalog: { concepts, diagnosticQuestions, trainingMissions },
+  } = useLearning();
+  const total = diagnosticQuestions.length;
   const [started, setStarted] = useState(false);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const answered = diagnosticQuestions.filter((q) => state.diagnosticAnswers[q.id] !== undefined);
   const question = diagnosticQuestions.find((q) => state.diagnosticAnswers[q.id] === undefined);
-  const finished = answered.length === diagnosticQuestions.length;
-  const recommended = recommendation(state);
+  const finished = answered.length === total;
+  const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   if (finished) {
     const known = diagnosticQuestions.filter((q) => state.diagnosticAnswers[q.id] === true);
-    const reinforce = diagnosticQuestions.filter((q) => state.diagnosticAnswers[q.id] === false);
     return (
       <div className="diagnostic-page">
         <PageHeading
@@ -51,7 +56,8 @@ function Diagnostic() {
             <div>
               <h2>Diagnóstico concluído</h2>
               <p>
-                {known.length} de 5 respostas corretas · Vamos transformar isso em próximos passos.
+                {known.length} de {total} respostas corretas · Vamos transformar isso em próximos
+                passos.
               </p>
             </div>
           </div>
@@ -93,16 +99,13 @@ function Diagnostic() {
           </div>
           <div className="diagnostic-recommendation">
             <span className="eyebrow">RECOMENDAÇÃO DO TUTOR</span>
-            <h3>{concepts.find((c) => c.id === recommended.concept)?.name}</h3>
+            <h3>{concepts.find((c) => c.id === recommended?.concept)?.name}</h3>
             <p>
-              Comece com o desafio “{recommended.title}”.{" "}
-              {reinforce.length
-                ? "Use este desafio para praticar uma base relacionada ao diagnóstico."
-                : "Vamos colocar seu raciocínio em prática."}
+              Comece com o desafio “{recommended?.title}”. {state.recommendation.message}
             </p>
             <div className="button-row">
               <Button asChild>
-                <Link to="/missoes/$id" params={{ id: recommended.id }}>
+                <Link to="/missoes/$id" params={{ id: state.recommendation.missionId }}>
                   Começar meu treinamento
                   <ArrowRight />
                 </Link>
@@ -129,16 +132,17 @@ function Diagnostic() {
           por onde começar?
         </h1>
         <p>
-          Cinco perguntas introdutórias de raciocínio e programação, voltadas ao 1º e ao 2º ano do
+          {total} perguntas introdutórias de raciocínio e programação, voltadas ao 1º e ao 2º ano do
           Ensino Médio. Ao final, veja seu nível por conceito e receba uma sugestão de desafio.
         </p>
         <div className="diagnostic-details">
           <span>
-            <ClipboardCheck size={16} />5 questões
+            <ClipboardCheck size={16} />
+            {total} questões
           </span>
           <span>
             <Compass size={16} />
-            Cerca de 5 minutos
+            Um conceito por questão
           </span>
           <span>
             <BookOpen size={16} />
@@ -164,39 +168,42 @@ function Diagnostic() {
     <div className="diagnostic-page">
       <div className="diagnostic-question-progress">
         <span>DIAGNÓSTICO INICIAL</span>
-        <strong>Questão {answered.length + 1} de 5</strong>
+        <strong>
+          Questão {answered.length + 1} de {total}
+        </strong>
       </div>
-      <progress max="5" value={answered.length} />
+      <progress max={total} value={answered.length} />
       <section className="diagnostic-question">
         <div className="eyebrow">{concepts.find((c) => c.id === question.concept)?.short}</div>
         <h1>{question.title}</h1>
         <p className="mission-prompt">{question.prompt}</p>
         {question.code && <CodeBlock code={question.code} />}
-        <fieldset className="options">
+        <fieldset className="options" disabled={busy}>
           <legend className="sr-only">Escolha uma resposta</legend>
           {question.options.map((option, index) => (
-            <label className={`answer-option ${selected === index ? "selected" : ""}`} key={option}>
+            <label
+              className={`answer-option ${selected === option.id ? "selected" : ""}`}
+              key={option.id}
+            >
               <input
                 type="radio"
                 name="diagnostic-answer"
-                checked={selected === index}
-                onChange={() => setSelected(index)}
+                checked={selected === option.id}
+                onChange={() => setSelected(option.id)}
               />
               <span className="option-letter">{String.fromCharCode(65 + index)}</span>
-              <span>{option}</span>
+              <span className="answer-text">{option.texto}</span>
             </label>
           ))}
         </fieldset>
         <div className="diagnostic-question-controls">
           <Button
-            disabled={selected === null}
-            onClick={() => {
-              if (selected === null) return;
-              diagnose(question, selected);
-              setSelected(null);
+            disabled={busy || selected === null}
+            onClick={async () => {
+              if (selected !== null && (await answer(question.id, selected))) setSelected(null);
             }}
           >
-            {answered.length === 4 ? "Ver meu resultado" : "Próxima questão"}
+            {answered.length === total - 1 ? "Ver meu resultado" : "Próxima questão"}
             <ArrowRight />
           </Button>
           <Button variant="ghost" onClick={() => setStarted(false)}>

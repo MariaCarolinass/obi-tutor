@@ -13,14 +13,14 @@ O estudante pode alternar, na mesma sessão, entre:
 
 A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, exemplo menor, explicação direta, outra missão ou pausa, conforme o contexto e a escolha do estudante.
 
-## Demonstração atual
+## Demonstração integrada
 
 - Início, Diagnóstico, Treinar para a OBI, Pergunte ao Tutor e Meu Progresso em React, TypeScript, TanStack Router e Vite.
-- Uma trilha com os dez conceitos, cinco questões de diagnóstico opcional e sete missões de prática.
-- Gabaritos e pontuação calculados no navegador. Um conceito é exibido como **Dominado** quando tem pelo menos 70 pontos e dois acertos independentes em questões distintas.
-- Chat com o Olimpio, tutor demonstrativo da OBI com respostas predefinidas. O progresso e a conversa ficam em memória no navegador enquanto a sessão está ativa.
+- Trilha com dez conceitos e 33 questões do catálogo. São dez questões de diagnóstico, vinte missões regulares e três de reforço.
+- O backend Python valida o domínio, corrige as respostas, registra o desempenho e recomenda o próximo passo. O chat do Olimpio usa orientações locais e pode usar um LLM quando configurado.
+- O progresso fica em memória no backend e a conversa em memória no navegador. Os dois modos compartilham a sessão da aba.
 
-O MVP prevê um catálogo de 33 itens e uma integração de LLM para formular orientações, com resposta local de contingência. Autenticação, armazenamento persistente, execução de código enviado pelo aluno, RAG, scraping de provas, geração ilimitada de questões, ranking e voz ficam fora do escopo. [Visão geral do MVP](docs/visao-geral.md)
+Autenticação, armazenamento persistente de sessões web, execução de código enviado pelo aluno, RAG, scraping de provas, geração ilimitada de questões, ranking e voz ficam fora do MVP. [Visão geral](docs/visao-geral.md)
 
 ## Documentação
 
@@ -32,13 +32,20 @@ O MVP prevê um catálogo de 33 itens e uma integração de LLM para formular or
 | [`docs/modelo-pedagogico.md`](docs/modelo-pedagogico.md) | Estratégias de ajuda, dois modos e laços do tutor |
 | [`docs/interface-e-fluxos.md`](docs/interface-e-fluxos.md) | Telas, rotas e comportamento da sessão |
 | [`docs/testes-e-organizacao.md`](docs/testes-e-organizacao.md) | Frentes de trabalho, casos de teste e demonstração |
+| [`docs/integracao.md`](docs/integracao.md) | Contrato entre domínio, modelo do aluno, tutor e frontend |
 | [`AGENTS.md`](AGENTS.md) | Instruções para agentes de IA usados no desenvolvimento |
 
 ## Desenvolvimento local
 
-### Iniciar a aplicação
+Use **Python 3.10+** e **Node.js 20.19+ na linha 20.x, ou 22.12+** com npm.
 
-Use **Node.js 20.19 ou superior na linha 20.x, ou Node.js 22.12 ou superior**, com npm. Execute na raiz do repositório.
+Para iniciar o backend, execute na raiz do repositório.
+
+```bash
+python3 -m obi_tutor.api
+```
+
+Em outro terminal, execute a partir da raiz.
 
 ```bash
 cd frontend
@@ -46,11 +53,24 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço exibido no terminal, normalmente [http://localhost:5173](http://localhost:5173). Depois de instalar as dependências, a demonstração usa fontes, imagens e dados locais e dispensa um arquivo `.env` ou chaves de API.
+Abra o endereço exibido pelo Vite, normalmente [http://localhost:5173](http://localhost:5173). O Vite encaminha `/api` para o Python na porta 8000. O backend usa a biblioteca padrão do Python.
 
-### Testar e gerar o build
+### Tutor com IA opcional
 
-Execute em `frontend/`.
+Para a demonstração privada, use uma chave de um projeto no **Nível gratuito** do Google AI Studio. O Olimpio usa o Gemini 3.1 Flash-Lite com a chave `OLIMPIO_TUTOR_OBI`, lida do ambiente do Python ou do arquivo `.env` na raiz do repositório. A aplicação usa orientações preparadas se a chave estiver ausente, a cota se esgotar ou a API estiver indisponível. [Contrato e contingência](docs/integracao.md#tutor-e-contingência) · [Preços e cota do Gemini](https://aistudio.google.com/docs/pricing#gemini-3.1-flash-lite)
+
+### Testes e build
+
+Na raiz do repositório, execute em um ambiente virtual.
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pytest
+```
+
+Em `frontend/`, execute.
 
 ```bash
 npm test
@@ -59,13 +79,4 @@ npm run lint
 npm run build
 ```
 
-`npm run build` gera `frontend/dist/`. Use `npm run preview` para testar esse build localmente. Em uma hospedagem estática, configure o servidor para servir `index.html` ao acessar diretamente rotas do frontend como `/tutor` e `/missoes/if-1`.
-
-### Pacote Python
-
-O pacote `obi_tutor/` já contém uma implementação do modelo do aluno. A demonstração web usa sua implementação em TypeScript no navegador. Para rodar os testes Python de importação e do modelo do aluno, use **Python 3.10+** em um ambiente virtual e execute a partir da raiz.
-
-```bash
-python -m pip install -r requirements.txt
-python -m pytest
-```
+O teste de navegação inicia o backend Python em uma porta livre. Após o build, `python3 -m obi_tutor.api` serve a API e os arquivos de `frontend/dist/` em [http://127.0.0.1:8000](http://127.0.0.1:8000), incluindo o acesso direto a rotas como `/tutor` e `/missoes/MISS-C4-01`.
