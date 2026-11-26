@@ -6,6 +6,8 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [tanstackRouter({ quoteStyle: "double", semicolons: true }), react(), tailwindcss()],
+  server: { proxy: { "/api": "http://127.0.0.1:8000" } },
+  preview: { proxy: { "/api": "http://127.0.0.1:8000" } },
   resolve: {
     alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },

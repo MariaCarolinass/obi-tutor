@@ -3,7 +3,7 @@ import { ArrowRight, CheckCheck, Info, Target } from "lucide-react";
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { useLearning } from "@/components/learning-context";
 import { Button } from "@/components/ui/button";
-import { concepts, trainingMissions, recommendation, status } from "@/lib/learning";
+import { status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/progresso")({
@@ -15,8 +15,11 @@ export const Route = createFileRoute("/progresso")({
   component: Progress,
 });
 function Progress() {
-  const { state } = useLearning();
-  const recommended = recommendation(state);
+  const {
+    state,
+    catalog: { concepts, trainingMissions },
+  } = useLearning();
+  const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   return (
     <>
@@ -90,7 +93,7 @@ function Progress() {
                     <span className="progress-mobile-label" aria-hidden="true">
                       Acertos independentes
                     </span>
-                    {record?.independent.length ?? 0} acertos
+                    {record?.independent ?? 0} acertos
                   </td>
                   <td>
                     {mission ? (
@@ -120,22 +123,19 @@ function Progress() {
       <div className="notice">
         <Info size={16} />
         <span>
-          Seu progresso reúne diagnóstico e desafios desta sessão. As respostas do tutor são
-          demonstrativas e não alteram sua pontuação.
+          Seu progresso reúne diagnóstico e desafios desta sessão. As conversas com o tutor não
+          alteram sua pontuação.
         </span>
       </div>
       <section className="recommendation">
         <div className="recommendation-top">
           <Target size={16} /> SEU PRÓXIMO PASSO
         </div>
-        <h3>{concepts.find((c) => c.id === recommended.concept)?.name}</h3>
-        <p>
-          Comece com o desafio “{recommended.title}”. Pedir ajuda faz parte da aprendizagem, e você
-          pode escolher qualquer conceito da trilha.
-        </p>
+        <h3>{concepts.find((c) => c.id === recommended?.concept)?.name}</h3>
+        <p>{state.recommendation.message}</p>
         <div className="button-row">
           <Button asChild>
-            <Link to="/missoes/$id" params={{ id: recommended.id }}>
+            <Link to="/missoes/$id" params={{ id: state.recommendation.missionId }}>
               Continuar treinando
               <ArrowRight />
             </Link>

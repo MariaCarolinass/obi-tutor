@@ -1,76 +1,174 @@
-import { useState, type ReactNode } from "react";
-import {
-  initialState,
-  registerAnswer,
-  registerDiagnosticAnswer,
-  registerHint,
-  type Mission,
-} from "@/lib/learning";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Button } from "@/components/ui/button";
+import type { Answer, Catalog, Help, LearningState } from "@/lib/learning";
 import { LearningContext, tutorName, type Message } from "./learning-context";
 
 const welcome: Message = {
   role: "tutor",
   text: `Oi! Sou o ${tutorName}, seu tutor para a OBI. Estou aqui para ajudar você a se preparar para a modalidade Programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`,
 };
-function tutorReply(text: string): Message {
-  const question = text.toLowerCase();
-  if (/lista/.test(question))
-    return {
-      role: "tutor",
-      text: "Uma lista guarda vários valores em uma única variável. Os índices começam em zero. Você pode percorrer cada elemento com um for.",
-      code: "notas = [7, 8, 10]\nprint(notas[0])  # 7\nfor nota in notas:\n    print(nota)",
-    };
-  if (/for|while|laço|repet/.test(question))
-    return {
-      role: "tutor",
-      text: "O for percorre uma sequência. O while repete enquanto uma condição for verdadeira. No while, lembre-se de atualizar a condição para evitar uma repetição infinita.",
-      code: "for n in range(3):\n    print(n)\n\nn = 0\nwhile n < 3:\n    print(n)\n    n += 1",
-    };
-  if (/erro|bug|código/.test(question))
-    return {
-      role: "tutor",
-      text: "Leia o código linha por linha e anote o valor de cada variável. Confira a indentação, os dois-pontos e os operadores: = atribui, enquanto == compara. Não executo nem avalio oficialmente seu código; podemos raciocinar sobre exemplos juntos.",
-      code: 'senha = 1234\nif senha == 1234:\n    print("Acesso permitido")',
-    };
-  if (/simples|outro jeito/.test(question))
-    return {
-      role: "tutor",
-      text: "Pense no if como uma escolha: se estiver chovendo, leve um guarda-chuva; caso contrário, saia sem ele. Só um dos caminhos é escolhido.",
-      code: 'chovendo = True\nif chovendo:\n    print("Levar guarda-chuva")\nelse:\n    print("Sair sem guarda-chuva")',
-    };
-  if (/if|condi|exemplo/.test(question))
-    return {
-      role: "tutor",
-      text: "O if executa um bloco quando uma condição é verdadeira. O else é o caminho alternativo, quando ela é falsa. Aqui, 15 é menor que 18. Qual caminho você acha que será escolhido?",
-      code: 'idade = 15\nif idade >= 18:\n    print("Maior de idade")\nelse:\n    print("Menor de idade")',
-    };
-  return {
-    role: "tutor",
-    text: "Nesta demonstração, posso ajudar com condicionais, for e while, listas e identificação de erros. Qual desses assuntos se aproxima da sua dúvida? Podemos começar com um exemplo simples, sem pressa.",
-  };
+
+type Session = { id: string; catalog: Catalog; state: LearningState };
+
+async function request<T>(path: string, method: string, id?: string, body?: object): Promise<T> {
+  const response = await fetch(path, {
+    method,
+    headers: {
+      ...(body && { "Content-Type": "application/json" }),
+      ...(id && { "X-Study-Session": id }),
+    },
+    ...(body && { body: JSON.stringify(body) }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(response.status === 410 ? data.error : "Falha na solicitação.");
+  return data as T;
 }
+
 export function LearningProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState(initialState);
+  const [session, setSession] = useState<Session | null>(null);
   const [messages, setMessages] = useState<Message[]>([welcome]);
-  const answer = (mission: Mission, correct: boolean) =>
-    setState((previous) => registerAnswer(previous, mission, correct).state);
-  const hint = (id: string) => setState((previous) => registerHint(previous, id));
-  const diagnose = (question: Mission, selected: number) =>
-    setState((previous) => registerDiagnosticAnswer(previous, question, selected));
-  const send = (text: string) => {
-    if (!text.trim()) return;
-    setMessages((previous) => [
-      ...previous,
-      { role: "student", text: text.trim() },
-      tutorReply(text),
-    ]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [ended, setEnded] = useState(false);
+  const pending = useRef(false);
+  const opening = useRef<Promise<Session> | null>(null);
+  const latest = useRef({ id: 0, retry: "" });
+  const activeQuestion = useRef<string | undefined>(undefined);
+  const focus = useCallback((questionId: string) => {
+    activeQuestion.current = questionId;
+  }, []);
+
+  function openSession() {
+    return request<Session>("/api/session", "POST");
+  }
+
+  useEffect(() => {
+    opening.current ??= openSession();
+    let mounted = true;
+    opening.current.then(
+      (current) => {
+        if (mounted) setSession(current);
+      },
+      () => {
+        if (mounted) setError("Não foi possível conectar ao servidor do tutor.");
+      },
+    );
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  async function run<T>(operation: () => Promise<T>) {
+    if (pending.current) return undefined;
+    pending.current = true;
+    setBusy(true);
+    setError("");
+    try {
+      return await operation();
+    } catch (err) {
+      const message =
+        err instanceof Error && err.message.startsWith("A sessão expirou")
+          ? err.message
+          : "Não foi possível concluir a ação. Tente novamente.";
+      setError(message);
+      return undefined;
+    } finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  }
+
+  async function action<T>(body: object, onSuccess?: (result: T) => void) {
+    if (!session) return undefined;
+    return run(async () => {
+      const retry = JSON.stringify(body);
+      if (retry !== latest.current.retry) {
+        latest.current = { id: latest.current.id + 1, retry };
+      }
+      const { result, state } = await request<{ result: T; state: LearningState }>(
+        "/api/session/action",
+        "POST",
+        session.id,
+        { requestId: latest.current.id, ...body },
+      );
+      latest.current.retry = "";
+      setSession({ ...session, state });
+      onSuccess?.(result);
+      return result;
+    });
+  }
+
+  const answer = (questionId: string, optionId: string) =>
+    action<Answer>({ action: "answer", questionId, optionId });
+  const help = async (questionId: string, kind: Help) =>
+    (await action<{ message: string }>({ action: "help", questionId, kind }))?.message;
+  const send = async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return false;
+    const questionId = activeQuestion.current;
+    const result = await action<Omit<Message, "role">>(
+      { action: "chat", text: trimmed, questionId },
+      (reply) =>
+        setMessages((history) => [
+          ...history,
+          { role: "student", text: trimmed },
+          { role: "tutor", ...reply },
+        ]),
+    );
+    return !!result;
   };
-  const reset = () => {
-    setState(initialState());
-    setMessages([welcome]);
-  };
+
+  const end = async () =>
+    !!(await run(async () => {
+      if (session) await request("/api/session", "DELETE", session.id);
+      setSession(null);
+      setMessages([welcome]);
+      setEnded(true);
+      activeQuestion.current = undefined;
+      return true;
+    }));
+
+  const reset = async () =>
+    !!(await run(async () => {
+      const current = await openSession();
+      if (session) {
+        // A nova sessão pode começar mesmo se a limpeza da anterior depender da expiração.
+        void request("/api/session", "DELETE", session.id).catch(() => {});
+      }
+      latest.current = { id: 0, retry: "" };
+      activeQuestion.current = undefined;
+      setSession(current);
+      setMessages([welcome]);
+      setEnded(false);
+      return true;
+    }));
+
+  if (!session) {
+    return (
+      <main className="study-page">
+        <div className="empty-state">
+          <h1>{ended ? "Sessão encerrada" : "OBI Tutor"}</h1>
+          {error && <p role="alert">{error}</p>}
+          {!ended && !error && <p role="status">Conectando ao tutor…</p>}
+          {(ended || error) && (
+            <Button disabled={busy} onClick={() => void reset()}>
+              {ended ? "Iniciar nova sessão" : "Tentar novamente"}
+            </Button>
+          )}
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <LearningContext.Provider value={{ state, answer, diagnose, hint, reset, messages, send }}>
+    <LearningContext.Provider
+      value={{ ...session, busy, answer, help, focus, reset, end, messages, send }}
+    >
+      {error && (
+        <p className="notice" role="alert">
+          {error}
+        </p>
+      )}
       {children}
     </LearningContext.Provider>
   );

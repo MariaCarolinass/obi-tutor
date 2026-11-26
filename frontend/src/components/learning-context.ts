@@ -1,18 +1,26 @@
 import { createContext, useContext } from "react";
-import type { LearningState, Mission } from "@/lib/learning";
+import type { Answer, Catalog, Help, LearningState } from "@/lib/learning";
 
 export const tutorName = "Olimpio";
 
-export type Message = { role: "tutor" | "student"; text: string; code?: string };
+export type Message = {
+  role: "tutor" | "student";
+  text: string;
+  missionId?: string;
+  offerEnd?: boolean;
+};
 
 type LearningSession = {
   state: LearningState;
-  answer: (mission: Mission, correct: boolean) => void;
-  diagnose: (question: Mission, selected: number) => void;
-  hint: (id: string) => void;
-  reset: () => void;
+  catalog: Catalog;
+  busy: boolean;
+  answer: (questionId: string, optionId: string) => Promise<Answer | undefined>;
+  help: (questionId: string, kind: Help) => Promise<string | undefined>;
+  focus: (questionId: string) => void;
+  reset: () => Promise<boolean>;
+  end: () => Promise<boolean>;
   messages: Message[];
-  send: (text: string) => void;
+  send: (text: string) => Promise<boolean>;
 };
 
 export const LearningContext = createContext<LearningSession | null>(null);

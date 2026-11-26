@@ -133,11 +133,12 @@ class ModeloAluno:
         if questao_id in conceito["itens_pontuados"]:
             return 0
 
-        # Marca a questão como processada
-        conceito["itens_pontuados"].append(questao_id)
-
         # Indica que o conceito já foi avaliado
         conceito["avaliado"] = True
+        if not atividade["resultado"]:
+            return 0
+
+        conceito["itens_pontuados"].append(questao_id)
 
         # Calcula os pontos recebidos
         pontos = self.calcular_pontuacao(atividade)

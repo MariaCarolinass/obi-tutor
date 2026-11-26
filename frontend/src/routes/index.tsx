@@ -14,7 +14,7 @@ import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
 import { ObiGuide } from "@/components/obi-guide";
 import { Button } from "@/components/ui/button";
-import { concepts, hasActivity, recommendation, status, trainingMissions } from "@/lib/learning";
+import { hasActivity, status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 import "../home.css";
 
@@ -120,7 +120,7 @@ const studyPaths = [
     to: "/diagnostico",
     icon: ClipboardCheck,
     title: "Fazer o diagnóstico",
-    description: "Responda a cinco questões para receber uma sugestão de estudo.",
+    description: "Responda a dez questões para receber uma sugestão de estudo.",
   },
   {
     to: "/trilha",
@@ -137,9 +137,12 @@ const studyPaths = [
 ] as const;
 
 function Index() {
-  const { state } = useLearning();
+  const {
+    state,
+    catalog: { concepts, trainingMissions },
+  } = useLearning();
   const started = hasActivity(state);
-  const recommended = recommendation(state);
+  const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const completed = trainingMissions.filter((m) => state.completed.includes(m.id)).length;
 
@@ -159,7 +162,7 @@ function Index() {
           </p>
           <div className="home-actions">
             <Button asChild size="lg">
-              <Link to="/missoes/$id" params={{ id: recommended.id }}>
+              <Link to="/missoes/$id" params={{ id: state.recommendation.missionId }}>
                 {started ? "Continuar com o tutor" : "Começar com o tutor"}
                 <ArrowRight aria-hidden="true" />
               </Link>
@@ -189,7 +192,7 @@ function Index() {
             </p>
             <p className="home-next-mission">
               <Lightbulb size={16} aria-hidden="true" />
-              Próximo desafio · {recommended.title}
+              Próximo desafio · {recommended?.title}
             </p>
           </div>
           <Link to="/progresso">

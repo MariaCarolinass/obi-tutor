@@ -469,3 +469,8 @@
     flex-wrap: wrap;
   }
 }
+
+.answer-text,
+.message-body > p {
+  white-space: pre-wrap;
+}

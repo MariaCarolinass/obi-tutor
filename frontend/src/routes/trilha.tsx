@@ -15,13 +15,7 @@ import {
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { useLearning } from "@/components/learning-context";
-import {
-  concepts,
-  trainingMissions,
-  status,
-  weakPrerequisites,
-  type Concept,
-} from "@/lib/learning";
+import { status, type Concept } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/trilha")({
@@ -33,10 +27,14 @@ export const Route = createFileRoute("/trilha")({
   component: Trail,
 });
 function Trail() {
-  const { state } = useLearning();
+  const {
+    state,
+    catalog: { concepts, trainingMissions },
+  } = useLearning();
   const [selected, setSelected] = useState<Concept | null>(null);
   const [reviewed, setReviewed] = useState(false);
-  const weak = selected ? weakPrerequisites(state, selected.id) : [];
+  const weakIds = selected ? state.weakPrerequisites[selected.id] : [];
+  const weak = concepts.filter((c) => weakIds?.includes(c.id));
   const activities = trainingMissions.filter((m) => m.concept === selected?.id);
   return (
     <>
@@ -191,7 +189,7 @@ function Trail() {
                         <span>
                           {state.completed.includes(m.id)
                             ? "Concluído · repetir sem novos pontos"
-                            : "Iniciante · cerca de 5 min"}
+                            : m.difficulty}
                         </span>
                       </div>
                       <Button size="sm" asChild>

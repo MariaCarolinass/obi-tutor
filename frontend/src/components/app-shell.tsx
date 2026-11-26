@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLearning } from "@/components/learning-context";
-import { concepts, hasActivity, status } from "@/lib/learning";
+import { hasActivity, status } from "@/lib/learning";
 import "../study.css";
 
 const nav = [
@@ -29,9 +29,16 @@ const nav = [
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const navigate = useNavigate();
-  const { state, reset } = useLearning();
+  const {
+    state,
+    reset,
+    end,
+    busy,
+    catalog: { concepts },
+  } = useLearning();
   const [open, setOpen] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
+  const [sessionAction, setSessionAction] = useState<"reset" | "end" | null>(null);
+  const confirmReset = sessionAction === "reset";
   const menuButton = useRef<HTMLButtonElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -112,9 +119,16 @@ export function AppShell({ children }: { children: ReactNode }) {
               </Link>
             </div>
           )}
-          <Button variant="ghost" className="reset-button" onClick={() => setConfirmReset(true)}>
+          <Button
+            variant="ghost"
+            className="reset-button"
+            onClick={() => setSessionAction("reset")}
+          >
             <RotateCcw />
             Reiniciar demonstração
+          </Button>
+          <Button variant="ghost" className="reset-button" onClick={() => setSessionAction("end")}>
+            Encerrar sessão
           </Button>
         </div>
       </aside>
@@ -151,7 +165,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </span>
         </footer>
       </div>
-      {confirmReset && (
+      {sessionAction && (
         <div className="modal-overlay">
           <section role="dialog" aria-modal="true" aria-labelledby="reset-title" className="modal">
             <Button
@@ -159,31 +173,33 @@ export function AppShell({ children }: { children: ReactNode }) {
               size="icon"
               className="modal-close"
               aria-label="Fechar"
-              onClick={() => setConfirmReset(false)}
+              onClick={() => setSessionAction(null)}
             >
               <X />
             </Button>
             <span className="icon-tile">
               <RotateCcw />
             </span>
-            <h2 id="reset-title">Começar de novo?</h2>
+            <h2 id="reset-title">{confirmReset ? "Começar de novo?" : "Encerrar a sessão?"}</h2>
             <p>
-              As respostas e conversas desta sessão serão apagadas. O diagnóstico e os pontos
-              voltarão ao início.
+              As respostas e conversas desta sessão serão apagadas. O diagnóstico e os pontos serão
+              reiniciados em uma nova sessão.
             </p>
             <div className="button-row">
-              <Button variant="outline" onClick={() => setConfirmReset(false)}>
+              <Button variant="outline" onClick={() => setSessionAction(null)}>
                 Cancelar
               </Button>
               <Button
-                onClick={() => {
-                  reset();
-                  setConfirmReset(false);
+                disabled={busy}
+                onClick={async () => {
+                  const done = await (confirmReset ? reset() : end());
+                  if (!done) return;
+                  setSessionAction(null);
                   setOpen(false);
                   void navigate({ to: "/", replace: true });
                 }}
               >
-                Reiniciar demonstração
+                {confirmReset ? "Reiniciar demonstração" : "Encerrar sessão"}
               </Button>
             </div>
           </section>

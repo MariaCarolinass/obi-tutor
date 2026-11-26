@@ -28,7 +28,7 @@ O **laço externo** seleciona o próximo conceito ou exercício. O **laço inter
 
 ## 4. Experiências
 
-**Pergunte ao Tutor** oferece um chat com o Olimpio para tirar dúvidas de Python e explorar exemplos de preparação para a OBI. Na demonstração, a aplicação seleciona respostas predefinidas a partir da mensagem do estudante. A conversa não altera a pontuação.
+**Pergunte ao Tutor** oferece um chat com o Olimpio para tirar dúvidas de Python e explorar exemplos de preparação para a OBI. O backend usa a mensagem e, quando pertinente, a missão em foco. O LLM é opcional e o tutor tem orientações locais de contingência. A conversa não altera a pontuação.
 
 **Missões Interativas** oferece diagnóstico opcional e desafios com gabarito local. A aplicação registra tentativas, oferece ajuda e concede pontos uma única vez por item.
 
@@ -43,25 +43,18 @@ O estudante pode alternar os modos na mesma sessão.
 5. Consultar o progresso atualizado por conceito e escolher o próximo passo.
 6. Continuar treinando, alternar para o chat, pausar a atividade ou sair da página.
 
-A pausa e a navegação preservam o progresso registrado enquanto a sessão estiver ativa. O fluxo dedicado de encerramento está previsto para o MVP. [Interface e fluxos](interface-e-fluxos.md)
+A pausa e a navegação preservam o progresso registrado enquanto a sessão estiver ativa. O estudante pode encerrar a sessão pelo menu ou pelo chat quando pedir para parar. [Interface e fluxos](interface-e-fluxos.md)
 
 ## 6. Arquitetura
 
-### Demonstração atual
+- React, TypeScript, TanStack Router e Vite executam a interface no navegador.
+- O servidor Python carrega e valida os conceitos, os pré-requisitos e o catálogo de 33 questões. O backend consulta o gabarito local e entrega à interface os dados necessários para cada tela.
+- O modelo do aluno em Python registra respostas objetivas. O modelo pedagógico usa o estado do aluno e o grafo para recomendar revisão, prática ou avanço.
+- O histórico do chat fica na aba. A correção, o progresso e as recomendações usam uma sessão em memória no servidor. O fluxo web funciona sem banco de dados.
+- O tutor usa a API de LLM quando configurada. Se o provedor estiver indisponível, o backend usa uma orientação local e preserva o fluxo de estudo.
 
-- React, TypeScript, TanStack Router e Vite executam a interface migrada do Lovable no navegador. [Frontend](../frontend/)
-- O grafo C1 a C10, o catálogo demonstrativo, o gabarito, a pontuação e as recomendações são locais. [Lógica em TypeScript](../frontend/src/lib/learning.ts)
-- O provedor de sessão mantém pontuações, conclusões, resultados do diagnóstico, erros e ajuda usada por atividade, além do histórico do chat. Recarregar a página ou confirmar **Reiniciar demonstração** descarta esse estado. [Provedor de sessão](../frontend/src/components/learning-provider.tsx)
-- O pacote Python contém uma implementação do modelo do aluno com testes próprios. A demonstração web usa a implementação em TypeScript. [Modelo do aluno em Python](../obi_tutor/models/modelo_aluno.py)
-
-### Evolução prevista para o MVP
-
-- Os arquivos JSON previstos descrevem conceitos, dependências, questões, gabaritos, explicações e dicas do catálogo completo.
-- A integração de LLM poderá formular explicações, contextualizar orientações e usar o conceito em foco. As regras locais continuam responsáveis pelo gabarito, pela pontuação e pelo estado de domínio.
-- Se a API ficar indisponível, a aplicação deve manter o fluxo principal e usar uma orientação preparada. [Modelo pedagógico](modelo-pedagogico.md)
-
-O sistema não exige banco de dados no MVP. Não serão implementados autenticação, perfis permanentes, execução de código enviado, RAG, scraping de provas, ranking ou voz.
+[Contrato de integração](integracao.md)
 
 ## 7. Resultado demonstrável
 
-A demonstração conecta as três camadas quando a resposta a uma missão atualiza a pontuação e o estado do conceito na trilha e no painel, alimentando a recomendação seguinte. O grupo validará a cadeia completa do MVP com perfis de acerto total, erro total e desempenho misto. [Cenários de validação](testes-e-organizacao.md#3-cenários-obrigatórios)
+A demonstração conecta as três camadas quando a resposta a uma missão atualiza a pontuação e o estado do conceito na trilha e no painel, alimentando a recomendação seguinte. Os testes da API exercitam perfis de acerto total, erro total e desempenho misto. A demonstração em grupo segue o roteiro de validação. [Cenários de validação](testes-e-organizacao.md#3-cenários-obrigatórios)
