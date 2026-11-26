@@ -63,6 +63,8 @@ O grupo pode usar desafios de integração que combinem conceitos, mas **cada it
 4. Evitar itens repetidos com respostas memorizáveis quando forem usados para nova avaliação.
 5. Não conceder pontos duas vezes pelo mesmo ID.
 6. Manter os itens resolúveis sem executar código enviado pelo estudante.
+7. Identificar exemplos fictícios quando o contexto puder ser confundido com uma regra oficial da OBI.
+8. Em questões sobre regras gerais, usar casos de teste que distingam o gabarito de alternativas que funcionam apenas para um exemplo.
 
 ## 7. Observação sobre cobertura
 
