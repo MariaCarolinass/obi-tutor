@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, BookOpen, Send, Sparkles } from "lucide-react";
+import tutorIllustration from "@/assets/obi-learning-red.webp";
 import { PageHeading, TutorIcon } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { tutorName, useLearning } from "@/components/learning-context";
@@ -154,6 +155,14 @@ function Tutor() {
             Você pode pedir uma ajuda direta ou escolher uma abordagem diferente. A decisão de como
             aprender continua sendo sua.
           </p>
+          <img
+            className="chat-tutor-illustration"
+            src={tutorIllustration}
+            alt="Olimpio, o robô tutor, ao lado de um notebook com código"
+            width={720}
+            height={540}
+            loading="lazy"
+          />
         </aside>
       </div>
     </>
