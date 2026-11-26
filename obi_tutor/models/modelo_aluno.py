@@ -161,7 +161,7 @@ class ModeloAluno:
     
     # Método público para o modelo pedagógico consultar informações
     def obter_historico_atividades(self):
-        return self.__historico_atividades.copy()
+        return deepcopy(self.__historico_atividades)
 
     @classmethod
     # permite criar uma instância da classe a partir de informações recebidas.
