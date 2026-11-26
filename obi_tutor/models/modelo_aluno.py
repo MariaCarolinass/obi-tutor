@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+# CAMINHO_DADOS = Path(__file__).resolve.parent.parent / "dados" / "modelos_alunos.json"
+
 
 class ModeloAluno:
 
@@ -159,3 +161,13 @@ class ModeloAluno:
     # Método público para o modelo pedagógico consultar informações
     def obter_historico_atividades(self):
         return self.__historico_atividades.copy()
+
+    @classmethod
+    # permite criar uma instância da classe a partir de informações recebidas.
+    def from_dict(cls, aluno_id, dados):
+        aluno = cls(aluno_id)
+
+        aluno.__conceitos = dados["conceitos"]
+        aluno.__historico_atividades = dados["historico_atividades"]
+
+        return aluno
