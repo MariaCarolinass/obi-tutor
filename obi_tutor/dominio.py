@@ -3,7 +3,7 @@ from collections import Counter
 from pathlib import Path
 
 
-RAIZ = Path(__file__).resolve().parent.parent
+PASTA_DADOS = Path(__file__).resolve().parent / "dados"
 FORMATOS_MISSAO = {"Detetive de Bugs", "Preveja a Saída", "Complete o Código"}
 DIFICULDADES = {"facil": "Fácil", "medio": "Médio", "dificil": "Difícil"}
 
@@ -11,8 +11,8 @@ DIFICULDADES = {"facil": "Fácil", "medio": "Médio", "dificil": "Difícil"}
 class Dominio:
     def __init__(
         self,
-        caminho_conceitos=RAIZ / "obi_tutor/dados/conceitos.json",
-        caminho_catalogo=RAIZ / "moddominio.json",
+        caminho_conceitos=PASTA_DADOS / "conceitos.json",
+        caminho_catalogo=PASTA_DADOS / "questoes.json",
     ):
         self.conceitos = self._indexar(self._ler(caminho_conceitos))
         self._validar_grafo()

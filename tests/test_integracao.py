@@ -176,7 +176,7 @@ def test_chat_contexto_contingencia_e_encerramento(api, monkeypatch, status_gemi
         raise TimeoutError
 
     monkeypatch.setenv("OLIMPIO_TUTOR_OBI", "chave-de-teste")
-    monkeypatch.setattr("obi_tutor.tutor.urlopen", indisponivel)
+    monkeypatch.setattr("obi_tutor.services.gemini.urlopen", indisponivel)
     sessao, agir = abrir(api)
     resposta = agir("chat", text="Mostre um exemplo mais simples", questionId="MISS-C4-01")
     assert "idade >= 16" in resposta["result"]["text"]
@@ -196,7 +196,7 @@ def test_chat_contexto_contingencia_e_encerramento(api, monkeypatch, status_gemi
 def test_gemini_le_chave_do_env_e_recebe_apenas_contexto_e_duvida(api, monkeypatch, tmp_path):
     arquivo = tmp_path / ".env"
     arquivo.write_text('OLIMPIO_TUTOR_OBI="chave-de-teste"\n', encoding="utf-8")
-    monkeypatch.setattr("obi_tutor.tutor.ARQUIVO_ENV", arquivo)
+    monkeypatch.setattr("obi_tutor.services.gemini.ARQUIVO_ENV", arquivo)
     monkeypatch.delenv("OLIMPIO_TUTOR_OBI")
 
     def simular(pedido, timeout):
@@ -221,7 +221,7 @@ def test_gemini_le_chave_do_env_e_recebe_apenas_contexto_e_duvida(api, monkeypat
             }],
         }).encode())
 
-    monkeypatch.setattr("obi_tutor.tutor.urlopen", simular)
+    monkeypatch.setattr("obi_tutor.services.gemini.urlopen", simular)
     sessao, agir = abrir(api)
     resposta = agir("chat", text="Pode explicar o conceito?", questionId="MISS-C4-01")
     assert resposta["result"]["text"] == "Compare os dois limites da condição."

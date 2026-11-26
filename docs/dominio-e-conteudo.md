@@ -25,7 +25,7 @@ O sentido de uma dependência é **pré-requisito -> conceito dependente**. Um e
 
 ### Catálogo integrado
 
-A trilha exibe os dez conceitos e seus pré-requisitos. O diagnóstico é opcional e tem um item por conceito. Os IDs e gabaritos são carregados pelo backend. [Catálogo de questões](../moddominio.json) · [Grafo](../obi_tutor/dados/conceitos.json)
+A trilha exibe os dez conceitos e seus pré-requisitos. O diagnóstico é opcional e tem um item por conceito. Os IDs e gabaritos são carregados pelo backend. [Catálogo de questões](../obi_tutor/dados/questoes.json) · [Grafo](../obi_tutor/dados/conceitos.json)
 
 | Tipo | Quantidade | Finalidade |
 | --- | ---: | --- |

@@ -1,8 +1,4 @@
-import json
-from pathlib import Path
 from copy import deepcopy
-
-# CAMINHO_DADOS = Path(__file__).resolve.parent.parent / "dados" / "modelos_alunos.json"
 
 
 class ModeloAluno:

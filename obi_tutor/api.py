@@ -8,13 +8,16 @@ from threading import Lock
 from time import monotonic
 from urllib.parse import urlsplit
 
-from obi_tutor.dominio import Dominio, RAIZ
+from obi_tutor.dominio import Dominio
 from obi_tutor.sessao import Sessao
 from obi_tutor.tutor import responder
 
 
+PASTA_FRONTEND = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+
+
 class ServidorTutor(ThreadingHTTPServer):
-    def __init__(self, endereco, pasta_frontend=RAIZ / "frontend/dist"):
+    def __init__(self, endereco, pasta_frontend=PASTA_FRONTEND):
         self.dominio = Dominio()
         self.catalogo = self.dominio.catalogo_publico()
         self.sessoes = {}
