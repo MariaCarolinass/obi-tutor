@@ -184,6 +184,104 @@ class TestModeloAluno(unittest.TestCase):
             )
 
         self.assertEqual(self.aluno.obter_pontuacao("C1"), 25)
+        self.assertEqual(len(self.aluno._ModeloAluno__historico_atividades), 2)
+
+    def test_rejeita_identificador_de_questao_vazio(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="",
+                conceito_id="C1",
+                resultado=True,
+                tentativas=1,
+                dicas_utilizadas=0,
+                tipo_atividade="missao"
+            )
+
+    def test_rejeita_resultado_invalido(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="Q1",
+                conceito_id="C1",
+                resultado="sim",
+                tentativas=1,
+                dicas_utilizadas=0,
+                tipo_atividade="missao"
+            )
+
+    def test_rejeita_numero_de_tentativas_invalido(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="Q1",
+                conceito_id="C1",
+                resultado=True,
+                tentativas=0,
+                dicas_utilizadas=0,
+                tipo_atividade="missao"
+            )
+
+    def test_rejeita_quantidade_de_dicas_invalida(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="Q1",
+                conceito_id="C1",
+                resultado=True,
+                tentativas=1,
+                dicas_utilizadas=-1,
+                tipo_atividade="missao"
+            )
+
+    def test_rejeita_conceito_inexistente(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="Q1",
+                conceito_id="C11",
+                resultado=True,
+                tentativas=1,
+                dicas_utilizadas=0,
+                tipo_atividade="missao"
+            )
+
+    def test_rejeita_tipo_de_atividade_invalido(self):
+        with self.assertRaises(ValueError):
+            self.aluno.registrar_atividade(
+                questao_id="Q1",
+                conceito_id="C1",
+                resultado=True,
+                tentativas=1,
+                dicas_utilizadas=0,
+                tipo_atividade="prova"
+            )
+
+    def test_obter_historico_atividades(self):
+        self.aluno.registrar_atividade(
+            questao_id="Q1",
+            conceito_id="C1",
+            resultado=True,
+            tentativas=1,
+            dicas_utilizadas=0,
+            tipo_atividade="missao"
+        )
+
+        historico = self.aluno.obter_historico_atividades()
+
+        self.assertEqual(len(historico), 1)
+        self.assertEqual(historico[0]["questao_id"], "Q1")
+
+    def test_modificar_historico_consultado_nao_altera_original(self):
+        self.aluno.registrar_atividade(
+            questao_id="Q1",
+            conceito_id="C1",
+            resultado=True,
+            tentativas=1,
+            dicas_utilizadas=0,
+            tipo_atividade="missao"
+        )
+
+        historico = self.aluno.obter_historico_atividades()
+        historico.clear()
+
+        self.assertEqual(len(self.aluno.obter_historico_atividades()), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
