@@ -1,0 +1,704 @@
+{
+  "schema_version": "1.0.0",
+  "total_questoes": 33,
+  "distribuicao": {
+    "diagnostico": 10,
+    "missao": 20,
+    "reforco": 3
+  },
+  "questoes": [
+    {
+      "id": "DIAG-C1-01",
+      "concept_id": "C1",
+      "tipo": "diagnostico",
+      "formato": "Diagnostico Conceitual",
+      "dificuldade": "facil",
+      "enunciado": "Em uma tarefa da OBI sobre distribuição de medalhas, o enunciado diz: 'Cada equipe recebe 1 medalha de ouro se fizer pelo menos 80 pontos, ou 1 medalha de prata se fizer entre 50 e 79 pontos. Pontuações abaixo de 50 não recebem medalha.' Se uma equipe fizer exatamente 80 pontos, qual é o resultado correto segundo a regra?",
+      "codigo_python": null,
+      "alternativas": [
+        { "id": "A", "texto": "Recebe 1 medalha de ouro." },
+        { "id": "B", "texto": "Recebe 1 medalha de prata." },
+        { "id": "C", "texto": "Recebe 1 medalha de ouro e 1 de prata." },
+        { "id": "D", "texto": "Não recebe medalha." }
+      ],
+      "gabarito": "A",
+      "explicacao": "A expressão 'pelo menos 80 pontos' significa pontuação maior ou igual a 80 (>= 80). Portanto, 80 pontos satisfaz a condição da medalha de ouro.",
+      "dicas": [
+        "Preste atenção à expressão 'pelo menos': ela inclui o próprio número limite.",
+        "Compare 80 com o intervalo [80, +infinito) antes de olhar a faixa da prata."
+      ]
+    },
+    {
+      "id": "DIAG-C2-01",
+      "concept_id": "C2",
+      "tipo": "diagnostico",
+      "formato": "Complete o Código",
+      "dificuldade": "facil",
+      "enunciado": "Um problema fornece dois números inteiros em linhas separadas representando a base e a altura de um retângulo, e pede a área na saída. Qual trecho lê corretamente as entradas como inteiros em Python?",
+      "codigo_python": "# Complete as duas primeiras linhas:\n# ???\n# ???\nprint(base * altura)",
+      "alternativas": [
+        { "id": "A", "texto": "base = input()\naltura = input()" },
+        { "id": "B", "texto": "base = int(input())\naltura = int(input())" },
+        { "id": "C", "texto": "base, altura = int(input())" },
+        { "id": "D", "texto": "base = print(input())\naltura = print(input())" }
+      ],
+      "gabarito": "B",
+      "explicacao": "A função input() retorna texto (str). Para multiplicar numericamente base e altura, cada leitura em linha separada precisa ser convertida com int().",
+      "dicas": [
+        "Lembre-se de que input() sempre devolve uma string em Python.",
+        "Como os valores vêm em linhas separadas, são necessárias duas chamadas de leitura."
+      ]
+    },
+    {
+      "id": "DIAG-C3-01",
+      "concept_id": "C3",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "facil",
+      "enunciado": "Em um problema de divisão de figurinhas em pacotes iguais, um aluno escreveu o código abaixo. Qual será a saída exibida?",
+      "codigo_python": "figurinhas = 23\npacote = 5\ncompletos = figurinhas // pacote\nsobra = figurinhas % pacote\nprint(completos, sobra)",
+      "alternativas": [
+        { "id": "A", "texto": "4.6 3" },
+        { "id": "B", "texto": "4 3" },
+        { "id": "C", "texto": "3 4" },
+        { "id": "D", "texto": "4 5" }
+      ],
+      "gabarito": "B",
+      "explicacao": "O operador // realiza divisão inteira (23 // 5 = 4) e o operador % calcula o resto da divisão (23 % 5 = 3).",
+      "dicas": [
+        "// descarta a parte decimal e mantém apenas o quociente inteiro.",
+        "% retorna o que sobra após formar todos os grupos de 5."
+      ]
+    },
+    {
+      "id": "DIAG-C4-01",
+      "concept_id": "C4",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "facil",
+      "enunciado": "Considere o trecho que classifica o saldo de energia de um robô na competição. O que será impresso?",
+      "codigo_python": "energia = 40\nif energia > 50:\n    print('ALTA')\nelif energia >= 40:\n    print('MEDIA')\nelse:\n    print('BAIXA')",
+      "alternativas": [
+        { "id": "A", "texto": "ALTA" },
+        { "id": "B", "texto": "MEDIA" },
+        { "id": "C", "texto": "BAIXA" },
+        { "id": "D", "texto": "MEDIA e BAIXA" }
+      ],
+      "gabarito": "B",
+      "explicacao": "A primeira condição (40 > 50) é falsa. A segunda condição (40 >= 40) é verdadeira, então imprime 'MEDIA' e encerra a estrutura condicional.",
+      "dicas": [
+        "Verifique a diferença entre '>' (estritamente maior) e '>=' (maior ou igual).",
+        "Em uma cadeia if/elif/else, apenas o primeiro bloco verdadeiro é executado."
+      ]
+    },
+    {
+      "id": "DIAG-C5-01",
+      "concept_id": "C5",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "facil",
+      "enunciado": "Quantas vezes a palavra 'OBI' será impressa pelo laço abaixo?",
+      "codigo_python": "for i in range(1, 5):\n    print('OBI')",
+      "alternativas": [
+        { "id": "A", "texto": "3 vezes" },
+        { "id": "B", "texto": "4 vezes" },
+        { "id": "C", "texto": "5 vezes" },
+        { "id": "D", "texto": "1 vez" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Em Python, range(1, 5) gera os valores 1, 2, 3 e 4 (o limite superior 5 não é incluído), totalizando 4 repetições.",
+      "dicas": [
+        "Em range(inicio, fim), o valor 'fim' fica de fora da sequência.",
+        "Conte quantos inteiros existem de 1 até 4."
+      ]
+    },
+    {
+      "id": "DIAG-C6-01",
+      "concept_id": "C6",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "O programa abaixo soma apenas as pontuações pares obtidas em quatro rodadas. Qual é o valor final impresso?",
+      "codigo_python": "pontos = [7, 10, 4, 9]\ntotal = 0\nfor p in pontos:\n    if p % 2 == 0:\n        total += p\nprint(total)",
+      "alternativas": [
+        { "id": "A", "texto": "2" },
+        { "id": "B", "texto": "14" },
+        { "id": "C", "texto": "30" },
+        { "id": "D", "texto": "16" }
+      ],
+      "gabarito": "B",
+      "explicacao": "A variável 'total' atua como acumulador. Apenas 10 e 4 têm resto 0 na divisão por 2, portanto total = 0 + 10 + 4 = 14.",
+      "dicas": [
+        "Observe se 'total' soma +1 (contador) ou +p (acumulador).",
+        "Filtre primeiro quais elementos da lista satisfazem p % 2 == 0."
+      ]
+    },
+    {
+      "id": "DIAG-C7-01",
+      "concept_id": "C7",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Dada a lista de tempos de resposta de um algoritmo, qual valor será exibido na saída?",
+      "codigo_python": "tempos = [12, 8, 15, 6]\nprint(tempos[1] + tempos[-1])",
+      "alternativas": [
+        { "id": "A", "texto": "18" },
+        { "id": "B", "texto": "14" },
+        { "id": "C", "texto": "27" },
+        { "id": "D", "texto": "20" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Em Python, o índice 0 é o primeiro elemento (12), o índice 1 é o segundo (8) e o índice -1 acessa o último elemento (6). Logo, 8 + 6 = 14.",
+      "dicas": [
+        "Listas em Python começam no índice 0, não no índice 1.",
+        "O índice -1 referencia o último item da lista."
+      ]
+    },
+    {
+      "id": "DIAG-C8-01",
+      "concept_id": "C8",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Acompanhe passo a passo (teste de mesa) a execução do algoritmo abaixo e indique a saída final:",
+      "codigo_python": "a = 2\nb = 5\nfor k in range(3):\n    a = a + k\n    if a > b:\n        b = a\nprint(a, b)",
+      "alternativas": [
+        { "id": "A", "texto": "5 5" },
+        { "id": "B", "texto": "8 8" },
+        { "id": "C", "texto": "5 8" },
+        { "id": "D", "texto": "6 6" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Para k=0: a=2, b=5. Para k=1: a=3, b=5. Para k=2: a=5, b=5 (5 > 5 é falso). Ao final do laço, a=5 e b=5.",
+      "dicas": [
+        "Monte uma tabela com os valores de k, a e b ao final de cada volta.",
+        "Lembre-se de que range(3) assume os valores 0, 1 e 2."
+      ]
+    },
+    {
+      "id": "DIAG-C9-01",
+      "concept_id": "C9",
+      "tipo": "diagnostico",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Um estudante escreveu a função abaixo para encontrar o maior número de uma lista de inteiros (que pode conter números negativos). Para qual caso-limite o código falha?",
+      "codigo_python": "def maior_valor(lista):\n    maior = 0\n    for x in lista:\n        if x > maior:\n            maior = x\n    return maior",
+      "alternativas": [
+        { "id": "A", "texto": "Quando todos os números da lista são negativos, como [-10, -4, -7]." },
+        { "id": "B", "texto": "Quando o maior número está na última posição da lista." },
+        { "id": "C", "texto": "Quando a lista possui números repetidos." },
+        { "id": "D", "texto": "Quando o maior número é 100." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Como 'maior' foi inicializado com 0, se todos os elementos forem negativos, nenhum deles será maior que 0, e a função retornará 0 incorretamente.",
+      "dicas": [
+        "Observe o valor inicial escolhido para a variável 'maior'.",
+        "Teste mentalmente a entrada [-10, -4, -7]."
+      ]
+    },
+    {
+      "id": "DIAG-C10-01",
+      "concept_id": "C10",
+      "tipo": "diagnostico",
+      "formato": "Preveja a Saída",
+      "dificuldade": "dificil",
+      "enunciado": "Um sensor registra o nível de água de um reservatório a cada hora. O alerta dispara sempre que o nível atual é estritamente maior que o nível da hora anterior E maior ou igual a 50. Quantos alertas são registrados para a sequência abaixo?",
+      "codigo_python": "niveis = [45, 50, 50, 62, 58, 70]\nalertas = 0\nfor i in range(1, len(niveis)):\n    if niveis[i] > niveis[i - 1] and niveis[i] >= 50:\n        alertas += 1\nprint(alertas)",
+      "alternativas": [
+        { "id": "A", "texto": "2" },
+        { "id": "B", "texto": "3" },
+        { "id": "C", "texto": "4" },
+        { "id": "D", "texto": "5" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Os pares (anterior -> atual) com aumento e atual >= 50 são: 45->50 (sim), 50->50 (não aumentou), 50->62 (sim), 62->58 (caiu), 58->70 (sim). Total: 3 alertas.",
+      "dicas": [
+        "Verifique as duas condições juntas para cada transição a partir do índice 1.",
+        "Atenção à transição 50 -> 50: ela não é estritamente maior."
+      ]
+    },
+    {
+      "id": "MISS-C1-01",
+      "concept_id": "C1",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "facil",
+      "enunciado": "Na prova da OBI, o problema 'Estacionamento' diz: 'A primeira hora custa R$ 10. Cada hora adicional, ou fração de hora, custa R$ 4.' Um aluno implementou o código abaixo, mas errou ao testar com t = 3 horas. Qual regra do enunciado foi violada?",
+      "codigo_python": "t = 3\nvalor = t * 4\nprint(valor)",
+      "alternativas": [
+        { "id": "A", "texto": "O código cobrou R$ 4 por todas as horas, ignorando que a primeira hora custa R$ 10." },
+        { "id": "B", "texto": "O código deveria multiplicar t por 10." },
+        { "id": "C", "texto": "O código não leu o valor de t com input()." },
+        { "id": "D", "texto": "O código deveria somar 10 + 4 independentemente de t." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Para t = 3 horas, a primeira hora custa R$ 10 e as 2 horas adicionais custam 2 * 4 = R$ 8, totalizando R$ 18 (e não 3 * 4 = 12).",
+      "dicas": [
+        "Calcule manualmente quanto deveria custar 3 horas pela regra do enunciado.",
+        "Separe a cobrança da 1ª hora das (t - 1) horas restantes."
+      ]
+    },
+    {
+      "id": "MISS-C1-02",
+      "concept_id": "C1",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "facil",
+      "enunciado": "Um enunciado define: 'Um número inteiro X é considerado equilibrado se for múltiplo de 3 e não for múltiplo de 5.' Complete a condição para refletir exatamente o enunciado.",
+      "codigo_python": "x = int(input())\nif ______________________________:\n    print('EQUILIBRADO')\nelse:\n    print('COMUM')",
+      "alternativas": [
+        { "id": "A", "texto": "x % 3 == 0 or x % 5 != 0" },
+        { "id": "B", "texto": "x % 3 == 0 and x % 5 != 0" },
+        { "id": "C", "texto": "x % 3 != 0 and x % 5 == 0" },
+        { "id": "D", "texto": "x // 3 == 0 and x // 5 != 0" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Ser múltiplo de 3 equivale a x % 3 == 0; não ser múltiplo de 5 equivale a x % 5 != 0; o conectivo 'e' exige ambos verdadeiros simultaneamente (and).",
+      "dicas": [
+        "Traduza cada parte da frase separadamente usando o operador de resto %.",
+        "A palavra 'e' no enunciado exige que as duas restrições valham ao mesmo tempo."
+      ]
+    },
+    {
+      "id": "MISS-C2-01",
+      "concept_id": "C2",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "facil",
+      "enunciado": "Um problema da OBI pede para ler o placar de dois times (dois inteiros na mesma linha separados por espaço, ex: '3 1') e imprimir a soma de gols. O código abaixo gera erro em tempo de execução. Por quê?",
+      "codigo_python": "a, b = int(input().split())\nprint(a + b)",
+      "alternativas": [
+        { "id": "A", "texto": "int() não converte uma lista diretamente; é preciso converter cada item, como map(int, input().split())." },
+        { "id": "B", "texto": "split() só funciona para separar por vírgula." },
+        { "id": "C", "texto": "Não é possível atribuir duas variáveis na mesma linha em Python." },
+        { "id": "D", "texto": "print(a + b) precisa de aspas." }
+      ],
+      "gabarito": "A",
+      "explicacao": "input().split() devolve uma lista de strings (ex: ['3', '1']), e int() aceita apenas um valor por vez, não uma lista.",
+      "dicas": [
+        "Verifique o tipo retornado por input().split().",
+        "Em Python, map(int, input().split()) aplica int() a cada elemento separado."
+      ]
+    },
+    {
+      "id": "MISS-C2-02",
+      "concept_id": "C2",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "facil",
+      "enunciado": "A especificação de saída de uma tarefa exige imprimir exatamente 'S' se o aluno passou (nota >= 60) ou 'N' caso contrário, sem textos extras. Complete o código adequadamente.",
+      "codigo_python": "nota = int(input())\nif nota >= 60:\n    print('S')\nelse:\n    ______________",
+      "alternativas": [
+        { "id": "A", "texto": "print('Nao passou: N')" },
+        { "id": "B", "texto": "print('N')" },
+        { "id": "C", "texto": "return 'N'" },
+        { "id": "D", "texto": "input('N')" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Em juízes automáticos como o da OBI, a saída deve corresponder caractere por caractere ao formato especificado ('N'), sem mensagens decorativas.",
+      "dicas": [
+        "Juízes online comparam exatamente o texto impresso na tela.",
+        "Use print() com apenas o caractere solicitado no enunciado."
+      ]
+    },
+    {
+      "id": "MISS-C3-01",
+      "concept_id": "C3",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "facil",
+      "enunciado": "Em um problema de conversão de tempo, um evento dura 135 minutos. O código abaixo converte esse total em horas inteiras e minutos restantes. Qual é a saída?",
+      "codigo_python": "minutos_totais = 135\nhoras = minutos_totais // 60\nminutos = minutos_totais % 60\nprint(f'{horas}h {minutos}m')",
+      "alternativas": [
+        { "id": "A", "texto": "2h 15m" },
+        { "id": "B", "texto": "2.25h 15m" },
+        { "id": "C", "texto": "1h 75m" },
+        { "id": "D", "texto": "2h 35m" }
+      ],
+      "gabarito": "A",
+      "explicacao": "135 // 60 resulta em 2 horas inteiras (120 minutos), e 135 % 60 resulta nos 15 minutos restantes.",
+      "dicas": [
+        "60 minutos formam 1 hora; veja quantas vezes 60 cabe em 135.",
+        "O resto da divisão por 60 dá os minutos que sobraram."
+      ]
+    },
+    {
+      "id": "MISS-C3-02",
+      "concept_id": "C3",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Um aluno tentou trocar os valores armazenados nas variáveis x e y, mas o resultado final imprimiu '20 20' em vez de '20 10'. Qual é o erro?",
+      "codigo_python": "x = 10\ny = 20\nx = y\ny = x\nprint(x, y)",
+      "alternativas": [
+        { "id": "A", "texto": "Ao fazer x = y, o valor original de x (10) foi sobrescrito antes de ser copiado para y." },
+        { "id": "B", "texto": "Variáveis inteiras não podem ser reatribuídas em Python." },
+        { "id": "C", "texto": "O comando print(x, y) inverte a ordem das variáveis." },
+        { "id": "D", "texto": "Deveria ser usado == em vez de =." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Na linha 'x = y', x passa a valer 20 e o valor 10 é perdido. Para trocar valores, é preciso usar uma variável auxiliar (temp = x) ou atribuição simultânea (x, y = y, x).",
+      "dicas": [
+        "Acompanhe o valor de x linha por linha após 'x = y'.",
+        "Pense no que acontece com o número 10 depois da terceira linha."
+      ]
+    },
+    {
+      "id": "MISS-C4-01",
+      "concept_id": "C4",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Para avançar à próxima fase da OBI, o competidor precisa de nota >= 70 para 'Ouro', nota >= 50 para 'Prata' e abaixo de 50 fica 'Eliminado'. Por que o código abaixo classifica erradamente quem tira 85 como 'Prata'?",
+      "codigo_python": "nota = 85\nif nota >= 50:\n    print('Prata')\nelif nota >= 70:\n    print('Ouro')\nelse:\n    print('Eliminado')",
+      "alternativas": [
+        { "id": "A", "texto": "A condição mais ampla (nota >= 50) foi testada antes da mais restrita (nota >= 70)." },
+        { "id": "B", "texto": "Faltou usar 'and' na primeira condição." },
+        { "id": "C", "texto": "O Python não permite usar elif com operadores >=." },
+        { "id": "D", "texto": "A variável nota deveria ser uma string." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Como 85 >= 50 é verdadeiro, o Python entra no primeiro bloco ('Prata') e nunca chega a testar o elif nota >= 70. Faixas numéricas decrescentes devem começar pelo maior limite.",
+      "dicas": [
+        "Qual é a primeira condição avaliada pelo Python quando nota = 85?",
+        "Teste se 85 satisfaz nota >= 50."
+      ]
+    },
+    {
+      "id": "MISS-C4-02",
+      "concept_id": "C4",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "medio",
+      "enunciado": "Três varetas de comprimentos a, b e c formam um triângulo somente se cada lado for estritamente menor que a soma dos outros dois. Complete a condição para verificar se o triângulo é válido.",
+      "codigo_python": "a, b, c = 3, 4, 5\nif ________________________________________:\n    print('VALIDO')\nelse:\n    print('INVALIDO')",
+      "alternativas": [
+        { "id": "A", "texto": "a < b + c or b < a + c or c < a + b" },
+        { "id": "B", "texto": "a < b + c and b < a + c and c < a + b" },
+        { "id": "C", "texto": "a <= b + c and b <= a + c and c <= a + b" },
+        { "id": "D", "texto": "a + b + c > 0" }
+      ],
+      "gabarito": "B",
+      "explicacao": "A desigualdade triangular exige que todas as três condições sejam verdadeiras simultaneamente (and) e estritamente menores (<).",
+      "dicas": [
+        "Se apenas uma desigualdade falhar (ex: 1, 2 e 10), o triângulo já não fecha.",
+        "Use 'and' para garantir que os três lados respeitem a regra."
+      ]
+    },
+    {
+      "id": "MISS-C5-01",
+      "concept_id": "C5",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Um algoritmo reduz pela metade (divisão inteira) a distância até um alvo a cada passo enquanto ela for maior que 1. O que será impresso?",
+      "codigo_python": "dist = 16\nwhile dist > 1:\n    print(dist, end=' ')\n    dist = dist // 2",
+      "alternativas": [
+        { "id": "A", "texto": "16 8 4 2" },
+        { "id": "B", "texto": "16 8 4 2 1" },
+        { "id": "C", "texto": "8 4 2 1" },
+        { "id": "D", "texto": "16 8 4" }
+      ],
+      "gabarito": "A",
+      "explicacao": "O laço imprime 16, 8, 4 e 2. Quando dist passa a valer 1, a condição dist > 1 torna-se falsa e o laço encerra antes de imprimir 1.",
+      "dicas": [
+        "Verifique em que momento dist passa a ser igual a 1.",
+        "A condição do while é testada antes de cada nova impressão."
+      ]
+    },
+    {
+      "id": "MISS-C5-02",
+      "concept_id": "C5",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "O código abaixo deveria imprimir uma contagem regressiva de 5 até 1, mas não imprime nada na tela. Qual é o problema?",
+      "codigo_python": "for n in range(5, 0):\n    print(n)",
+      "alternativas": [
+        { "id": "A", "texto": "Faltou especificar o passo negativo -1 em range(5, 0, -1)." },
+        { "id": "B", "texto": "O laço for não aceita números maiores no início do range." },
+        { "id": "C", "texto": "Deveria ser range(5, 1, -1) para incluir o número 1." },
+        { "id": "D", "texto": "Faltou inicializar n = 5 antes do for." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Por padrão, range(inicio, fim) usa passo +1. Como 5 já é maior que 0, a sequência gerada é vazia. Com passo -1, range(5, 0, -1) gera 5, 4, 3, 2, 1.",
+      "dicas": [
+        "Qual é o passo padrão da função range() quando o terceiro argumento é omitido?",
+        "Para contar para trás, o passo precisa ser negativo."
+      ]
+    },
+    {
+      "id": "MISS-C6-01",
+      "concept_id": "C6",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "medio",
+      "enunciado": "Em um campeonato, deseja-se contar quantas partidas tiveram mais de 3 gols E somar o total de gols apenas dessas partidas. Complete as duas linhas indicadas.",
+      "codigo_python": "gols = [2, 5, 4, 1, 6]\nqtd = 0\nsoma = 0\nfor g in gols:\n    if g > 3:\n        __________\n        __________\nprint(qtd, soma)",
+      "alternativas": [
+        { "id": "A", "texto": "qtd += 1\nsoma += g" },
+        { "id": "B", "texto": "qtd += g\nsoma += 1" },
+        { "id": "C", "texto": "qtd = 1\nsoma = g" },
+        { "id": "D", "texto": "qtd += 1\nsoma += qtd" }
+      ],
+      "gabarito": "A",
+      "explicacao": "qtd é um contador de ocorrências (incrementa em +1) e soma é um acumulador de valores (incrementa em +g).",
+      "dicas": [
+        "Diferencie 'quantas vezes aconteceu' (+1) de 'quanto vale no total' (+g).",
+        "Use += para somar ao valor já guardado sem sobrescrevê-lo."
+      ]
+    },
+    {
+      "id": "MISS-C6-02",
+      "concept_id": "C6",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "O programa abaixo deveria contar quantas notas são maiores ou iguais a 7 em uma lista de 4 notas, mas sempre imprime 0 ou 1 ao final. Qual é o bug?",
+      "codigo_python": "notas = [8, 9, 4, 7]\nfor n in notas:\n    aprovados = 0\n    if n >= 7:\n        aprovados += 1\nprint(aprovados)",
+      "alternativas": [
+        { "id": "A", "texto": "A variável aprovados = 0 foi zerada dentro do laço a cada repetição." },
+        { "id": "B", "texto": "O operador >= deveria ser >." },
+        { "id": "C", "texto": "O comando print(aprovados) deveria estar dentro do if." },
+        { "id": "D", "texto": "aprovados += 1 deveria ser aprovados =+ 1." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Como 'aprovados = 0' está indentado dentro do for, o contador é reiniciado a cada elemento da lista, guardando apenas o resultado da última nota.",
+      "dicas": [
+        "Observe a indentação da linha 'aprovados = 0'.",
+        "Um contador precisa ser inicializado uma única vez antes de o laço começar."
+      ]
+    },
+    {
+      "id": "MISS-C7-01",
+      "concept_id": "C7",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Analise o percurso por índices na lista de códigos de salas abaixo. O que será exibido?",
+      "codigo_python": "salas = [10, 20, 30, 40, 50]\nresultado = []\nfor i in range(0, len(salas), 2):\n    resultado.append(salas[i])\nprint(resultado)",
+      "alternativas": [
+        { "id": "A", "texto": "[10, 30, 50]" },
+        { "id": "B", "texto": "[20, 40]" },
+        { "id": "C", "texto": "[10, 20, 30]" },
+        { "id": "D", "texto": "[10, 30]" }
+      ],
+      "gabarito": "A",
+      "explicacao": "len(salas) é 5. range(0, 5, 2) gera os índices 0, 2 e 4, que correspondem aos elementos 10, 30 e 50.",
+      "dicas": [
+        "O terceiro parâmetro de range(0, 5, 2) faz o índice pular de 2 em 2.",
+        "Mapeie os índices 0, 2 e 4 aos valores da lista 'salas'."
+      ]
+    },
+    {
+      "id": "MISS-C7-02",
+      "concept_id": "C7",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Um aluno tentou comparar cada elemento de uma lista com o próximo elemento vizinho, mas o código gera erro IndexError: list index out of range. Por quê?",
+      "codigo_python": "valores = [4, 7, 2, 9]\nfor i in range(len(valores)):\n    if valores[i] < valores[i + 1]:\n        print(valores[i])",
+      "alternativas": [
+        { "id": "A", "texto": "Na última iteração (i = 3), valores[i + 1] tenta acessar o índice 4, que não existe." },
+        { "id": "B", "texto": "Listas não podem ser acessadas com colchetes dentro de um if." },
+        { "id": "C", "texto": "len(valores) retorna 3 em vez de 4." },
+        { "id": "D", "texto": "O operador < não funciona entre elementos da mesma lista." }
+      ],
+      "gabarito": "A",
+      "explicacao": "A lista tem 4 elementos (índices 0 a 3). Quando i chega a 3, i + 1 vale 4, ultrapassando o limite da lista. O laço deveria ir até range(len(valores) - 1).",
+      "dicas": [
+        "Descubra qual é o maior valor que i assume em range(4).",
+        "Calcule quanto vale i + 1 na última volta do laço."
+      ]
+    },
+    {
+      "id": "MISS-C8-01",
+      "concept_id": "C8",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Faça o teste de mesa do código abaixo, que simula o saldo de moedas em um jogo após uma sequência de eventos. Qual é o valor final impresso?",
+      "codigo_python": "moedas = 10\neventos = [4, -3, 8, -12]\nfor e in eventos:\n    moedas += e\n    if moedas < 0:\n        moedas = 0\nprint(moedas)",
+      "alternativas": [
+        { "id": "A", "texto": "7" },
+        { "id": "B", "texto": "0" },
+        { "id": "C", "texto": "-3" },
+        { "id": "D", "texto": "19" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Início: 10. Após +4 -> 14. Após -3 -> 11. Após +8 -> 19. Após -12 -> 7. Como moedas nunca ficou menor que 0, o valor final impresso é 7.",
+      "dicas": [
+        "Atualize o valor de 'moedas' passo a passo para cada item de 'eventos'.",
+        "Some: 10 + 4 - 3 + 8 - 12 e verifique se em algum momento ficou negativo."
+      ]
+    },
+    {
+      "id": "MISS-C8-02",
+      "concept_id": "C8",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "dificil",
+      "enunciado": "Execute o teste de mesa para o laço while abaixo e determine o valor final de 'passos':",
+      "codigo_python": "x = 3\npassos = 0\nwhile x != 1:\n    if x % 2 == 0:\n        x = x // 2\n    else:\n        x = 3 * x + 1\n    passos += 1\nprint(passos)",
+      "alternativas": [
+        { "id": "A", "texto": "5" },
+        { "id": "B", "texto": "7" },
+        { "id": "C", "texto": "8" },
+        { "id": "D", "texto": "6" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Trajetória de x (Conjectura de Collatz a partir de 3): 3 -> 10 (1) -> 5 (2) -> 16 (3) -> 8 (4) -> 4 (5) -> 2 (6) -> 1 (7). Total: 7 passos.",
+      "dicas": [
+        "Anote a sequência de valores de x: começa em 3 (ímpar, vira 3*3+1 = 10).",
+        "Conte cada transição até x chegar exatamente em 1."
+      ]
+    },
+    {
+      "id": "MISS-C9-01",
+      "concept_id": "C9",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Um problema pede para calcular a média inteira dos valores válidos (maiores que zero) de uma lista. Se não houver nenhum valor válido, deve imprimir 0. Em qual caso-limite o código abaixo quebra com ZeroDivisionError?",
+      "codigo_python": "dados = [-5, 0, -2]\nsoma = 0\ncont = 0\nfor d in dados:\n    if d > 0:\n        soma += d\n        cont += 1\nprint(soma // cont)",
+      "alternativas": [
+        { "id": "A", "texto": "Quando nenhum elemento da lista é maior que 0, fazendo cont permanecer igual a 0." },
+        { "id": "B", "texto": "Quando todos os elementos da lista são maiores que 0." },
+        { "id": "C", "texto": "Quando a soma é um número ímpar." },
+        { "id": "D", "texto": "Quando a lista tem exatamente 3 elementos." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Se nenhum item satisfaz d > 0, o contador 'cont' termina em 0 e a divisão 'soma // cont' tenta dividir por zero. É necessário testar 'if cont == 0:' antes de dividir.",
+      "dicas": [
+        "Verifique o valor de 'cont' ao final do laço para a entrada [-5, 0, -2].",
+        "Nunca divida por um contador sem antes garantir que ele é diferente de zero."
+      ]
+    },
+    {
+      "id": "MISS-C9-02",
+      "concept_id": "C9",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "dificil",
+      "enunciado": "Para encontrar o menor elemento de uma lista não vazia 'leituras' (que pode conter valores negativos, zero ou números muito grandes), qual é a inicialização mais segura para a variável 'menor'?",
+      "codigo_python": "leituras = [-120, -45, -300, -10]\nmenor = ______________\nfor val in leituras:\n    if val < menor:\n        menor = val\nprint(menor)",
+      "alternativas": [
+        { "id": "A", "texto": "0" },
+        { "id": "B", "texto": "-100" },
+        { "id": "C", "texto": "leituras[0]" },
+        { "id": "D", "texto": "len(leituras)" }
+      ],
+      "gabarito": "C",
+      "explicacao": "Inicializar 'menor' com o primeiro elemento da própria lista (leituras[0]) garante que o valor de referência pertence ao domínio dos dados, funcionando para qualquer faixa numérica.",
+      "dicas": [
+        "Qualquer número fixo chutado (como 0 ou -100) pode falhar se todos os itens da lista forem menores que ele.",
+        "Use um elemento que você sabe com certeza que já faz parte da lista."
+      ]
+    },
+    {
+      "id": "MISS-C10-01",
+      "concept_id": "C10",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "dificil",
+      "enunciado": "Na OBI, deseja-se descobrir a maior sequência consecutiva de dias com temperatura acima de 30 graus. Analise o código e determine a saída para a lista dada.",
+      "codigo_python": "temps = [31, 33, 28, 32, 34, 35, 29]\natual = 0\nrecorde = 0\nfor t in temps:\n    if t > 30:\n        atual += 1\n        if atual > recorde:\n            recorde = atual\n    else:\n        atual = 0\nprint(recorde)",
+      "alternativas": [
+        { "id": "A", "texto": "2" },
+        { "id": "B", "texto": "3" },
+        { "id": "C", "texto": "5" },
+        { "id": "D", "texto": "0" }
+      ],
+      "gabarito": "B",
+      "explicacao": "Os dias consecutivos > 30 são [31, 33] (tamanho 2) e [32, 34, 35] (tamanho 3). O contador 'atual' zera quando encontra 28 e 29, mantendo recorde = 3.",
+      "dicas": [
+        "Acompanhe 'atual' e 'recorde' a cada dia; quando t <= 30, 'atual' volta a 0.",
+        "Identifique o maior bloco contínuo de números maiores que 30."
+      ]
+    },
+    {
+      "id": "MISS-C10-02",
+      "concept_id": "C10",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "dificil",
+      "enunciado": "O código abaixo busca a maior sequência consecutiva de números pares em uma lista. Porém, se a maior sequência estiver no final da lista [1, 2, 4, 6], ele imprime 0 em vez de 3. Qual é o erro?",
+      "codigo_python": "nums = [1, 2, 4, 6]\nseq = 0\nmelhor = 0\nfor n in nums:\n    if n % 2 == 0:\n        seq += 1\n    else:\n        if seq > melhor:\n            melhor = seq\n        seq = 0\nprint(melhor)",
+      "alternativas": [
+        { "id": "A", "texto": "O recorde 'melhor' só é atualizado no bloco else (quando surge um ímpar); se a sequência terminar no fim da lista, ela nunca é comparada com 'melhor'." },
+        { "id": "B", "texto": "A condição n % 2 == 0 verifica números ímpares." },
+        { "id": "C", "texto": "seq = 0 deveria estar fora do else." },
+        { "id": "D", "texto": "Faltou usar break dentro do else." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Para [1, 2, 4, 6], o else nunca roda após o 2, o 4 e o 6. Assim, seq chega a 3, mas melhor permanece 0. Atualizar 'melhor' dentro do if (ou após o laço) corrige o caso-limite.",
+      "dicas": [
+        "Faça o teste de mesa com nums = [1, 2, 4, 6] e veja em que linha 'melhor' é alterado.",
+        "O que acontece se o bloco else nunca for executado após a sequência par?"
+      ]
+    },
+    {
+      "id": "REF-C4-01",
+      "concept_id": "C4",
+      "tipo": "reforco",
+      "formato": "Complete o Código",
+      "dificuldade": "medio",
+      "enunciado": "Em uma competição de robótica, um protótipo só é homologado se tiver peso até 500g (inclusive) E altura estritamente menor que 30cm, OU se possuir autorização especial (autorizado == True). Complete a expressão condicional correta.",
+      "codigo_python": "peso = 500\naltura = 28\nautorizado = False\nif ______________________________________________________:\n    print('HOMOLOGADO')\nelse:\n    print('REPROVADO')",
+      "alternativas": [
+        { "id": "A", "texto": "(peso <= 500 and altura < 30) or autorizado" },
+        { "id": "B", "texto": "peso < 500 and altura <= 30 and autorizado" },
+        { "id": "C", "texto": "(peso >= 500 or altura < 30) and autorizado" },
+        { "id": "D", "texto": "peso <= 500 or altura < 30 or autorizado" }
+      ],
+      "gabarito": "A",
+      "explicacao": "'Até 500g (inclusive)' é peso <= 500; 'estritamente menor que 30cm' é altura < 30. Ambas devem ocorrer juntas (and), ou basta autorizado ser True (or).",
+      "dicas": [
+        "Separe os limites inclusivos (<=) dos estritos (<).",
+        "Agrupe com parênteses as duas medidas físicas antes de combinar com 'or autorizado'."
+      ]
+    },
+    {
+      "id": "REF-C5-01",
+      "concept_id": "C5",
+      "tipo": "reforco",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Um drone sobe 3 metros por segundo, mas a cada segundo impar de voo sofre uma rajada de vento que o faz descer 1 metro. Observe o laço de 4 segundos e indique a altura final.",
+      "codigo_python": "altura = 0\nfor seg in range(1, 5):\n    altura += 3\n    if seg % 2 == 1:\n        altura -= 1\nprint(altura)",
+      "alternativas": [
+        { "id": "A", "texto": "8" },
+        { "id": "B", "texto": "10" },
+        { "id": "C", "texto": "12" },
+        { "id": "D", "texto": "9" }
+      ],
+      "gabarito": "B",
+      "explicacao": "range(1, 5) executa para seg = 1, 2, 3, 4. Em seg=1: +3 -1 = 2; seg=2: +3 = 5; seg=3: +3 -1 = 7; seg=4: +3 = 10.",
+      "dicas": [
+        "Liste os quatro valores que 'seg' assume em range(1, 5).",
+        "Aplique -1 apenas nos segundos ímpares (seg = 1 e seg = 3)."
+      ]
+    },
+    {
+      "id": "REF-C6-01",
+      "concept_id": "C6",
+      "tipo": "reforco",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Um sistema de caixa registra depósitos (valores positivos) e saques (valores negativos). O código abaixo soma apenas os depósitos e conta quantos saques ocorreram. Qual será a saída?",
+      "codigo_python": "movimentos = [50, -20, 30, -10, -5, 40]\ntotal_depositos = 0\nqtd_saques = 0\nfor m in movimentos:\n    if m > 0:\n        total_depositos += m\n    elif m < 0:\n        qtd_saques += 1\nprint(total_depositos, qtd_saques)",
+      "alternativas": [
+        { "id": "A", "texto": "120 3" },
+        { "id": "B", "texto": "3 -35" },
+        { "id": "C", "texto": "85 3" },
+        { "id": "D", "texto": "120 -35" }
+      ],
+      "gabarito": "A",
+      "explicacao": "total_depositos acumula os valores positivos (50 + 30 + 40 = 120) e qtd_saques conta quantos valores negativos existem (-20, -10, -5 -> 3 saques).",
+      "dicas": [
+        "Note que total_depositos soma 'm', enquanto qtd_saques soma '1'.",
+        "Calcule separadamente a soma dos positivos e a contagem dos negativos."
+      ]
+    }
+  ]
+}
