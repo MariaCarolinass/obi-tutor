@@ -13,7 +13,7 @@ class TestModeloAluno(unittest.TestCase):
             resultado,
             tentativas=1,
             dicas_utilizadas=0,
-            tipo_atividade="missão"
+            tipo_atividade="missao"
     ):
         return {
             "questao_id": questao_id,
@@ -136,6 +136,13 @@ class TestModeloAluno(unittest.TestCase):
 
         self.assertEqual(self.aluno.obter_pontuacao("C1"), 70)
         self.assertEqual(self.aluno.obter_estado("C1"), "Em progresso")
+
+    def test_get_conceitos_nao_permite_alteracao_externa(self):
+        conceitos = self.aluno.get_conceitos()
+
+        conceitos["C1"]["pontuacao"] = 100
+
+        self.assertEqual(self.aluno.obter_pontuacao("C1"), 0)
 
     def test_acerto_com_dica_nao_conta_como_independente(self):
         atividade = self.criar_atividade(
@@ -282,6 +289,17 @@ class TestModeloAluno(unittest.TestCase):
 
         self.assertEqual(len(self.aluno.obter_historico_atividades()), 1)
 
+    def test_acerto_no_reforco_recebe_25_pontos(self):
+        self.aluno.registrar_atividade(
+            questao_id="Q1",
+            conceito_id="C1",
+            resultado=True,
+            tentativas=1,
+            dicas_utilizadas=0,
+            tipo_atividade="reforco"
+        )
+
+        self.assertEqual(self.aluno.obter_pontuacao("C1"), 25)
 
 if __name__ == "__main__":
     unittest.main()

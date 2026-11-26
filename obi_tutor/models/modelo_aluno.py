@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from copy import deepcopy
 
 # CAMINHO_DADOS = Path(__file__).resolve.parent.parent / "dados" / "modelos_alunos.json"
 
@@ -38,7 +39,7 @@ class ModeloAluno:
         return self.__aluno_id
 
     def get_conceitos(self):
-        return self.__conceitos
+        return deepcopy(self.__conceitos)
 
     def obter_pontuacao(self, conceito_id):
         if conceito_id not in self.__conceitos:
@@ -78,9 +79,9 @@ class ModeloAluno:
         if type(resultado) is not bool:
             raise ValueError("O resultado deve ser verdadeiro ou falso.")
 
-        if not isinstance(tipo_atividade, str) or tipo_atividade not in ["diagnostico", "missao"]:
+        if not isinstance(tipo_atividade, str) or tipo_atividade not in ["diagnostico", "missao", "reforco"]:
             raise ValueError("Tipo de atividade inválido.")
-
+        
         if type(tentativas) is not int or tentativas < 1:
             raise ValueError("O número de tentativas deve ser um inteiro maior ou igual a 1.")
 
