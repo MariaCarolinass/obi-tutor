@@ -125,7 +125,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             onClick={() => setSessionAction("reset")}
           >
             <RotateCcw />
-            Reiniciar demonstração
+            Reiniciar sessão
           </Button>
           <Button variant="ghost" className="reset-button" onClick={() => setSessionAction("end")}>
             Encerrar sessão
@@ -198,7 +198,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   void navigate({ to: "/", replace: true });
                 }}
               >
-                {confirmReset ? "Reiniciar demonstração" : "Encerrar sessão"}
+                {confirmReset ? "Reiniciar sessão" : "Encerrar sessão"}
               </Button>
             </div>
           </section>

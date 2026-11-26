@@ -45,7 +45,7 @@ Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**.
 
 O diagnóstico registrado, a pontuação, as missões concluídas, os erros e o uso de ajuda por item e a conversa são compartilhados entre as telas. Uma alternativa ainda não enviada, o feedback visível e o painel de ajuda aberto pertencem à tela da missão e podem ser reiniciados ao sair dela.
 
-O botão **Reiniciar demonstração** pede confirmação, limpa os registros e retorna ao Início. Recarregar a página ou fechar a aba descarta o acesso à sessão anterior. **Encerrar sessão** apaga o progresso dessa sessão no servidor e limpa o chat da aba. O Olimpio oferece encerrar ou pausar quando o estudante pede para parar.
+O botão **Reiniciar sessão** pede confirmação, limpa os registros e retorna ao Início. Recarregar a página ou fechar a aba descarta o acesso à sessão anterior. **Encerrar sessão** apaga o progresso dessa sessão no servidor e limpa o chat da aba. O Olimpio oferece encerrar ou pausar quando o estudante pede para parar.
 
 ## 6. Critérios de aceitação da interface
 

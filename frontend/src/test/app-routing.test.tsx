@@ -86,9 +86,9 @@ it("shows the next recommendation and lets the student reset the session", async
   ).toBeVisible();
   expect(screen.queryByText("Modo demonstração")).not.toBeInTheDocument();
 
-  fireEvent.click(screen.getByRole("button", { name: "Reiniciar demonstração" }));
+  fireEvent.click(screen.getByRole("button", { name: "Reiniciar sessão" }));
   const dialog = screen.getByRole("dialog", { name: "Começar de novo?" });
-  fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar demonstração" }));
+  fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar sessão" }));
   expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
   expect(
     screen.queryByRole("region", { name: "Seu progresso nesta sessão" }),

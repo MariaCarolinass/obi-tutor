@@ -49,7 +49,7 @@ Em `frontend/`, `npm test` inicia um backend Python local em uma porta livre e e
 3. Na trilha, abra uma missão ainda não concluída, erre a resposta e peça uma pista. Pause, retome e acerte. Confira os 15 pontos e o registro de uso de ajuda.
 4. No Início, abra **Conversar com o tutor**, envie uma pergunta ao Olimpio e confira **Meu Progresso**. Verifique se a nota se mantém e se a conversa aparece ao voltar ao chat.
 5. Reabra a missão que já pontuou e acerte de novo. A pontuação deve permanecer igual.
-6. Confirme **Reiniciar demonstração** e verifique o retorno ao Início e a limpeza dos registros. Depois, confirme **Encerrar sessão** e abra uma nova sessão. Em uma tela estreita, confira também o acesso aos modos pelo menu recolhível.
+6. Confirme **Reiniciar sessão** e verifique o retorno ao Início e a limpeza dos registros. Depois, confirme **Encerrar sessão** e abra uma nova sessão. Em uma tela estreita, confira também o acesso aos modos pelo menu recolhível.
 
 ### Checklist de aceite do MVP
 
