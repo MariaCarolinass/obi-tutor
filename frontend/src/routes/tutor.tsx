@@ -73,35 +73,56 @@ function Tutor() {
                       </Button>
                     </div>
                   )}
-                  {m.role === "tutor" && i === messages.length - 1 && !m.offerEnd && (
+                  {m.role === "tutor" && i === messages.length - 1 && m.offerChange && (
                     <div className="chat-context-actions">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={busy}
-                        onClick={() => void send("Pode mostrar um exemplo menor do conceito?")}
-                      >
-                        Ver exemplo
-                      </Button>
+                      {m.missionId && (
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/missoes/$id" params={{ id: m.missionId }}>
+                            Tentar outra missão
+                            <ArrowRight />
+                          </Link>
+                        </Button>
+                      )}
                       <Button variant="outline" size="sm" asChild>
-                        <Link
-                          to="/missoes/$id"
-                          params={{ id: m.missionId ?? state.recommendation.missionId }}
-                        >
-                          Resolver exercício
-                          <ArrowRight />
-                        </Link>
+                        <Link to="/trilha">Explorar a trilha</Link>
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={busy}
-                        onClick={() => void send("Pode explicar de outro jeito?")}
-                      >
-                        Explicar de outro jeito
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to="/">Pausar e voltar ao início</Link>
                       </Button>
                     </div>
                   )}
+                  {m.role === "tutor" &&
+                    i === messages.length - 1 &&
+                    !m.offerEnd &&
+                    !m.offerChange && (
+                      <div className="chat-context-actions">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={busy}
+                          onClick={() => void send("Pode mostrar um exemplo menor do conceito?")}
+                        >
+                          Ver exemplo
+                        </Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link
+                            to="/missoes/$id"
+                            params={{ id: m.missionId ?? state.recommendation.missionId }}
+                          >
+                            Resolver exercício
+                            <ArrowRight />
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={busy}
+                          onClick={() => void send("Pode explicar de outro jeito?")}
+                        >
+                          Explicar de outro jeito
+                        </Button>
+                      </div>
+                    )}
                 </div>
               </div>
             ))}

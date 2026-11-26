@@ -254,3 +254,43 @@ def test_ajuda_sem_resposta_deixa_conceito_nao_avaliado(api):
         sessao["id"],
     )
     assert status == 400
+
+
+@pytest.mark.parametrize("texto", [
+    "Estou entediado.",
+    "Tô com tédio nessa missão!",
+    "Quero fazer outra coisa",
+    "Prefiro trocar de modo agora.",
+])
+def test_chat_oferece_outra_atividade_sem_alterar_progresso(api, monkeypatch, texto):
+    def falhar_se_chamar_gemini(*args):
+        pytest.fail("A troca de atividade deve ser tratada pelas regras locais.")
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", falhar_se_chamar_gemini)
+    _, agir = abrir(api)
+    q = Dominio().questoes["MISS-C1-01"]
+    respondida = agir("answer", questionId=q["id"], optionId=q["gabarito"])
+    foco = respondida["state"]["recommendation"]["missionId"]
+    assert foco == "MISS-C1-02"
+
+    resposta = agir("chat", text=texto, questionId=foco)
+    assert resposta["result"]["offerChange"]
+    assert resposta["result"]["missionId"] == "MISS-C2-01"
+    assert resposta["state"] == respondida["state"]
+
+
+def test_chat_nao_confunde_negacao_com_pedido_de_troca(api):
+    sessao, agir = abrir(api)
+    resposta = agir("chat", text="Não estou entediada, quero outra explicação sobre listas.")
+    assert "offerChange" not in resposta["result"]
+    assert resposta["result"]["missionId"] == "MISS-C7-01"
+    assert resposta["state"] == sessao["state"]
+
+
+def test_chat_oferece_trilha_quando_todas_as_missoes_estao_concluidas(api):
+    _, agir = abrir(api)
+    for q in Dominio().missoes:
+        agir("answer", questionId=q["id"], optionId=q["gabarito"])
+    resposta = agir("chat", text="Estou entediada")
+    assert resposta["result"]["offerChange"]
+    assert "missionId" not in resposta["result"]

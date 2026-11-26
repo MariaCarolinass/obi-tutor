@@ -193,3 +193,39 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   fireEvent.click(screen.getByRole("button", { name: "Iniciar nova sessão" }));
   expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
 });
+
+it("offers a different mission when the student asks to switch activities", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/MISS-C1-01"] }));
+  render(<RouterProvider router={router} />);
+
+  const answer = await screen.findByRole("radio", { name: /O código cobrou R\$ 4/ });
+  fireEvent.click(answer);
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(await screen.findByText(/Boa descoberta! \+25 pontos/)).toBeVisible();
+  fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
+  fireEvent.change(await screen.findByRole("textbox", { name: "Sua pergunta" }), {
+    target: { value: "Estou entediado." },
+  });
+  fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));
+
+  const outraMissao = await screen.findByRole("link", { name: "Tentar outra missão" });
+  expect(outraMissao).toHaveAttribute("href", "/missoes/MISS-C1-02");
+  expect(screen.getByRole("link", { name: "Explorar a trilha" })).toHaveAttribute(
+    "href",
+    "/trilha",
+  );
+  expect(screen.getByRole("link", { name: "Pausar e voltar ao início" })).toHaveAttribute(
+    "href",
+    "/",
+  );
+  expect(router.state.location.pathname).toBe("/tutor");
+
+  fireEvent.click(outraMissao);
+  expect(
+    await screen.findByRole("heading", { name: "Complete o Código · Enunciados · 2" }),
+  ).toBeVisible();
+  const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+  fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
+  const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
+  expect(within(c1).getByText("25/100")).toBeVisible();
+});

@@ -8,6 +8,7 @@ export type Message = {
   text: string;
   missionId?: string;
   offerEnd?: boolean;
+  offerChange?: boolean;
 };
 
 type LearningSession = {

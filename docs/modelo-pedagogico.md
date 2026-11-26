@@ -42,7 +42,7 @@ Na demonstração, a recomendação prioriza dificuldades registradas no diagnó
 | Relata tédio ou deseja encerrar | Oferecer troca de modo, outra missão, pausa ou encerramento sem insistir |
 | Avança, mas falta evidência de domínio | Reconhecer o que fez e sugerir uma missão nova |
 
-Não inferir emoções ocultas a partir de uma nota. As intervenções respondem a **ações observáveis e preferências expressas**.
+Não inferir emoções ocultas a partir de uma nota. As intervenções respondem a **ações observáveis e preferências expressas**. Quando o estudante diz que está entediado ou quer mudar de atividade, o Olimpio oferece outra missão, acesso à trilha ou pausa. Essa orientação é preparada pelo backend e mantém a conversa aberta para quem quiser continuar.
 
 ## 5. Exemplos de conversa previstos
 

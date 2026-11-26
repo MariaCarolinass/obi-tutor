@@ -31,13 +31,45 @@ PARAR = re.compile(
     re.IGNORECASE,
 )
 
+TROCAR_ATIVIDADE = re.compile(
+    r"^(?:eu\s+)?(?:"
+    r"(?:estou|t[oô]|me sinto|estou me sentindo)\s+(?:entediad[oa]|com t[ée]dio)"
+    r"|(?:quero|prefiro|gostaria de)\s+"
+    r"(?:fazer outra coisa|(?:trocar|mudar) de (?:atividade|miss[aã]o|modo))"
+    r")(?:\s+(?:agora|(?:com|nesta|nessa|neste|nesse)\s+[^.!?]+))?[.!?]*$",
+    re.IGNORECASE,
+)
 
-def responder(dominio, texto, foco, recomendacao, tema_anterior):
+
+def sugerir_missao_diferente(dominio, foco, recomendada, concluidas):
+    id_foco = foco["id"] if foco else None
+    pendentes = [
+        q["id"] for q in dominio.missoes
+        if q["id"] != id_foco and q["id"] not in concluidas
+    ]
+    if recomendada in pendentes:
+        return recomendada
+    return next(iter(pendentes), None)
+
+
+def responder(dominio, texto, foco, recomendacao, tema_anterior, concluidas):
     if PARAR.fullmatch(texto):
         return {
             "text": "Tudo bem. Você pode pausar por aqui ou encerrar a sessão.",
             "offerEnd": True,
         }, tema_anterior
+
+    if TROCAR_ATIVIDADE.fullmatch(texto):
+        missao = sugerir_missao_diferente(
+            dominio, foco, recomendacao["missionId"], concluidas
+        )
+        resposta = {
+            "text": "Tudo bem mudar de ideia. Você pode escolher outra atividade, fazer uma pausa ou continuar conversando.",
+            "offerChange": True,
+        }
+        if missao is not None:
+            resposta["missionId"] = missao
+        return resposta, tema_anterior
 
     tema = next((c for c, regra in TEMAS.items() if re.search(regra, texto.lower())), None)
     conceito_id = tema or (foco and foco["concept_id"]) or tema_anterior

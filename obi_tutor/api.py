@@ -150,7 +150,8 @@ class Handler(SimpleHTTPRequestHandler):
             foco = dominio.questoes.get(dados.get("questionId"))
             estado = sessao.estado()
             resposta, sessao.tema_chat = responder(
-                dominio, texto.strip(), foco, estado["recommendation"], sessao.tema_chat
+                dominio, texto.strip(), foco, estado["recommendation"],
+                sessao.tema_chat, estado["completed"],
             )
             return resposta
 

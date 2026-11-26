@@ -31,7 +31,7 @@ Ao concluir as dez questões, o estudante vê o total de acertos e uma missão s
 
 O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. O tutor usa a missão acessada por último como contexto quando pertinente e pode sugerir uma missão relacionada. As respostas podem vir do LLM configurado ou de exemplos locais. Mensagens livres deixam a pontuação intacta.
 
-O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
+Quando o estudante diz que está entediado ou quer trocar de atividade, o chat oferece uma missão diferente, a trilha e uma pausa. O estudante também pode ficar no chat. O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
 
 ## 4. Trilha e painel de progresso
 

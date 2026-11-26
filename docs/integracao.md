@@ -14,7 +14,7 @@ A divisão a seguir documenta o contrato implementado para revisão do grupo. [P
 - **`POST /api/session/action`** recebe o cabeçalho `X-Study-Session` com o ID e um `requestId` inteiro crescente por sessão. A resposta contém `state` e `result`. Reenviar a última solicitação com o mesmo ID e conteúdo devolve o mesmo resultado.
   - `action: "answer"` recebe `questionId` e `optionId` e devolve correção, pontos concedidos, indicação de revisão e feedback quando aplicável.
   - `action: "help"` recebe `questionId` e `kind` (`hint`, `simple`, `concept` ou `direct`) e devolve uma orientação. As ajudas da missão são registradas para os próximos acertos naquele item.
-  - `action: "chat"` recebe `text` e, quando disponível, `questionId` da missão em foco. Retorna o texto do tutor e pode indicar uma missão relacionada ou oferecer o encerramento.
+  - `action: "chat"` recebe `text` e, quando disponível, `questionId` da missão em foco. Retorna o texto do tutor e pode indicar uma missão relacionada, oferecer outra atividade com `offerChange` ou oferecer o encerramento.
 - **`DELETE /api/session`** recebe `X-Study-Session` e encerra aquela sessão. A interface usa um identificador em memória da aba e abre outra sessão ao reiniciar ou recarregar. Sessões abandonadas expiram após duas horas sem atividade. O servidor local suporta até 256 sessões ativas.
 
 ## Tutor e contingência
