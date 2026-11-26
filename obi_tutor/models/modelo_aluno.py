@@ -67,11 +67,23 @@ class ModeloAluno:
 
     def registrar_atividade(self, questao_id, conceito_id, resultado, tentativas, dicas_utilizadas, tipo_atividade):
 
-        if conceito_id not in self.__conceitos:
+        if not isinstance(questao_id, str) or not questao_id.strip():
+            raise ValueError("Identificador da questão inválido.")
+        
+        if not isinstance(conceito_id, str) or conceito_id not in self.__conceitos:
             raise ValueError("Conceito inválido.")
+        
+        if type(resultado) is not bool:
+            raise ValueError("O resultado deve ser verdadeiro ou falso.")
 
-        if tipo_atividade not in ["diagnostico", "missao"]:
+        if not isinstance(tipo_atividade, str) or tipo_atividade not in ["diagnostico", "missao"]:
             raise ValueError("Tipo de atividade inválido.")
+
+        if type(tentativas) is not int or tentativas < 1:
+            raise ValueError("O número de tentativas deve ser um inteiro maior ou igual a 1.")
+
+        if type(dicas_utilizadas) is not int or dicas_utilizadas < 0:
+            raise ValueError("A quantidade de dicas deve ser um inteiro maior ou igual a zero.")
 
         atividade = {
             "questao_id": questao_id,
@@ -142,3 +154,8 @@ class ModeloAluno:
             conceito["acertos_independentes"] += 1
 
         return nova_pontuacao - pontuacao_atual
+
+    
+    # Método público para o modelo pedagógico consultar informações
+    def obter_historico_atividades(self):
+        return self.__historico_atividades.copy()
