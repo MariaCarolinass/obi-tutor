@@ -139,7 +139,6 @@ function MissionActivity({ mission }: { mission: Mission }) {
             <span className="tiny-tag">
               {concept?.short} · {mission.difficulty}
             </span>
-            <span className="tiny-tag">1º e 2º anos do Ensino Médio</span>
           </div>
           <h2>{mission.title}</h2>
           <p className="mission-prompt">{mission.prompt}</p>
