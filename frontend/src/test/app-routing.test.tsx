@@ -68,9 +68,15 @@ it("shows the next recommendation and lets the student reset the session", async
   const router = getRouter(createMemoryHistory({ initialEntries: ["/"] }));
   render(<RouterProvider router={router} />);
 
-  fireEvent.click(await screen.findByRole("link", { name: "Começar com o tutor" }));
+  fireEvent.click(await screen.findByRole("link", { name: "Começar pela trilha" }));
+  const concept = await screen.findByRole("heading", { name: "Interpretação de enunciados" });
+  fireEvent.click(
+    within(concept.closest("article")!).getByRole("button", { name: "Ver desafios" }),
+  );
+  const activities = screen.getByRole("dialog", { name: "Interpretação de enunciados" });
+  fireEvent.click(within(activities).getAllByRole("link", { name: "Iniciar" })[0]!);
   expect(
-    await screen.findByRole("heading", { name: "Detetive de Bugs · Enunciados · 1" }),
+    await screen.findByRole("heading", { name: "Detetive de Bugs · Enunciados · 1", level: 2 }),
   ).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
   expect(screen.getByRole("heading", { name: "Conte com o Olimpio" })).toBeVisible();
@@ -81,15 +87,24 @@ it("shows the next recommendation and lets the student reset the session", async
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   const progress = await screen.findByRole("region", { name: "Seu progresso nesta sessão" });
-  expect(
-    within(progress).getByText("Próximo desafio · Complete o Código · Enunciados · 2"),
-  ).toBeVisible();
+  const nextMission = within(progress).getByRole("link", {
+    name: "Próximo desafio · Complete o Código · Enunciados · 2",
+  });
+  expect(nextMission).toHaveAttribute("href", "/missoes/MISS-C1-02");
+  expect(screen.getByRole("link", { name: "Continuar na trilha" })).toHaveAttribute(
+    "href",
+    "/trilha",
+  );
   expect(screen.queryByText("Modo demonstração")).not.toBeInTheDocument();
 
+  fireEvent.click(nextMission);
+  expect(
+    await screen.findByRole("heading", { name: "Complete o Código · Enunciados · 2", level: 2 }),
+  ).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Reiniciar sessão" }));
   const dialog = screen.getByRole("dialog", { name: "Começar de novo?" });
   fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar sessão" }));
-  expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
+  expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
   expect(
     screen.queryByRole("region", { name: "Seu progresso nesta sessão" }),
   ).not.toBeInTheDocument();
@@ -102,11 +117,10 @@ it("shows the OBI guide and links to official rules, preparation and participati
   const guide = await screen.findByRole("region", {
     name: "Como funciona a OBI na modalidade Programação?",
   });
-  expect(screen.getByRole("link", { name: "Saiba como funciona a OBI" })).toHaveAttribute(
-    "href",
-    "#sobre-a-obi",
-  );
-  expect(within(guide).getByRole("heading", { name: "Onde o OBI Tutor entra?" })).toBeVisible();
+  expect(screen.queryByRole("link", { name: "Saiba como funciona a OBI" })).not.toBeInTheDocument();
+  const project = screen.getByRole("region", { name: "Onde o OBI Tutor entra?" });
+  expect(project).toBeVisible();
+  expect(project.compareDocumentPosition(guide)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
   expect(within(guide).getByRole("link", { name: /^Regulamento da OBI/ })).toHaveAttribute(
     "href",
     "https://olimpiada.ic.unicamp.br/info/regulamento/",
@@ -132,15 +146,25 @@ it("guides the warmup with a hint and distinct feedback without starting a score
   fireEvent.click(screen.getByRole("button", { name: "Pedir uma pista" }));
   expect(within(reply).getByText("Olimpio")).toBeVisible();
   expect(reply).toHaveTextContent("Comece com total igual a 0");
-  fireEvent.click(within(options).getByRole("button", { name: "13" }));
-  expect(reply).toHaveTextContent("Ainda falta a última volta");
-  fireEvent.click(within(options).getByRole("button", { name: "25" }));
-  expect(reply).toHaveTextContent("O total começa em 0 e passa por 5, 13 e 25");
-  expect(within(options).getByRole("button", { name: "25" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-  expect(screen.getByRole("link", { name: "Começar com o tutor" })).toBeVisible();
+  const feedback = [
+    ["12", "12 é o último valor da lista"],
+    ["13", "Ainda falta a última volta"],
+    ["25", "O total começa em 0 e passa por 5, 13 e 25"],
+  ] as const;
+  for (const [value, message] of feedback) {
+    const option = within(options).getByRole("button", { name: value });
+    fireEvent.click(option);
+    expect(reply).toHaveTextContent(message);
+    const close = screen.getByRole("button", { name: "Fechar resposta do Olimpio" });
+    fireEvent.click(close);
+    expect(reply).toBeEmptyDOMElement();
+    expect(close).not.toBeInTheDocument();
+    expect(option).toHaveAttribute("aria-pressed", "true");
+    expect(option).toHaveFocus();
+    fireEvent.click(option);
+    expect(reply).toHaveTextContent(message);
+  }
+  expect(screen.getByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
 
 it("shows the learner model status and diagnostic result for each assessed concept", async () => {
@@ -191,7 +215,7 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   fireEvent.click(within(dialog).getByRole("button", { name: "Encerrar sessão" }));
   expect(await screen.findByRole("heading", { name: "Sessão encerrada" })).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Iniciar nova sessão" }));
-  expect(await screen.findByRole("link", { name: "Começar com o tutor" })).toBeVisible();
+  expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
 
 it("offers a different mission when the student asks to switch activities", async () => {

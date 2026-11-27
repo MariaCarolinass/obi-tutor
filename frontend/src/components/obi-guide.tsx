@@ -12,6 +12,26 @@ function SourceLink({ href, children }: { href: string; children: string }) {
   );
 }
 
+export function ObiTutorIntro() {
+  return (
+    <section className="home-obi-project" aria-labelledby="home-obi-project-title">
+      <TutorIcon />
+      <div>
+        <h2 id="home-obi-project-title">Onde o OBI Tutor entra?</h2>
+        <p>
+          O OBI Tutor é um projeto acadêmico desenvolvido na Universidade Federal do Rio Grande do
+          Norte (UFRN) para apoiar quem está começando a programar. Aqui, você pratica Python em
+          missões inspiradas na OBI, pede uma pista quando trava e vê exemplos para entender o
+          próximo passo. A trilha ajuda a escolher o que estudar e o painel mostra seu progresso.
+        </p>
+        <Link to="/trilha" className="home-obi-project-link">
+          Explorar a trilha de estudos <ArrowRight size={15} aria-hidden="true" />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 export function ObiGuide() {
   return (
     <section className="home-obi" id="sobre-a-obi" aria-labelledby="home-obi-title" tabIndex={-1}>
@@ -82,22 +102,6 @@ export function ObiGuide() {
             </SourceLink>
           </div>
         </article>
-      </div>
-
-      <div className="home-obi-project">
-        <TutorIcon />
-        <div>
-          <h3>Onde o OBI Tutor entra?</h3>
-          <p>
-            O OBI Tutor é um projeto acadêmico desenvolvido na Universidade Federal do Rio Grande do
-            Norte (UFRN) para apoiar quem está começando a programar. Aqui, você pratica Python em
-            missões inspiradas na OBI, pede uma pista quando trava e vê exemplos para entender o
-            próximo passo. A trilha ajuda a escolher o que estudar e o painel mostra seu progresso.
-          </p>
-          <Link to="/trilha" className="home-obi-project-link">
-            Explorar a trilha de estudos <ArrowRight size={15} aria-hidden="true" />
-          </Link>
-        </div>
       </div>
     </section>
   );

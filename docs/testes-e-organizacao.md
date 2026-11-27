@@ -44,7 +44,7 @@ Em `frontend/`, `npm test` inicia um backend Python local em uma porta livre e e
 
 ### Roteiro de verificação no navegador
 
-1. Em uma sessão nova, selecione **Começar com o tutor** no Início. Conclua a primeira missão e volte ao Início. Confira se **Seu progresso nesta sessão** mostra uma missão concluída e indica o próximo desafio.
+1. Em uma sessão nova, selecione **Começar pela trilha** no Início. Abra **Interpretação de enunciados**, conclua a primeira missão e volte ao Início. Confira se **Seu progresso nesta sessão** mostra uma missão concluída e se o link **Próximo desafio** abre a missão recomendada. No aquecimento, selecione uma opção e confira se o botão **X** fecha a resposta do Olimpio.
 2. No Início, selecione **Fazer o diagnóstico**. Registre uma resposta, pause e retome. Confira se a questão seguinte está disponível. Ao concluir, confira o total de acertos e os dez resultados em **Seu nível por conceito**.
 3. Na trilha, abra uma missão ainda não concluída, erre a resposta e peça uma pista. Pause, retome e acerte. Confira os 15 pontos e o registro de uso de ajuda.
 4. No Início, abra **Conversar com o tutor**, envie uma pergunta ao Olimpio e confira **Meu Progresso**. Verifique se a nota se mantém e se a conversa aparece ao voltar ao chat.

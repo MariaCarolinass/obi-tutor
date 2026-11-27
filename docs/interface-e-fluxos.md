@@ -4,7 +4,7 @@
 
 A interface web tem um menu lateral no desktop e um menu recolhível no celular. O estudante pode alternar entre treinar e conversar com o tutor durante a sessão.
 
-- **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Começar com o tutor** ou **Continuar com o tutor** abre a missão recomendada. **Conversar com o tutor** abre o chat com o Olimpio. A página também dá acesso ao diagnóstico, à trilha e ao guia sobre a modalidade Programação da OBI.
+- **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Começar pela trilha** ou **Continuar na trilha** abre os conceitos e desafios disponíveis. Após iniciar uma atividade, **Seu progresso nesta sessão** inclui um link direto para o **Próximo desafio** recomendado. **Conversar com o tutor** abre o chat com o Olimpio. No aquecimento, o estudante pode fechar a resposta do Olimpio pelo botão **X**. A página também dá acesso ao diagnóstico e apresenta o projeto antes do guia sobre a modalidade Programação da OBI.
 - **Diagnóstico** (`/diagnostico`) oferece dez questões opcionais, um resultado por conceito avaliado e uma missão recomendada.
 - **Treinar para a OBI** (`/trilha`) apresenta os conceitos, pré-requisitos e atividades disponíveis. As missões abrem em `/missoes/<id>`.
 - **Pergunte ao Tutor** (`/tutor`) reúne a conversa demonstrativa com o Olimpio e sugestões de perguntas.
