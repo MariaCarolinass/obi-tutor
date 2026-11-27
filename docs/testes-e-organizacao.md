@@ -6,7 +6,7 @@ Endriw mantém domínio e conteúdo. Erika mantém o modelo do aluno. Maria Caro
 
 | Frente | Atividades principais | Entrega verificável |
 | --- | --- | --- |
-| Domínio e conteúdo | Conferir C1-C10, dependências, questões, gabaritos e dicas | Grafo sem ciclos e 33 itens revisados |
+| Domínio e conteúdo | Conferir C1-C10, dependências, questões, gabaritos e dicas | Grafo sem ciclos e catálogo de 39 itens |
 | Modelo do aluno | Implementar notas, eventos, acertos independentes e testes | Regras de pontuação determinísticas com testes |
 | Tutor e interface | Integrar os modos, Rota de Desbloqueio, LLM e painel | Fluxo interativo com estado compartilhado |
 | Integração e validação | Conectar camadas, revisar mudanças, manter execução demonstrável | Aplicação que percorre o fluxo de ponta a ponta |

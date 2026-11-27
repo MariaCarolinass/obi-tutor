@@ -48,7 +48,7 @@ A pausa e a navegação preservam o progresso registrado enquanto a sessão esti
 ## 6. Arquitetura
 
 - React, TypeScript, TanStack Router e Vite executam a interface no navegador.
-- O servidor Python carrega e valida os conceitos, os pré-requisitos e o catálogo de 33 questões. O backend consulta o gabarito local e entrega à interface os dados necessários para cada tela.
+- O servidor Python carrega e valida os conceitos, os pré-requisitos e o catálogo de 39 questões. O backend consulta o gabarito local e entrega à interface os dados necessários para cada tela.
 - O modelo do aluno em Python registra respostas objetivas. O modelo pedagógico usa o estado do aluno e o grafo para recomendar revisão, prática ou avanço.
 - O histórico do chat fica na aba. A correção, o progresso e as recomendações usam uma sessão em memória no servidor. O fluxo web funciona sem banco de dados.
 - O tutor usa a API de LLM quando configurada. Se o provedor estiver indisponível, o backend usa uma orientação local e preserva o fluxo de estudo.

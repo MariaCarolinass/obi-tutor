@@ -72,9 +72,10 @@ def test_catalogo_contem_grafo_e_distribuicao_sem_gabaritos(api):
     missoes = catalogo["trainingMissions"]
     assert Counter(q["concept"] for q in diagnostico) == {f"C{i}": 1 for i in range(1, 11)}
     assert Counter(q["concept"] for q in missoes) == {
-        f"C{i}": 3 if i in {4, 5, 6} else 2 for i in range(1, 11)
+        "C1": 2, "C2": 2, "C3": 2, "C4": 3, "C5": 3,
+        "C6": 3, "C7": 4, "C8": 2, "C9": 3, "C10": 5,
     }
-    assert len({q["id"] for q in diagnostico + missoes}) == 33
+    assert len({q["id"] for q in diagnostico + missoes}) == 39
     assert all(
         {"gabarito", "answer", "explicacao", "dicas"}.isdisjoint(q)
         for q in diagnostico + missoes
@@ -130,6 +131,22 @@ def test_perfis_atualizam_modelo_e_recomendacao(api, perfil):
         assert registro["records"]["C5"]["independent"] == 0
     assert all(0 <= r["score"] <= 100 for r in registro["records"].values())
     assert registro["recommendation"]["missionId"] in dominio.questoes
+
+
+@pytest.mark.parametrize("conceito", ["C7", "C9", "C10"])
+def test_missoes_adicionais_permitem_dominio_apos_erro_no_diagnostico(api, conceito):
+    _, agir = abrir(api)
+    dominio = Dominio()
+    diagnostico = next(q for q in dominio.diagnostico if q["concept_id"] == conceito)
+    agir("answer", questionId=diagnostico["id"], optionId=errada(diagnostico))
+
+    missoes = [q for q in dominio.missoes if q["concept_id"] == conceito]
+    for questao in missoes[:3]:
+        resposta = agir("answer", questionId=questao["id"], optionId=questao["gabarito"])
+        assert resposta["result"]["points"] == 25
+
+    registro = resposta["state"]["records"][conceito]
+    assert (registro["score"], registro["independent"], registro["status"]) == (75, 3, "Dominado")
 
 
 def test_erro_ajuda_reenvio_e_revisao(api):
