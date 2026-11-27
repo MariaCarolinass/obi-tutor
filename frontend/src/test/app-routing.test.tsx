@@ -77,10 +77,12 @@ it("shows the next recommendation and lets the student reset the session", async
     within(concept.closest("article")!).getByRole("button", { name: "Ver desafios" }),
   );
   const activities = screen.getByRole("dialog", { name: "Interpretação de enunciados" });
+  expect(within(activities).getByText(/Cada desafio tem uma questão/)).toBeVisible();
   fireEvent.click(within(activities).getAllByRole("link", { name: "Iniciar" })[0]!);
   expect(
     await screen.findByRole("heading", { name: "Detetive de Bugs · Enunciados · 1", level: 2 }),
   ).toBeVisible();
+  expect(screen.getByText("1 questão", { exact: true })).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
   expect(screen.getByRole("heading", { name: "Conte com o Olimpio" })).toBeVisible();
   fireEvent.click(screen.getAllByRole("radio")[0]!);

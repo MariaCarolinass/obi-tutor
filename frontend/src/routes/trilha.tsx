@@ -146,6 +146,9 @@ function Trail() {
             </span>
             <h2 id="concept-title">{selected.name}</h2>
             <p>{selected.description}</p>
+            {activities.length > 0 && (
+              <p>Cada desafio tem uma questão. Ao acertar, você conclui o desafio.</p>
+            )}
             {weak.length > 0 && (
               <div className="prerequisite-advice">
                 <Info size={15} />
