@@ -19,18 +19,13 @@ export function ObiTutorIntro() {
       <div>
         <h2 id="home-obi-project-title">Onde o OBI Tutor entra?</h2>
         <p>
-          No OBI Tutor, você pratica Python com desafios de programação inspirados na OBI. Na
-          trilha, você escolhe um assunto e resolve missões como descobrir o que um código imprime,
-          encontrar um erro ou completar um trecho.
-        </p>
-        <p>
-          Se travar, peça uma pista ao Olimpio para tentar de novo. Você também pode ver um exemplo
-          mais simples, pedir uma explicação direta ou conversar com ele sobre uma dúvida de Python.
-        </p>
-        <p>
-          Se estiver em dúvida sobre por onde começar, faça o diagnóstico para receber uma sugestão
-          de desafio. Conforme pratica, acompanhe seu progresso por assunto e veja qual desafio é
-          recomendado a seguir.
+          O OBI Tutor ajuda você a treinar para a OBI praticando Python em missões curtas. Em uma
+          missão sobre condicionais, por exemplo, você lê a regra para três varetas formarem um
+          triângulo e escolhe a condição que falta no código. Se ficar em dúvida, o Olimpio pode
+          sugerir que você pense no caso de duas varetas curtas e uma bem mais longa. Depois, você
+          pode tentar de novo ou pedir uma explicação direta. Para começar, escolha um assunto na
+          trilha ou faça o diagnóstico para receber uma sugestão de missão. No painel de progresso,
+          você vê o que já domina, o que ainda vale revisar e qual desafio fazer a seguir.
         </p>
         <Link to="/trilha" className="home-obi-project-link">
           Explorar a trilha de estudos <ArrowRight size={15} aria-hidden="true" />
