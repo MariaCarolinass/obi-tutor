@@ -19,10 +19,18 @@ export function ObiTutorIntro() {
       <div>
         <h2 id="home-obi-project-title">Onde o OBI Tutor entra?</h2>
         <p>
-          O OBI Tutor é um projeto acadêmico desenvolvido na Universidade Federal do Rio Grande do
-          Norte (UFRN) para apoiar quem está começando a programar. Aqui, você pratica Python em
-          missões inspiradas na OBI, pede uma pista quando trava e vê exemplos para entender o
-          próximo passo. A trilha ajuda a escolher o que estudar e o painel mostra seu progresso.
+          No OBI Tutor, você pratica Python com desafios inspirados na modalidade Programação da
+          OBI. Na trilha, você escolhe um assunto e resolve missões como descobrir o que um código
+          imprime, encontrar um erro ou completar um trecho.
+        </p>
+        <p>
+          Se travar, peça uma pista ao Olimpio para tentar de novo. Você também pode ver um exemplo
+          mais simples, pedir uma explicação direta ou conversar com ele sobre uma dúvida de Python.
+        </p>
+        <p>
+          Se estiver em dúvida sobre por onde começar, faça o diagnóstico para receber uma sugestão
+          de desafio. Conforme pratica, acompanhe seu progresso por assunto e veja qual desafio é
+          recomendado a seguir.
         </p>
         <Link to="/trilha" className="home-obi-project-link">
           Explorar a trilha de estudos <ArrowRight size={15} aria-hidden="true" />
