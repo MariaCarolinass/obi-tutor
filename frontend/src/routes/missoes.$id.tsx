@@ -136,7 +136,6 @@ function MissionActivity({ mission }: { mission: Mission }) {
         <section className="mission-question">
           <div className="mission-meta">
             <span className="eyebrow mb-0">{mission.type}</span>
-            <span className="tiny-tag">1 questão</span>
             <span className="tiny-tag">
               {concept?.short} · {mission.difficulty}
             </span>

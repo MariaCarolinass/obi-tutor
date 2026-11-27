@@ -82,7 +82,6 @@ it("shows the next recommendation and lets the student reset the session", async
   expect(
     await screen.findByRole("heading", { name: "Detetive de Bugs · Enunciados · 1", level: 2 }),
   ).toBeVisible();
-  expect(screen.getByText("1 questão", { exact: true })).toBeVisible();
   expect(screen.getByRole("button", { name: "Preciso de uma dica" })).toBeVisible();
   expect(screen.getByRole("heading", { name: "Conte com o Olimpio" })).toBeVisible();
   fireEvent.click(screen.getAllByRole("radio")[0]!);
