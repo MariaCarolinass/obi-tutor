@@ -30,6 +30,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ended, setEnded] = useState(false);
+  const [activityHistory, setActivityHistory] = useState<string[]>([]);
   const pending = useRef(0);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
   const nextChatId = useRef(0);
@@ -38,6 +39,13 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const activeQuestion = useRef<string | undefined>(undefined);
   const focus = useCallback((questionId: string) => {
     activeQuestion.current = questionId;
+  }, []);
+  const startActivity = useCallback((activityId: string) => {
+    setActivityHistory((history) =>
+      history[0] === activityId
+        ? history
+        : [activityId, ...history.filter((id) => id !== activityId)],
+    );
   }, []);
 
   function openSession() {
@@ -138,6 +146,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
       setSession(null);
       setMessages([welcome]);
       setEnded(true);
+      setActivityHistory([]);
       activeQuestion.current = undefined;
       return true;
     }));
@@ -154,6 +163,7 @@ export function LearningProvider({ children }: { children: ReactNode }) {
       setSession(current);
       setMessages([welcome]);
       setEnded(false);
+      setActivityHistory([]);
       return true;
     }));
 
@@ -176,7 +186,19 @@ export function LearningProvider({ children }: { children: ReactNode }) {
 
   return (
     <LearningContext.Provider
-      value={{ ...session, busy, answer, help, focus, reset, end, messages, send }}
+      value={{
+        ...session,
+        busy,
+        answer,
+        help,
+        focus,
+        activityHistory,
+        startActivity,
+        reset,
+        end,
+        messages,
+        send,
+      }}
     >
       {error && (
         <p className="notice" role="alert">

@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BookOpen,
@@ -18,6 +18,8 @@ import { status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/diagnostico")({
+  validateSearch: (search): { retomar?: true } =>
+    search["retomar"] === true ? { retomar: true } : {},
   head: () =>
     pageMeta(
       "Diagnóstico inicial",
@@ -26,19 +28,24 @@ export const Route = createFileRoute("/diagnostico")({
   component: Diagnostic,
 });
 function Diagnostic() {
+  const { retomar } = Route.useSearch();
   const {
     state,
     answer,
     busy,
+    startActivity,
     catalog: { concepts, diagnosticQuestions, trainingMissions },
   } = useLearning();
   const total = diagnosticQuestions.length;
-  const [started, setStarted] = useState(false);
+  const [started, setStarted] = useState(retomar === true);
   const [selected, setSelected] = useState<string | null>(null);
   const answered = diagnosticQuestions.filter((q) => state.diagnosticAnswers[q.id] !== undefined);
   const question = diagnosticQuestions.find((q) => state.diagnosticAnswers[q.id] === undefined);
   const finished = answered.length === total;
   const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
+  useEffect(() => {
+    if (started && !finished) startActivity("diagnostico");
+  }, [finished, startActivity, started]);
   if (finished) {
     const known = diagnosticQuestions.filter((q) => state.diagnosticAnswers[q.id] === true);
     return (

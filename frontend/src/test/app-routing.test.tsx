@@ -43,6 +43,9 @@ it("offers diagnostic from the home page and preserves learning and chat when na
 
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
+  fireEvent.click(await screen.findByRole("link", { name: "Continuar de onde parei" }));
+  expect(await screen.findByText("Questão 2 de 10")).toBeVisible();
+  fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   fireEvent.click(await screen.findByRole("link", { name: "Conversar com o tutor" }));
   const chat = await screen.findByRole("log");
   expect(within(chat).getByText("Olimpio")).toBeVisible();
@@ -91,7 +94,7 @@ it("shows the next recommendation and lets the student reset the session", async
     name: "Próximo desafio · Complete o Código · Enunciados · 2",
   });
   expect(nextMission).toHaveAttribute("href", "/missoes/MISS-C1-02");
-  expect(screen.getByRole("link", { name: "Continuar na trilha" })).toHaveAttribute(
+  expect(screen.getByRole("link", { name: "Começar pela trilha" })).toHaveAttribute(
     "href",
     "/trilha",
   );
@@ -188,6 +191,10 @@ it("shows the learner model status and diagnostic result for each assessed conce
   expect(reading).toHaveTextContent("Inicial");
   expect(inputOutput).toHaveTextContent("Vale reforçar");
   expect(inputOutput).toHaveTextContent("Inicial");
+
+  const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+  fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
+  expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
 
 it("redirects the old diagnostic URL into the single diagnostic flow", async () => {
@@ -202,6 +209,15 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   render(<RouterProvider router={router} />);
   fireEvent.click(await screen.findByRole("button", { name: "Preciso de uma dica" }));
   expect(await screen.findByRole("heading", { name: "Uma pista para você" })).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Quero fazer uma pausa" }));
+  fireEvent.click(screen.getByRole("button", { name: "Pausar atividade" }));
+  expect(screen.getByRole("heading", { name: "Um respiro também faz parte." })).toBeVisible();
+  const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+  fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
+  const resume = await screen.findByRole("link", { name: "Continuar de onde parei" });
+  expect(resume).toHaveAttribute("href", "/missoes/MISS-C4-01");
+  fireEvent.click(resume);
+  await screen.findByRole("button", { name: "Preciso de uma dica" });
   fireEvent.click(screen.getAllByRole("radio")[0]!);
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(await screen.findByText(/Boa descoberta! \+15 pontos/)).toBeVisible();

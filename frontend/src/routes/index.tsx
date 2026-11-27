@@ -157,9 +157,21 @@ const studyPaths = [
 function Index() {
   const {
     state,
-    catalog: { concepts, trainingMissions },
+    activityHistory,
+    catalog: { concepts, diagnosticQuestions, trainingMissions },
   } = useLearning();
   const started = hasActivity(state);
+  const resume = activityHistory.find((id) =>
+    id === "diagnostico"
+      ? diagnosticQuestions.some((question) => state.diagnosticAnswers[question.id] === undefined)
+      : !state.completed.includes(id),
+  );
+  const primaryLink =
+    resume === "diagnostico"
+      ? ({ to: "/diagnostico", search: { retomar: true } } as const)
+      : resume
+        ? ({ to: "/missoes/$id", params: { id: resume } } as const)
+        : ({ to: "/trilha" } as const);
   const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const completed = trainingMissions.filter((m) => state.completed.includes(m.id)).length;
@@ -180,8 +192,8 @@ function Index() {
           </p>
           <div className="home-actions">
             <Button asChild size="lg">
-              <Link to="/trilha">
-                {started ? "Continuar na trilha" : "Começar pela trilha"}
+              <Link {...primaryLink}>
+                {resume ? "Continuar de onde parei" : "Começar pela trilha"}
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>

@@ -74,6 +74,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
     answer,
     help,
     focus,
+    startActivity,
     busy,
     catalog: { concepts, trainingMissions },
   } = useLearning();
@@ -82,7 +83,10 @@ function MissionActivity({ mission }: { mission: Mission }) {
   const [guidance, setGuidance] = useState<{ kind: Help; message: string } | null>(null);
   const [paused, setPaused] = useState(false);
   const [pauseMenu, setPauseMenu] = useState(false);
-  useEffect(() => focus(mission.id), [focus, mission.id]);
+  useEffect(() => {
+    focus(mission.id);
+    startActivity(mission.id);
+  }, [focus, mission.id, startActivity]);
 
   const concept = concepts.find((c) => c.id === mission.concept);
   const record = state.records[mission.concept];

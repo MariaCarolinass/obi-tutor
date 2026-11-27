@@ -20,6 +20,8 @@ type LearningSession = {
   answer: (questionId: string, optionId: string) => Promise<Answer | undefined>;
   help: (questionId: string, kind: Help) => Promise<string | undefined>;
   focus: (questionId: string) => void;
+  activityHistory: string[];
+  startActivity: (activityId: string) => void;
   reset: () => Promise<boolean>;
   end: () => Promise<boolean>;
   messages: Message[];
