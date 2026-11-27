@@ -14,6 +14,23 @@ export const Route = createFileRoute("/progresso")({
     ),
   component: Progress,
 });
+
+const masteryPoints = 70;
+const masteryAnswers = 2;
+
+function masteryGap(score: number, independent: number) {
+  const points = Math.max(0, masteryPoints - score);
+  const answers = Math.max(0, masteryAnswers - independent);
+  return [
+    points > 0 ? `${points} ${points === 1 ? "ponto" : "pontos"}` : null,
+    answers > 0
+      ? `${answers} ${answers === 1 ? "acerto" : "acertos"} de primeira, sem ajuda`
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" e ");
+}
+
 function Progress() {
   const {
     state,
@@ -50,7 +67,7 @@ function Progress() {
               <th>Conceito</th>
               <th>Pontuação</th>
               <th>Seu momento</th>
-              <th>Acertos independentes</th>
+              <th>Acertos de primeira, sem ajuda</th>
               <th>Próximo passo</th>
             </tr>
           </thead>
@@ -58,6 +75,8 @@ function Progress() {
             {concepts.map((c) => {
               const record = state.records[c.id];
               const value = status(record);
+              const independent = record?.independent ?? 0;
+              const missing = masteryGap(record?.score ?? 0, independent);
               const mission =
                 trainingMissions.find(
                   (m) => m.concept === c.id && !state.completed.includes(m.id),
@@ -91,11 +110,21 @@ function Progress() {
                   </td>
                   <td>
                     <span className="progress-mobile-label" aria-hidden="true">
-                      Acertos independentes
+                      Acertos de primeira, sem ajuda
                     </span>
-                    {record?.independent ?? 0} acertos
+                    <strong>
+                      {Math.min(independent, masteryAnswers)} de {masteryAnswers}
+                    </strong>
+                    {independent > masteryAnswers && (
+                      <span className="progress-extra-answers"> · {independent} no total</span>
+                    )}
                   </td>
                   <td>
+                    {!record?.evaluated ? (
+                      <p className="progress-gap">Responda à primeira questão deste conceito.</p>
+                    ) : value !== "Dominado" && missing ? (
+                      <p className="progress-gap">Para dominar, ainda precisa de {missing}.</p>
+                    ) : null}
                     {mission ? (
                       <Link to="/missoes/$id" params={{ id: mission.id }}>
                         {value === "Dominado" ? "Reforçar" : "Praticar"}
@@ -115,18 +144,34 @@ function Progress() {
       </div>
       <p className="progress-note">
         <Info size={14} className="inline mr-1" />
-        Um conceito é dominado com pelo menos <strong>
-          70 pontos e 2 acertos independentes
+        Um conceito é dominado com pelo menos{" "}
+        <strong>
+          {masteryPoints} pontos e {masteryAnswers} acertos de primeira, sem ajuda
         </strong>{" "}
-        em questões diferentes, de primeira e sem ajuda. Erros e dicas nunca retiram pontos.
+        em questões diferentes.
       </p>
-      <div className="notice">
-        <Info size={16} />
-        <span>
-          Seu progresso reúne diagnóstico e desafios desta sessão. As conversas com o tutor não
-          alteram sua pontuação.
-        </span>
-      </div>
+      <details className="scoring-rules">
+        <summary>Como a pontuação funciona?</summary>
+        <ul>
+          <li>
+            <strong>+30 pontos</strong> por acerto no diagnóstico.
+          </li>
+          <li>
+            <strong>+25 pontos</strong> por acerto de primeira em uma missão, sem ajuda.
+          </li>
+          <li>
+            <strong>+15 pontos</strong> por acerto em uma missão após usar ajuda, mesmo se você
+            tiver errado antes.
+          </li>
+          <li>
+            <strong>+10 pontos</strong> por acerto em uma nova tentativa, sem ajuda.
+          </li>
+        </ul>
+        <p>
+          Cada questão concede pontos uma vez, até o limite de 100 por conceito. Erros, pedidos de
+          ajuda, pausas e conversas com o Olimpio deixam a pontuação como está.
+        </p>
+      </details>
       <section className="recommendation">
         <div className="recommendation-top">
           <Target size={16} /> SEU PRÓXIMO PASSO

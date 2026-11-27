@@ -89,6 +89,12 @@ function MissionActivity({ mission }: { mission: Mission }) {
   const attempt = state.attempts[mission.id];
   const solved = feedback?.correct === true;
   const points = feedback?.points ?? 0;
+  const score = record?.score ?? 0;
+  const scoreReason = attempt?.hinted
+    ? "após usar ajuda"
+    : (attempt?.errors ?? 0) > 0
+      ? "em uma nova tentativa, sem ajuda"
+      : "de primeira, sem ajuda";
   const next =
     trainingMissions.find(
       (m) =>
@@ -211,15 +217,21 @@ function MissionActivity({ mission }: { mission: Mission }) {
               </h3>
               <p>{feedback?.message}</p>
               <p className="mt-2">
-                {feedback?.review
-                  ? "Você já concluiu esta questão nesta sessão."
-                  : points === 0
-                    ? "O conceito já atingiu 100 pontos."
-                    : attempt?.hinted
-                      ? "Você usou ajuda e chegou à solução. Isso também é aprender!"
-                      : "Seu progresso foi atualizado. Continue explorando!"}{" "}
-                {status(record) === "Dominado" ? "Conceito dominado!" : ""}
+                {feedback?.review ? (
+                  "Você já concluiu esta questão nesta sessão."
+                ) : points === 0 ? (
+                  "O conceito já atingiu 100 pontos."
+                ) : (
+                  <>
+                    <strong>
+                      {concept?.name} passou de {score - points} para {score} de 100.
+                    </strong>{" "}
+                    Você ganhou {points} {points === 1 ? "ponto" : "pontos"} por acertar{" "}
+                    {scoreReason}.{score === 100 ? " Esse é o limite por conceito." : ""}
+                  </>
+                )}
               </p>
+              {status(record) === "Dominado" && <p>Conceito dominado!</p>}
               <div className="button-row">
                 {next ? (
                   <Button asChild>

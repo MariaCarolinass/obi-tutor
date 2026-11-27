@@ -62,9 +62,32 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
   expect(within(c1).getByText("30/100")).toBeVisible();
   expect(within(c1).getByText("Inicial")).toBeVisible();
+  expect(within(c1).getByText("1 de 2", { exact: true })).toBeVisible();
+  expect(within(c1).getByText(/40 pontos e 1 acerto de primeira, sem ajuda/)).toBeVisible();
+  fireEvent.click(screen.getByText("Como a pontuação funciona?"));
+  expect(screen.getByText("+30 pontos", { exact: true })).toBeVisible();
+  expect(screen.getByText("+10 pontos", { exact: true })).toBeVisible();
 
   fireEvent.click(within(nav).getByRole("link", { name: "Pergunte ao tutor" }));
   expect(await screen.findByText(question)).toBeVisible();
+
+  fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
+  const reading = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
+  fireEvent.click(within(reading).getByRole("link", { name: "Praticar" }));
+  fireEvent.click(await screen.findByRole("radio", { name: /O código cobrou R\$ 4/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(
+    await screen.findByText("Interpretação de enunciados passou de 30 para 55 de 100."),
+  ).toBeVisible();
+  expect(
+    screen.getByText(/Você ganhou 25 pontos por acertar de primeira, sem ajuda/),
+  ).toBeVisible();
+  const feedback = screen.getByRole("status");
+  fireEvent.click(within(feedback).getByRole("link", { name: "Ver meu progresso" }));
+  const updated = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
+  expect(within(updated).getByText("55/100")).toBeVisible();
+  expect(within(updated).getByText("2 de 2", { exact: true })).toBeVisible();
+  expect(within(updated).getByText("Para dominar, ainda precisa de 15 pontos.")).toBeVisible();
 });
 
 it("shows the next recommendation and lets the student reset the session", async () => {
@@ -233,6 +256,8 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   fireEvent.click(screen.getAllByRole("radio")[0]!);
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(await screen.findByText(/Boa descoberta! \+15 pontos/)).toBeVisible();
+  expect(screen.getByText(/passou de 0 para 15 de 100/)).toBeVisible();
+  expect(screen.getByText(/Você ganhou 15 pontos por acertar após usar ajuda/)).toBeVisible();
   fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
   const chat = await screen.findByRole("log");
   expect(within(chat).getByText(/Detetive de Bugs.*Condicionais.*Em que parte/)).toBeVisible();

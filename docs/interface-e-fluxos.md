@@ -23,7 +23,7 @@ Ao concluir as dez questões, o estudante vê o total de acertos e uma missão s
 1. Em **Treinar para a OBI**, abra um conceito para consultar sua descrição, seus pré-requisitos e suas missões. Com um pré-requisito abaixo de 50 pontos, a interface oferece revisão e permite iniciar a atividade escolhida.
 2. Cada desafio tem uma questão e termina quando o estudante acerta. Escolha uma alternativa e pressione **Verificar resposta**. O backend compara o ID da alternativa ao gabarito local e devolve o efeito sobre o progresso.
 3. Quando precisar de ajuda, escolha uma pista, um exemplo mais simples, uma revisão do conceito ou uma explicação direta. A cada erro, **Pergunte ao tutor** aparece ao lado de **Tentar novamente** e abre o chat com o contexto da missão. Após erros repetidos, a interface também oferece a troca de missão.
-4. Após acertar, consulte a explicação e os pontos recebidos. Siga para outra missão ou abra **Meu Progresso**. Uma missão concluída pode ser repetida para revisão, sem conceder novos pontos.
+4. Após acertar, consulte a explicação, a pontuação do conceito antes e depois e o motivo dos pontos recebidos. Siga para outra missão ou abra **Meu Progresso**. Uma missão concluída pode ser repetida para revisão, sem conceder novos pontos.
 
 **Quero fazer uma pausa** abre opções para pausar, voltar à trilha ou escolher outra missão. **Retomar atividade** volta à missão que está aberta.
 
@@ -37,7 +37,7 @@ Quando o estudante diz que está entediado ou quer trocar de atividade, o chat o
 
 ## 4. Trilha e painel de progresso
 
-A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. **Meu Progresso** reúne pontuações, acertos independentes, estados e uma recomendação para continuar.
+A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. **Meu Progresso** reúne a pontuação, os acertos de primeira e sem ajuda e o estado de cada conceito. O painel indica quantos pontos ou acertos ainda faltam para confirmar o domínio. **Como a pontuação funciona?** explica o valor de cada tipo de acerto e quando a pontuação fica igual.
 
 Após registrar atividade, o painel **Seu progresso nesta sessão**, no Início, exibe os totais de missões concluídas e conceitos dominados, além do próximo desafio recomendado.
 

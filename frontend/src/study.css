@@ -400,6 +400,36 @@
   display: none;
 }
 
+.study-page .progress-gap {
+  margin-bottom: 4px;
+}
+
+.study-page .progress-gap,
+.study-page .progress-extra-answers {
+  color: var(--muted-foreground);
+}
+
+.study-page .scoring-rules {
+  margin-block: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: var(--study-small);
+}
+
+.study-page .scoring-rules summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.study-page .scoring-rules ul {
+  margin-block: 10px;
+  padding-inline-start: 20px;
+  list-style: disc;
+}
+
 @media (max-width: 900px) {
   .study-page :is(.mission-layout, .chat-layout) {
     grid-template-columns: minmax(0, 1fr);
@@ -461,7 +491,7 @@
   }
 
   .study-page .progress-table td:last-child {
-    align-self: end;
+    grid-column: 1 / -1;
   }
 
   .study-page .progress-mobile-label {
