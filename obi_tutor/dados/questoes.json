@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0.0",
-  "total_questoes": 33,
+  "total_questoes": 39,
   "distribuicao": {
     "diagnostico": 10,
-    "missao": 20,
+    "missao": 26,
     "reforco": 3
   },
   "questoes": [
@@ -512,6 +512,48 @@
       ]
     },
     {
+      "id": "MISS-C7-03",
+      "concept_id": "C7",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Em Python, uma lista pode ser usada como uma pilha (estrutura LIFO — o último elemento a entrar é o primeiro a sair) com os métodos append() e pop(). Qual será a saída do código abaixo?",
+      "codigo_python": "pilha = []\npilha.append('A')\npilha.append('B')\npilha.append('C')\ntopo = pilha.pop()\npilha.append('D')\nprint(topo, pilha)",
+      "alternativas": [
+        { "id": "A", "texto": "C ['A', 'B', 'D']" },
+        { "id": "B", "texto": "A ['B', 'C', 'D']" },
+        { "id": "C", "texto": "C ['D', 'A', 'B']" },
+        { "id": "D", "texto": "B ['A', 'C', 'D']" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Após inserir 'A', 'B' e 'C', a pilha fica ['A', 'B', 'C']. O método pop() remove e retorna o último elemento ('C'), restando ['A', 'B']. Em seguida, append('D') insere 'D' no topo, formando ['A', 'B', 'D'].",
+      "dicas": [
+        "Em uma pilha, append() insere no final e pop() sem argumentos remove do final.",
+        "Acompanhe o conteúdo da lista após cada operação."
+      ]
+    },
+    {
+      "id": "MISS-C7-04",
+      "concept_id": "C7",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "medio",
+      "enunciado": "Uma matriz 3x3 representa um tabuleiro de jogo onde cada posição guarda a pontuação da célula. Qual será o valor impresso pela soma dos elementos da diagonal principal?",
+      "codigo_python": "tabuleiro = [\n    [2, 5, 1],\n    [4, 8, 3],\n    [7, 6, 9]\n]\nsoma_diag = 0\nfor i in range(3):\n    soma_diag += tabuleiro[i][i]\nprint(soma_diag)",
+      "alternativas": [
+        { "id": "A", "texto": "19" },
+        { "id": "B", "texto": "16" },
+        { "id": "C", "texto": "15" },
+        { "id": "D", "texto": "18" }
+      ],
+      "gabarito": "A",
+      "explicacao": "A diagonal principal corresponde às posições onde o índice da linha é igual ao da coluna: tabuleiro[0][0] = 2, tabuleiro[1][1] = 8 e tabuleiro[2][2] = 9. A soma é 2 + 8 + 9 = 19.",
+      "dicas": [
+        "Substitua i por 0, 1 e 2 na expressão tabuleiro[i][i].",
+        "Na diagonal principal, o índice da linha e o da coluna são iguais."
+      ]
+    },
+    {
       "id": "MISS-C8-01",
       "concept_id": "C8",
       "tipo": "missao",
@@ -596,6 +638,27 @@
       ]
     },
     {
+      "id": "MISS-C9-03",
+      "concept_id": "C9",
+      "tipo": "missao",
+      "formato": "Detetive de Bugs",
+      "dificuldade": "medio",
+      "enunciado": "Um aluno usou um dicionário (dict) para contar a frequência de cada código de produto lido, mas o código gera KeyError na primeira ocorrência de um código novo. Por que isso acontece?",
+      "codigo_python": "codigos = [101, 205, 101, 309]\ncontagem = {}\nfor c in codigos:\n    contagem[c] += 1\nprint(contagem)",
+      "alternativas": [
+        { "id": "A", "texto": "Não é possível fazer contagem[c] += 1 antes de inicializar a chave c no dicionário (como contagem.get(c, 0) + 1)." },
+        { "id": "B", "texto": "Dicionários em Python não aceitam números inteiros como chave." },
+        { "id": "C", "texto": "Deveria ser usado colchetes vazios [] para criar um dicionário." },
+        { "id": "D", "texto": "O operador += não funciona com valores armazenados em dicionários." }
+      ],
+      "gabarito": "A",
+      "explicacao": "Quando c = 101 aparece pela primeira vez, a chave 101 ainda não existe em 'contagem', então tentar ler seu valor atual com += 1 dispara KeyError. Usar contagem[c] = contagem.get(c, 0) + 1 resolve o problema.",
+      "dicas": [
+        "Para executar contagem[c] += 1, o Python precisa primeiro ler quanto vale contagem[c].",
+        "O método .get(chave, 0) devolve 0 se a chave ainda não estiver no dicionário."
+      ]
+    },
+    {
       "id": "MISS-C10-01",
       "concept_id": "C10",
       "tipo": "missao",
@@ -635,6 +698,69 @@
       "dicas": [
         "Faça o teste de mesa com nums = [1, 2, 4, 6] e veja em que linha 'melhor' é alterado.",
         "O que acontece se o bloco else nunca for executado após a sequência par?"
+      ]
+    },
+    {
+      "id": "MISS-C10-03",
+      "concept_id": "C10",
+      "tipo": "missao",
+      "formato": "Complete o Código",
+      "dificuldade": "dificil",
+      "enunciado": "Um sistema registra em um conjunto (set) os identificadores únicos dos competidores que enviaram soluções válidas, ignorando envios repetidos do mesmo competidor. Complete o código para exibir a quantidade de competidores distintos.",
+      "codigo_python": "envios = [12, 45, 12, 78, 45, 90, 12]\nunicos = set()\nfor comp in envios:\n    __________________\nprint(len(unicos))",
+      "alternativas": [
+        { "id": "A", "texto": "unicos.add(comp)" },
+        { "id": "B", "texto": "unicos.append(comp)" },
+        { "id": "C", "texto": "unicos[comp] = 1" },
+        { "id": "D", "texto": "unicos += comp" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Em Python, conjuntos (set) armazenam apenas elementos distintos e utilizam o método .add() para inserção. Ao final, unicos contém {12, 45, 78, 90}, e len(unicos) imprime 4.",
+      "dicas": [
+        "Listas usam .append(), enquanto conjuntos (set) usam outro método para inserir um item.",
+        "Conjuntos eliminam automaticamente valores duplicados."
+      ]
+    },
+    {
+      "id": "MISS-C10-04",
+      "concept_id": "C10",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "dificil",
+      "enunciado": "O módulo collections.deque permite implementar uma fila eficiente (estrutura FIFO — o primeiro a entrar é o primeiro a sair) usando append() e popleft(). Qual será a saída do programa abaixo?",
+      "codigo_python": "from collections import deque\n\nfila = deque([10, 20, 30])\nprimeiro = fila.popleft()\nfila.append(primeiro + 5)\nfila.popleft()\nprint(list(fila))",
+      "alternativas": [
+        { "id": "A", "texto": "[30, 15]" },
+        { "id": "B", "texto": "[10, 20]" },
+        { "id": "C", "texto": "[20, 30]" },
+        { "id": "D", "texto": "[15, 30]" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Inicialmente fila = [10, 20, 30]. O primeiro popleft() remove 10 (primeiro = 10), deixando [20, 30]. Depois append(15) insere 15 no fim, ficando [20, 30, 15]. O segundo popleft() remove 20, restando [30, 15].",
+      "dicas": [
+        "popleft() remove o elemento mais à esquerda (início da fila), e append() adiciona no final.",
+        "Acompanhe a fila a cada uma das três operações."
+      ]
+    },
+    {
+      "id": "MISS-C10-05",
+      "concept_id": "C10",
+      "tipo": "missao",
+      "formato": "Preveja a Saída",
+      "dificuldade": "dificil",
+      "enunciado": "Um algoritmo usa uma pilha para verificar se os parênteses de uma expressão estão balanceados, empilhando '(' e desempilhando ao encontrar ')'. Qual será a saída para a expressão abaixo?",
+      "codigo_python": "expr = '(()())'\npilha = []\nvalida = True\nfor ch in expr:\n    if ch == '(':\n        pilha.append(ch)\n    elif ch == ')':\n        if len(pilha) == 0:\n            valida = False\n            break\n        pilha.pop()\nprint(valida and len(pilha) == 0)",
+      "alternativas": [
+        { "id": "A", "texto": "True" },
+        { "id": "B", "texto": "False" },
+        { "id": "C", "texto": "0" },
+        { "id": "D", "texto": "['(', ')']" }
+      ],
+      "gabarito": "A",
+      "explicacao": "Para '(()())': '(' empilha (tam 1), '(' empilha (tam 2), ')' desempilha (tam 1), '(' empilha (tam 2), ')' desempilha (tam 1), ')' desempilha (tam 0). Como valida é True e a pilha termina vazia, imprime True.",
+      "dicas": [
+        "Conte quantos '(' estão abertos na pilha após ler cada caractere de '(()())'.",
+        "Para a expressão ser válida, a pilha nunca pode estar vazia ao ler ')' e deve terminar vazia."
       ]
     },
     {
