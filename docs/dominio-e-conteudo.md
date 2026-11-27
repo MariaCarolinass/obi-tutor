@@ -2,7 +2,7 @@
 
 ## 1. Escopo
 
-O domínio cobre interpretação de problemas e fundamentos de programação em Python, como aproximação didática de habilidades úteis em desafios inspirados na OBI Programação.
+O domínio cobre interpretação de problemas, fundamentos de Python e prática introdutória com estruturas de dados. Os desafios são inspirados na OBI Programação e voltados a estudantes do 1º e do 2º ano do Ensino Médio.
 
 ## 2. Conceitos e pré-requisitos
 
@@ -30,13 +30,13 @@ A trilha exibe os dez conceitos e seus pré-requisitos. O diagnóstico é opcion
 | Tipo | Quantidade | Finalidade |
 | --- | ---: | --- |
 | Diagnóstico | 10 | Um item inicial por conceito |
-| Missões regulares | 20 | Duas atividades diferentes por conceito |
+| Missões regulares | 26 | Duas por conceito e seis adicionais de estruturas de dados em C7, C9 e C10 |
 | Reforço para demonstração | 3 | Uma atividade extra para cada conceito central selecionado |
-| **Total** | **33** | Itens preparados e revisados pelo grupo |
+| **Total** | **39** | Questões do catálogo integrado |
 
 Formatos das missões: **Detetive de Bugs** (identificar falha), **Preveja a Saída** (interpretar execução) e **Complete o Código** (selecionar uma alternativa que falta).
 
-O grupo pode usar desafios de integração que combinem conceitos, mas **cada item deve apontar para um conceito principal** ao qual a pontuação será atribuída.
+As seis missões adicionais trabalham pilha e matriz em C7, frequência com dicionário em C9 e conjunto, fila e parênteses balanceados em C10. Cada questão atribui seus pontos a um único conceito principal.
 
 ## 4. Dados necessários para cada conceito
 
@@ -70,4 +70,4 @@ O grupo pode usar desafios de integração que combinem conceitos, mas **cada it
 
 Quem erra o diagnóstico e acerta duas missões regulares de primeira e sem ajuda chega a 50 pontos. O catálogo inclui missões de reforço em C4, C5 e C6 para oferecer uma nova oportunidade de avaliação.
 
-Em C4, C5 e C6, um erro no diagnóstico seguido por três acertos de primeira e sem ajuda resulta em 75 pontos e três acertos independentes. Nos demais conceitos, quem erra o diagnóstico pode chegar a 50 pontos com as duas missões atuais. [Modelo do aluno](modelo-do-aluno.md)
+Após errar o diagnóstico, é possível chegar a 75 pontos e três acertos independentes em C4, C5 e C6 com a missão de reforço e em C7, C9 e C10 com as missões adicionais. C1, C2, C3 e C8 têm duas missões cada e chegam a 50 pontos nesse cenário. [Modelo do aluno](modelo-do-aluno.md)

@@ -16,7 +16,7 @@ A **Rota de Desbloqueio** oferece alternativas quando há dificuldade: pista, ex
 ## Demonstração integrada
 
 - Início, Diagnóstico, Treinar para a OBI, Pergunte ao Tutor e Meu Progresso em React, TypeScript, TanStack Router e Vite.
-- Trilha com dez conceitos e 33 questões do catálogo. São dez questões de diagnóstico, vinte missões regulares e três de reforço.
+- Trilha com dez conceitos e 39 questões do catálogo. São dez questões de diagnóstico, 26 missões regulares e três de reforço. A prática inclui listas, matrizes, pilhas, filas, dicionários e conjuntos.
 - O backend Python valida o domínio, corrige as respostas, registra o desempenho e recomenda o próximo passo. O chat do Olimpio usa orientações locais e pode usar um LLM quando configurado.
 - O progresso fica em memória no backend e a conversa em memória no navegador. Os dois modos compartilham a sessão da aba.
 
