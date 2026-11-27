@@ -38,6 +38,8 @@ Formatos das missões: **Detetive de Bugs** (identificar falha), **Preveja a Sa�
 
 As seis missões adicionais trabalham pilha e matriz em C7, frequência com dicionário em C9 e conjunto, fila e parênteses balanceados em C10. Cada questão atribui seus pontos a um único conceito principal.
 
+O catálogo de treino agrupa as missões por conceito e ordena as atividades de fácil a difícil. Dentro da mesma dificuldade, vale a ordem do arquivo de questões. Os níveis de dificuldade servem para orientar o estudo, e o estudante pode iniciar qualquer missão.
+
 ## 4. Dados necessários para cada conceito
 
 - `id`, nome e descrição curta.
@@ -53,6 +55,7 @@ As seis missões adicionais trabalham pilha e matriz em C7, frequência com dici
 - Alternativas ou resposta estruturada verificável.
 - Gabarito local inequívoco.
 - Explicação do raciocínio e até duas dicas preparadas.
+- O campo `feedback_por_alternativa` associa o ID de cada alternativa incorreta a uma orientação curta. O catálogo atual tem orientações nas 39 questões. O backend devolve a orientação a cada erro nas missões e na revisão após o diagnóstico.
 - Indicação simples de dificuldade, útil para a escolha entre missões.
 
 ## 6. Regras de qualidade
