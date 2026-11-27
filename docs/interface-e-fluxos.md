@@ -29,9 +29,9 @@ Ao concluir as dez questões, o estudante vê o total de acertos e uma missão s
 
 ## 3. Pergunte ao Tutor
 
-O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. O tutor usa a missão acessada por último como contexto quando pertinente e pode sugerir uma missão relacionada. As respostas podem vir do LLM configurado ou de exemplos locais. Mensagens livres deixam a pontuação intacta.
+O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. A pergunta aparece imediatamente e a conversa indica enquanto o Olimpio prepara a resposta. Os atalhos **Ver exemplo** e **Explicar de outro jeito** podem enfileirar outra pergunta. O tutor retoma o assunto das mensagens recentes e usa o enunciado da missão quando o estudante pergunta sobre ela. Mensagens livres deixam a pontuação intacta.
 
-O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
+Quando o estudante diz que está entediado ou quer trocar de atividade, o chat oferece uma missão diferente, a trilha e uma pausa. O estudante também pode ficar no chat. O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
 
 ## 4. Trilha e painel de progresso
 

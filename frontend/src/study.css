@@ -287,6 +287,11 @@
   background: var(--accent);
 }
 
+.study-page .chat-context-actions {
+  margin: 0;
+  padding: 0 14px 14px;
+}
+
 .study-page .chat-form {
   padding: 14px;
 }

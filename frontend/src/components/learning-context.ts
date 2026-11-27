@@ -8,6 +8,9 @@ export type Message = {
   text: string;
   missionId?: string;
   offerEnd?: boolean;
+  offerChange?: boolean;
+  quiet?: boolean;
+  pendingId?: number;
 };
 
 type LearningSession = {
@@ -20,7 +23,7 @@ type LearningSession = {
   reset: () => Promise<boolean>;
   end: () => Promise<boolean>;
   messages: Message[];
-  send: (text: string) => Promise<boolean>;
+  send: (text: string) => boolean;
 };
 
 export const LearningContext = createContext<LearningSession | null>(null);

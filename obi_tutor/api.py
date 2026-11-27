@@ -10,7 +10,6 @@ from urllib.parse import urlsplit
 
 from obi_tutor.dominio import Dominio
 from obi_tutor.sessao import Sessao
-from obi_tutor.tutor import responder
 
 
 PASTA_FRONTEND = Path(__file__).resolve().parent.parent / "frontend" / "dist"
@@ -148,11 +147,10 @@ class Handler(SimpleHTTPRequestHandler):
             if not isinstance(texto, str) or not 0 < len(texto.strip()) <= 2000:
                 raise ValueError("Digite uma pergunta de até 2000 caracteres.")
             foco = dominio.questoes.get(dados.get("questionId"))
-            estado = sessao.estado()
-            resposta, sessao.tema_chat = responder(
-                dominio, texto.strip(), foco, estado["recommendation"], sessao.tema_chat
+            recomendada = sessao.estado()["recommendation"]["missionId"]
+            return sessao.conversa.responder(
+                dominio, texto.strip(), foco, recomendada, sessao.concluidas,
             )
-            return resposta
 
         questao = dominio.questoes.get(dados.get("questionId"))
         if questao is None:

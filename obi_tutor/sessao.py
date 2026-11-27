@@ -2,6 +2,7 @@ from threading import Lock
 
 from obi_tutor.models.modelo_aluno import ModeloAluno
 from obi_tutor.pedagogia import oferecer_ajuda, orientar_erro, recomendar, requisitos_fracos
+from obi_tutor.tutor import ConversaTutor
 
 
 class Sessao:
@@ -12,7 +13,7 @@ class Sessao:
         self.concluidas = []
         self.diagnostico = {}
         self.ultimo_pedido = None
-        self.tema_chat = None
+        self.conversa = ConversaTutor()
         self.lock = Lock()
 
     def estado(self):

@@ -30,9 +30,15 @@ function Tutor() {
     const element = history.current;
     if (element) element.scrollTop = element.scrollHeight;
   }, [messages]);
-  const submit = async () => {
-    if (!text.trim() || busy) return;
-    if (await send(text)) setText((draft) => (draft === text ? "" : draft));
+  const waiting = messages.some((message) => message.pendingId !== undefined);
+  const latestReply = messages
+    .filter(
+      (message) =>
+        message.role === "tutor" && message.pendingId === undefined && (!waiting || !message.quiet),
+    )
+    .at(-1);
+  const submit = () => {
+    if (send(text)) setText("");
   };
   return (
     <>
@@ -62,55 +68,73 @@ function Tutor() {
                 {m.role === "tutor" && <TutorIcon />}
                 <div className="message-body">
                   <small>{m.role === "tutor" ? tutorName : "Você"}</small>
-                  <p>{m.text}</p>
-                  {m.role === "tutor" && i === messages.length - 1 && m.offerEnd && (
-                    <div className="chat-context-actions">
-                      <Button disabled={busy} variant="outline" onClick={() => void end()}>
-                        Encerrar sessão
-                      </Button>
-                      <Button variant="ghost" asChild>
-                        <Link to="/">Pausar e voltar ao início</Link>
-                      </Button>
-                    </div>
-                  )}
-                  {m.role === "tutor" && i === messages.length - 1 && !m.offerEnd && (
-                    <div className="chat-context-actions">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={busy}
-                        onClick={() => void send("Pode mostrar um exemplo menor do conceito?")}
-                      >
-                        Ver exemplo
-                      </Button>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link
-                          to="/missoes/$id"
-                          params={{ id: m.missionId ?? state.recommendation.missionId }}
-                        >
-                          Resolver exercício
-                          <ArrowRight />
-                        </Link>
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={busy}
-                        onClick={() => void send("Pode explicar de outro jeito?")}
-                      >
-                        Explicar de outro jeito
-                      </Button>
-                    </div>
-                  )}
+                  <p role={m.pendingId !== undefined ? "status" : undefined}>{m.text}</p>
                 </div>
               </div>
             ))}
           </div>
+          {latestReply && !latestReply.quiet && (
+            <div className="chat-context-actions" role="group" aria-label="Opções do tutor">
+              {latestReply.offerEnd ? (
+                <>
+                  <Button disabled={busy} variant="outline" onClick={() => void end()}>
+                    Encerrar sessão
+                  </Button>
+                  <Button variant="ghost" asChild>
+                    <Link to="/">Pausar e voltar ao início</Link>
+                  </Button>
+                </>
+              ) : latestReply.offerChange ? (
+                <>
+                  {latestReply.missionId && (
+                    <Button variant="outline" size="sm" asChild>
+                      <Link to="/missoes/$id" params={{ id: latestReply.missionId }}>
+                        Tentar outra missão
+                        <ArrowRight />
+                      </Link>
+                    </Button>
+                  )}
+                  <Button variant="outline" size="sm" asChild>
+                    <Link to="/trilha">Explorar a trilha</Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/">Pausar e voltar ao início</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => send("Pode mostrar um exemplo menor do conceito?")}
+                  >
+                    Ver exemplo
+                  </Button>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link
+                      to="/missoes/$id"
+                      params={{ id: latestReply.missionId ?? state.recommendation.missionId }}
+                    >
+                      Resolver exercício
+                      <ArrowRight />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => send("Pode explicar de outro jeito?")}
+                  >
+                    Explicar de outro jeito
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
           <form
             className="chat-form"
             onSubmit={(e) => {
               e.preventDefault();
-              void submit();
+              submit();
             }}
           >
             <textarea
@@ -122,23 +146,15 @@ function Tutor() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  void submit();
+                  submit();
                 }
               }}
             />
-            <Button
-              type="submit"
-              size="icon"
-              disabled={busy || !text.trim()}
-              aria-label="Enviar pergunta"
-            >
+            <Button type="submit" size="icon" disabled={!text.trim()} aria-label="Enviar pergunta">
               <Send />
             </Button>
           </form>
-          <p className="chat-disclaimer">
-            {busy ? "Olimpio está preparando uma resposta. " : ""}O tutor analisa o texto da sua
-            pergunta. Evite enviar dados pessoais.
-          </p>
+          <p className="chat-disclaimer">Evite enviar dados pessoais.</p>
         </section>
         <aside className="chat-suggestions">
           <h3>
@@ -146,7 +162,7 @@ function Tutor() {
             Por onde começar?
           </h3>
           {suggestions.map((s) => (
-            <Button variant="outline" key={s} disabled={busy} onClick={() => void send(s)}>
+            <Button variant="outline" key={s} onClick={() => send(s)}>
               <BookOpen />
               {s}
             </Button>

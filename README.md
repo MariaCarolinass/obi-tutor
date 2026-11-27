@@ -55,9 +55,9 @@ npm run dev
 
 Abra o endereço exibido pelo Vite, normalmente [http://localhost:5173](http://localhost:5173). O Vite encaminha `/api` para o Python na porta 8000. O backend usa a biblioteca padrão do Python.
 
-### Tutor com IA opcional
+### Tutor com IA
 
-Para a demonstração privada, use uma chave de um projeto no **Nível gratuito** do Google AI Studio. O Olimpio usa o Gemini 3.1 Flash-Lite com a chave `OLIMPIO_TUTOR_OBI`, lida do ambiente do Python ou do arquivo `.env` na raiz do repositório. A aplicação usa orientações preparadas se a chave estiver ausente, a cota se esgotar ou a API estiver indisponível. [Contrato e contingência](docs/integracao.md#tutor-e-contingência) · [Preços e cota do Gemini](https://aistudio.google.com/docs/pricing#gemini-3.1-flash-lite)
+Use uma chave do Google AI Studio e configure a variável de ambiente `GOOGLE_API_KEY` com o valor da chave. O Olimpio usa o Gemini 3.1 Flash-Lite.
 
 ### Testes e build
 
