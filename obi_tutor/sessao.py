@@ -1,6 +1,10 @@
 from threading import Lock
 
-from obi_tutor.models.modelo_aluno import ModeloAluno
+from obi_tutor.models.modelo_aluno import (
+    LIMITE_PONTUACAO,
+    PONTOS_ACERTO_INDEPENDENTE_MISSAO,
+    ModeloAluno,
+)
 from obi_tutor.pedagogia import oferecer_ajuda, orientar_erro, recomendar, requisitos_fracos
 from obi_tutor.tutor import ConversaTutor
 
@@ -31,7 +35,7 @@ class Sessao:
 
         if contexto not in self.conversas:
             self.conversas[contexto] = ConversaTutor()
-        recomendada = self.estado()["recommendation"]["missionId"]
+        recomendada = recomendar(self.dominio, self.aluno, self.concluidas, self.diagnostico)["missionId"]
         return self.conversas[contexto].responder(
             self.dominio, texto, foco, recomendada, self.concluidas,
             diagnostico=diagnostico,
@@ -50,6 +54,7 @@ class Sessao:
         }
         return {
             "records": registros,
+            "trainingProgress": self._progresso_trilha(),
             "attempts": {
                 id_: {
                     "errors": tentativa["errors"],
@@ -63,6 +68,26 @@ class Sessao:
             "recommendation": recomendar(self.dominio, self.aluno, self.concluidas, self.diagnostico),
             "weakPrerequisites": requisitos_fracos(self.dominio, self.aluno),
         }
+
+    def _progresso_trilha(self):
+        progresso = {id_: {"points": 0, "maxPoints": 0} for id_ in self.dominio.conceitos}
+        concluidas = set(self.concluidas)
+        for questao in self.dominio.missoes:
+            registro = progresso[questao["concept_id"]]
+            registro["maxPoints"] = min(
+                LIMITE_PONTUACAO,
+                registro["maxPoints"] + PONTOS_ACERTO_INDEPENDENTE_MISSAO,
+            )
+            if questao["id"] in concluidas:
+                tentativa = self.tentativas[questao["id"]]
+                pontos = self.aluno.calcular_pontuacao({
+                    "resultado": True,
+                    "tipo_atividade": questao["tipo"],
+                    "tentativas": tentativa["errors"] + 1,
+                    "dicas_utilizadas": tentativa["ajudas"],
+                })
+                registro["points"] = min(LIMITE_PONTUACAO, registro["points"] + pontos)
+        return progresso
 
     def _tentativa(self, id_):
         return self.tentativas.setdefault(

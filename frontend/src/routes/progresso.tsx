@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCheck, Info, Target } from "lucide-react";
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { useLearning } from "@/components/learning-context";
+import { TrainingProgress } from "@/components/training-progress";
 import { Button } from "@/components/ui/button";
 import { status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
@@ -34,7 +35,7 @@ function masteryGap(score: number, independent: number) {
 function Progress() {
   const {
     state,
-    catalog: { concepts, trainingMissions },
+    catalog: { concepts, trainingMissions, diagnosticQuestions },
   } = useLearning();
   const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
@@ -65,8 +66,8 @@ function Progress() {
           <thead>
             <tr>
               <th>Conceito</th>
-              <th>Pontuação</th>
-              <th>Seu momento</th>
+              <th>Trilha e diagnóstico</th>
+              <th>Domínio do conceito</th>
               <th>Acertos de primeira, sem ajuda</th>
               <th>Próximo passo</th>
             </tr>
@@ -77,10 +78,12 @@ function Progress() {
               const value = status(record);
               const independent = record?.independent ?? 0;
               const missing = masteryGap(record?.score ?? 0, independent);
-              const mission =
-                trainingMissions.find(
-                  (m) => m.concept === c.id && !state.completed.includes(m.id),
-                ) ?? trainingMissions.find((m) => m.concept === c.id);
+              const missions = trainingMissions.filter((m) => m.concept === c.id);
+              const pending = missions.find((m) => !state.completed.includes(m.id));
+              const mission = pending ?? missions[0];
+              const diagnosticQuestion = diagnosticQuestions.find((q) => q.concept === c.id);
+              const diagnosticAnswer =
+                diagnosticQuestion && state.diagnosticAnswers[diagnosticQuestion.id];
               return (
                 <tr className={value === "Dominado" ? "mastered" : ""} key={c.id}>
                   <td>
@@ -89,24 +92,28 @@ function Progress() {
                   </td>
                   <td>
                     <span className="progress-mobile-label" aria-hidden="true">
-                      Pontuação
+                      Trilha e diagnóstico
                     </span>
-                    <div className="table-score">
-                      <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
-                        {record?.evaluated ? `${record.score}/100` : "—"}
-                      </strong>
-                      <progress
-                        max="100"
-                        value={record?.score ?? 0}
-                        aria-label={`Progresso em ${c.name}`}
-                      />
-                    </div>
+                    <TrainingProgress score={state.trainingProgress?.[c.id]} concept={c.name} />
+                    {diagnosticQuestion && (
+                      <p className="progress-diagnostic">
+                        Diagnóstico ·{" "}
+                        {diagnosticAnswer === undefined
+                          ? "sem resposta"
+                          : diagnosticAnswer
+                            ? "acerto"
+                            : "resposta incorreta"}
+                      </p>
+                    )}
                   </td>
                   <td>
                     <span className="progress-mobile-label" aria-hidden="true">
-                      Seu momento
+                      Domínio do conceito
                     </span>
                     <StatusBadge value={value} />
+                    {record?.evaluated && (
+                      <p className="progress-official-score">{record.score} pontos no conceito</p>
+                    )}
                   </td>
                   <td>
                     <span className="progress-mobile-label" aria-hidden="true">
@@ -125,9 +132,14 @@ function Progress() {
                     ) : value !== "Dominado" && missing ? (
                       <p className="progress-gap">Para dominar, ainda precisa de {missing}.</p>
                     ) : null}
+                    {!pending && mission && (
+                      <p className="progress-gap">
+                        Todos os desafios disponíveis foram concluídos.
+                      </p>
+                    )}
                     {mission ? (
                       <Link to="/missoes/$id" params={{ id: mission.id }}>
-                        {value === "Dominado" ? "Reforçar" : "Praticar"}
+                        {pending ? (value === "Dominado" ? "Reforçar" : "Praticar") : "Revisar"}
                         <ArrowRight size={11} className="inline ml-1" />
                       </Link>
                     ) : (
@@ -170,6 +182,11 @@ function Progress() {
         <p>
           Cada questão concede pontos uma vez, até o limite de 100 por conceito. Erros, pedidos de
           ajuda, pausas e conversas com o Olimpio deixam a pontuação como está.
+        </p>
+        <p>
+          A barra da trilha considera os pontos que você pode ganhar nos desafios disponíveis, até
+          100. O resultado do diagnóstico aparece separado e os acertos nele contam para o domínio
+          do conceito.
         </p>
       </details>
       <section className="recommendation">

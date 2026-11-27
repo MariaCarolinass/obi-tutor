@@ -60,7 +60,10 @@ it("offers diagnostic from the home page and preserves learning and chat when na
 
   fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
   const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
-  expect(within(c1).getByText("30/100")).toBeVisible();
+  expect(within(c1).getByText("30 pontos no conceito")).toBeVisible();
+  expect(within(c1).getByText("Diagnóstico · acerto")).toBeVisible();
+  expect(within(c1).getByRole("progressbar")).toHaveAttribute("value", "0");
+  expect(within(c1).getByRole("progressbar")).toHaveAttribute("max", "50");
   expect(within(c1).getByText("Inicial")).toBeVisible();
   expect(within(c1).getByText("1 de 2", { exact: true })).toBeVisible();
   expect(within(c1).getByText(/40 pontos e 1 acerto de primeira, sem ajuda/)).toBeVisible();
@@ -77,7 +80,7 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   fireEvent.click(await screen.findByRole("radio", { name: /O código cobrou R\$ 4/ }));
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(
-    await screen.findByText("Interpretação de enunciados passou de 30 para 55 de 100."),
+    await screen.findByText("Interpretação de enunciados passou de 30 para 55 pontos."),
   ).toBeVisible();
   expect(
     screen.getByText(/Você ganhou 25 pontos por acertar de primeira, sem ajuda/),
@@ -85,7 +88,8 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   const feedback = screen.getByRole("status");
   fireEvent.click(within(feedback).getByRole("link", { name: "Ver meu progresso" }));
   const updated = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
-  expect(within(updated).getByText("55/100")).toBeVisible();
+  expect(within(updated).getByText("55 pontos no conceito")).toBeVisible();
+  expect(within(updated).getByRole("progressbar")).toHaveAttribute("value", "25");
   expect(within(updated).getByText("2 de 2", { exact: true })).toBeVisible();
   expect(within(updated).getByText("Para dominar, ainda precisa de 15 pontos.")).toBeVisible();
 });
@@ -128,6 +132,16 @@ it("shows the next recommendation and lets the student reset the session", async
   expect(
     await screen.findByRole("heading", { name: "Complete o Código · Enunciados · 2", level: 2 }),
   ).toBeVisible();
+  fireEvent.click(screen.getByRole("radio", { name: /x % 3 == 0 and x % 5 != 0/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  const success = await screen.findByRole("status");
+  fireEvent.click(within(success).getByRole("link", { name: "Ver meu progresso" }));
+  const finished = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
+  expect(within(finished).getByText("50 de 50 pontos")).toBeVisible();
+  expect(within(finished).getByRole("progressbar")).toHaveAttribute("value", "50");
+  expect(within(finished).getByRole("progressbar")).toHaveAttribute("max", "50");
+  expect(within(finished).getByText("Diagnóstico · sem resposta")).toBeVisible();
+  expect(within(finished).getByText("50 pontos no conceito")).toBeVisible();
   fireEvent.click(screen.getByRole("button", { name: "Reiniciar sessão" }));
   const dialog = screen.getByRole("dialog", { name: "Começar de novo?" });
   fireEvent.click(within(dialog).getByRole("button", { name: "Reiniciar sessão" }));
@@ -256,7 +270,7 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   fireEvent.click(screen.getAllByRole("radio")[0]!);
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(await screen.findByText(/Boa descoberta! \+15 pontos/)).toBeVisible();
-  expect(screen.getByText(/passou de 0 para 15 de 100/)).toBeVisible();
+  expect(screen.getByText(/passou de 0 para 15 pontos/)).toBeVisible();
   expect(screen.getByText(/Você ganhou 15 pontos por acertar após usar ajuda/)).toBeVisible();
   fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
   const chat = await screen.findByRole("log");
@@ -328,7 +342,7 @@ it("offers a different mission when the student asks to switch activities", asyn
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Meu progresso" }));
   const c1 = await screen.findByRole("row", { name: /Interpretação de enunciados/ });
-  expect(within(c1).getByText("25/100")).toBeVisible();
+  expect(within(c1).getByText("25 pontos no conceito")).toBeVisible();
 });
 
 it("shows the message immediately and queues the shortcuts while a reply is pending", async () => {

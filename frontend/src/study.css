@@ -72,7 +72,6 @@
     .prerequisites,
     .tiny-tag,
     .option-letter,
-    .mission-progress p,
     .mission-progress small,
     .integration-strip,
     .message-body > small,
@@ -160,10 +159,6 @@
   padding: 4px 8px;
   border-radius: 100px;
   font-size: 0.75rem;
-}
-
-.study-page .concept-score strong {
-  font-size: var(--study-small);
 }
 
 .study-page .concept-actions {
@@ -384,7 +379,7 @@
   font-weight: 700;
 }
 
-.study-page .progress-table :is(th, td, a, .table-score strong) {
+.study-page .progress-table :is(th, td, a) {
   font-size: var(--study-small);
 }
 
@@ -392,8 +387,28 @@
   font-size: var(--study-caption);
 }
 
-.study-page .table-score strong {
-  width: 52px;
+.study-page .training-progress {
+  display: grid;
+  gap: 5px;
+}
+
+.study-page .training-progress p {
+  color: var(--muted-foreground);
+  font-size: var(--study-small);
+}
+
+.study-page .training-progress strong {
+  color: var(--foreground);
+}
+
+.study-page .progress-diagnostic,
+.study-page .progress-official-score,
+.study-page .scoring-rules p + p {
+  margin-top: 6px;
+}
+
+.study-page .progress-diagnostic {
+  color: var(--muted-foreground);
 }
 
 .progress-mobile-label {

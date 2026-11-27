@@ -37,7 +37,7 @@ Quando o estudante diz que está entediado ou quer trocar de atividade, o chat o
 
 ## 4. Trilha e painel de progresso
 
-A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. **Meu Progresso** reúne a pontuação, os acertos de primeira e sem ajuda e o estado de cada conceito. O painel indica quantos pontos ou acertos ainda faltam para confirmar o domínio. **Como a pontuação funciona?** explica o valor de cada tipo de acerto e quando a pontuação fica igual.
+A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. As barras da trilha, da missão e de **Meu Progresso** mostram os pontos conquistados nos desafios em relação ao máximo disponível por conceito, até 100. O painel mostra separadamente o resultado do diagnóstico opcional, a pontuação oficial e os critérios que faltam para confirmar o domínio. **Como a pontuação funciona?** explica o valor de cada tipo de acerto e quando a pontuação fica igual.
 
 Após registrar atividade, o painel **Seu progresso nesta sessão**, no Início, exibe os totais de missões concluídas e conceitos dominados, além do próximo desafio recomendado.
 

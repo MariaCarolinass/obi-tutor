@@ -17,6 +17,8 @@ A divisão a seguir documenta o contrato implementado para revisão do grupo. [P
   - `action: "chat"` recebe `text` e `context`, que pode ser `geral`, `diagnostico` ou o ID de uma missão. O servidor valida o contexto, consulta os resultados do diagnóstico concluído ou o desafio do catálogo e guarda os turnos recentes por conversa na sessão. Clientes que enviam apenas `questionId` ainda podem indicar a missão em foco. O resultado pode indicar uma missão relacionada, oferecer outra atividade com `offerChange` ou oferecer o encerramento.
 - **`DELETE /api/session`** recebe `X-Study-Session` e encerra aquela sessão. A interface usa um identificador em memória da aba e abre outra sessão ao reiniciar ou recarregar. Sessões abandonadas expiram após duas horas sem atividade. O servidor local suporta até 256 sessões ativas.
 
+Em `state.trainingProgress`, cada conceito tem os pontos conquistados na trilha (`points`) e o máximo que o catálogo de desafios permite (`maxPoints`), ambos limitados a 100. O cálculo usa as tentativas das missões e é independente do diagnóstico. `state.records` registra a pontuação oficial e o estado de domínio.
+
 ## Tutor e contingência
 
 O chat da demonstração privada usa o Gemini 3.1 Flash-Lite via `generateContent`. Configure `OLIMPIO_TUTOR_OBI` no ambiente do backend ou no `.env` ignorado pelo Git. Use uma chave de um projeto do Google AI Studio no **Nível gratuito**. O projeto determina a cota e o faturamento. [API do Gemini](https://aistudio.google.com/api-reference/generate-content/generate-content) · [Cotas ativas do projeto](https://aistudio.google.com/rate-limit)

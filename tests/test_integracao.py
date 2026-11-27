@@ -81,6 +81,10 @@ def test_catalogo_contem_grafo_e_distribuicao_sem_gabaritos(api):
         for q in diagnostico + missoes
     )
     assert all(r["status"] == "Não avaliado" for r in sessao["state"]["records"].values())
+    assert sessao["state"]["trainingProgress"] == {
+        conceito: {"points": 0, "maxPoints": min(100, quantidade * 25)}
+        for conceito, quantidade in Counter(q["concept"] for q in missoes).items()
+    }
 
 
 @pytest.mark.parametrize("destino", ["C12", "C10"])
@@ -126,9 +130,16 @@ def test_perfis_atualizam_modelo_e_recomendacao(api, perfil):
         "erra": (0, 0, "Inicial"),
         "misto": (75, 3, "Dominado"),
     }[perfil]
+    assert registro["trainingProgress"]["C4"] == {
+        "points": 0 if perfil == "erra" else 75, "maxPoints": 75,
+    }
+    if perfil == "acerta":
+        assert registro["trainingProgress"]["C1"] == {"points": 50, "maxPoints": 50}
+        assert registro["trainingProgress"]["C10"] == {"points": 100, "maxPoints": 100}
     if perfil == "misto":
         assert registro["records"]["C5"]["score"] == 45
         assert registro["records"]["C5"]["independent"] == 0
+        assert registro["trainingProgress"]["C5"] == {"points": 45, "maxPoints": 75}
     assert all(0 <= r["score"] <= 100 for r in registro["records"].values())
     assert registro["recommendation"]["missionId"] in dominio.questoes
 

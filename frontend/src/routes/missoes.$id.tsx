@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
+import { TrainingProgress } from "@/components/training-progress";
 import { status, type Answer, type Help, type Mission } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
@@ -224,7 +225,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
                 ) : (
                   <>
                     <strong>
-                      {concept?.name} passou de {score - points} para {score} de 100.
+                      {concept?.name} passou de {score - points} para {score} pontos.
                     </strong>{" "}
                     Você ganhou {points} {points === 1 ? "ponto" : "pontos"} por acertar{" "}
                     {scoreReason}.{score === 100 ? " Esse é o limite por conceito." : ""}
@@ -333,13 +334,10 @@ function MissionActivity({ mission }: { mission: Mission }) {
             </div>
           )}
           <div className="mission-progress">
-            <p>
-              <span>{concept?.short}</span>
-              <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
-                {record?.evaluated ? `${record.score} / 100` : "—"}
-              </strong>
-            </p>
-            <progress max="100" value={record?.score ?? 0} aria-label="Progresso no conceito" />
+            <TrainingProgress
+              score={state.trainingProgress?.[mission.concept]}
+              concept={concept?.name ?? mission.concept}
+            />
             <small>
               {status(record)} · {record?.independent ?? 0} acertos independentes
               <br />
