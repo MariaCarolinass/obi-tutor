@@ -44,12 +44,12 @@ export function ObiGuide() {
   return (
     <section className="home-obi" id="sobre-a-obi" aria-labelledby="home-obi-title" tabIndex={-1}>
       <header className="home-obi-heading">
-        <h2 id="home-obi-title">Como funciona a OBI na modalidade Programação?</h2>
+        <h2 id="home-obi-title">Como funciona a OBI para quem programa?</h2>
         <p>
           A Olimpíada Brasileira de Informática é uma competição estudantil da Sociedade Brasileira
-          de Computação, organizada pelo Instituto de Computação da Unicamp. A modalidade Iniciação
-          propõe problemas de lógica em papel. Na modalidade Programação, os estudantes resolvem
-          problemas escrevendo programas.
+          de Computação, organizada pelo Instituto de Computação da Unicamp. Na Iniciação, os
+          estudantes resolvem problemas de lógica em papel. Em Programação, eles escrevem código
+          para resolver os problemas.
         </p>
         <SourceLink href="https://olimpiada.ic.unicamp.br/info/apresentacao/">
           Apresentação oficial da OBI
@@ -96,7 +96,7 @@ export function ObiGuide() {
         <article className="home-obi-topic">
           <h3>Níveis, fases e inscrição</h3>
           <p>
-            Na modalidade Programação, o Nível 1 aceita estudantes até o 1º ano do Ensino Médio, e o
+            Nas provas de programação, o Nível 1 aceita estudantes até o 1º ano do Ensino Médio, e o
             Nível 2, até o 3º. A competição tem fases Local, Estadual e Nacional. As duas primeiras
             acontecem na escola da inscrição. Procure o responsável pela OBI na sua escola para
             confirmar em qual nível pode participar.

@@ -8,7 +8,7 @@ O OBI Tutor pretende oferecer apoio contextual sem substituir automaticamente o 
 
 ## 2. Público e objetivos
 
-**Público:** estudantes do 1º e 2º anos do Ensino Médio, com atividades introdutórias de Python inspiradas na modalidade Programação da OBI. As séries escolares não são equivalentes aos níveis oficiais da competição.
+**Público:** estudantes do 1º e 2º anos do Ensino Médio, com atividades introdutórias de Python inspiradas nas provas de programação da OBI. As séries escolares não são equivalentes aos níveis oficiais da competição.
 
 **Objetivos verificáveis:**
 

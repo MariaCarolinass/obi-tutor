@@ -5,7 +5,7 @@ import { LearningContext, tutorName, type Message } from "./learning-context";
 
 const welcome: Message = {
   role: "tutor",
-  text: `Oi! Sou o ${tutorName}, seu tutor para a OBI. Estou aqui para ajudar você a se preparar para a modalidade Programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`,
+  text: `Oi! Sou o ${tutorName}, seu tutor para a OBI. Posso ajudar você a praticar Python e se preparar para as provas de programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`,
 };
 
 type Session = { id: string; catalog: Catalog; state: LearningState };

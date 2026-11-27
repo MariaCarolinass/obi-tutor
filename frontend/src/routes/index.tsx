@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   head: () =>
     pageMeta(
       "Treine para a OBI com seu tutor",
-      "Prepare-se para a modalidade Programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
+      "Treine para as provas de programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
     ),
   component: Index,
 });
@@ -187,7 +187,7 @@ function Index() {
             Treine para a <mark>OBI</mark> <span>com seu tutor.</span>
           </h1>
           <p className="home-description">
-            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>,
+            Pratique <strong>Python</strong> com desafios de programação inspirados na OBI e
             voltados ao 1º e ao 2º ano do Ensino Médio. Se travar, peça uma pista ao Olimpio.
           </p>
           <div className="home-actions">

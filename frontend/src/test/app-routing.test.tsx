@@ -50,7 +50,7 @@ it("offers diagnostic from the home page and preserves learning and chat when na
   const chat = await screen.findByRole("log");
   expect(within(chat).getByText("Olimpio")).toBeVisible();
   expect(screen.getByText("Seu tutor para a OBI", { exact: true })).toBeVisible();
-  expect(within(chat).getByText(/Sou o Olimpio.*modalidade Programação/)).toBeVisible();
+  expect(within(chat).getByText(/Sou o Olimpio.*provas de programação/)).toBeVisible();
   const question = "Como funciona uma lista?";
   fireEvent.change(screen.getByRole("textbox", { name: "Sua pergunta" }), {
     target: { value: question },
@@ -118,7 +118,7 @@ it("shows the OBI guide and links to official rules, preparation and participati
   render(<RouterProvider router={router} />);
 
   const guide = await screen.findByRole("region", {
-    name: "Como funciona a OBI na modalidade Programação?",
+    name: "Como funciona a OBI para quem programa?",
   });
   expect(screen.queryByRole("link", { name: "Saiba como funciona a OBI" })).not.toBeInTheDocument();
   const project = screen.getByRole("region", { name: "Onde o OBI Tutor entra?" });

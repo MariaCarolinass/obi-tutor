@@ -1,6 +1,6 @@
 # OBI Tutor
 
-Sistema Tutor Inteligente (STI) conversacional para apoiar estudantes do 1º e 2º anos do Ensino Médio na aprendizagem de fundamentos de programação em Python e na resolução de desafios inspirados na modalidade Programação da Olimpíada Brasileira de Informática (OBI).
+Sistema Tutor Inteligente (STI) conversacional para apoiar estudantes do 1º e 2º anos do Ensino Médio na aprendizagem de fundamentos de Python e na resolução de desafios inspirados nas provas de programação da Olimpíada Brasileira de Informática (OBI).
 
 ## Proposta
 
