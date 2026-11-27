@@ -185,16 +185,23 @@ function MissionActivity({ mission }: { mission: Mission }) {
                 Ainda não é essa. Vamos pensar juntos?
               </h3>
               <p>{feedback.message}</p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setFeedback(null);
-                  setSelected(null);
-                }}
-              >
-                <RefreshCw />
-                Tentar novamente
-              </Button>
+              <div className="button-row">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFeedback(null);
+                    setSelected(null);
+                  }}
+                >
+                  <RefreshCw />
+                  Tentar novamente
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/tutor" search={{ contexto: mission.id }}>
+                    Pergunte ao tutor
+                  </Link>
+                </Button>
+              </div>
             </div>
           )}
           {solved && (

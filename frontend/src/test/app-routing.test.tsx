@@ -249,6 +249,28 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
 
+it("links to the current mission's tutor conversation after each wrong answer", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/MISS-C4-02"] }));
+  render(<RouterProvider router={router} />);
+
+  const submitWrongAnswer = async (name: RegExp) => {
+    fireEvent.click(await screen.findByRole("radio", { name }));
+    fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+    const feedback = await screen.findByRole("status");
+    const retry = within(feedback).getByRole("button", { name: "Tentar novamente" });
+    const tutor = within(feedback).getByRole("link", { name: "Pergunte ao tutor" });
+    expect(tutor).toHaveAttribute("href", "/tutor?contexto=MISS-C4-02");
+    return { retry, tutor };
+  };
+
+  const first = await submitWrongAnswer(/a < b \+ c or/);
+  fireEvent.click(first.retry);
+  const second = await submitWrongAnswer(/a <= b \+ c and/);
+  fireEvent.click(second.tutor);
+  const chat = await screen.findByRole("log");
+  expect(within(chat).getByText(/Complete o Código.*Condicionais.*Em que parte/)).toBeVisible();
+});
+
 it("offers a different mission when the student asks to switch activities", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/MISS-C1-01"] }));
   render(<RouterProvider router={router} />);
