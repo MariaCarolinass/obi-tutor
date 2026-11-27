@@ -7,7 +7,7 @@ A interface web tem um menu lateral no desktop e um menu recolhível no celular.
 - **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Continuar de onde parei** retoma a atividade mais recente ainda em andamento na sessão. Quando não há atividade para retomar, **Começar pela trilha** abre os conceitos e desafios disponíveis. **Fazer o diagnóstico** é uma opção para quem quer uma sugestão de estudo. Quando há tentativas registradas, **Seu progresso nesta sessão** inclui um link direto para o **Próximo desafio** recomendado. **Conversar com o tutor** abre o chat com o Olimpio. No aquecimento, o estudante pode fechar a resposta do Olimpio pelo botão **X**. A página apresenta o projeto antes do guia sobre as provas de programação da OBI.
 - **Diagnóstico** (`/diagnostico`) oferece dez questões opcionais, um resultado por conceito avaliado e uma missão recomendada.
 - **Treinar para a OBI** (`/trilha`) apresenta os conceitos, pré-requisitos e atividades disponíveis. As missões abrem em `/missoes/<id>`.
-- **Pergunte ao Tutor** (`/tutor`) reúne a conversa demonstrativa com o Olimpio e sugestões de perguntas.
+- **Pergunte ao Tutor** (`/tutor`) reúne as conversas com o Olimpio e sugestões de perguntas.
 - **Meu Progresso** (`/progresso`) exibe a pontuação, o estado e os acertos independentes de cada conceito.
 
 ## 2. Diagnóstico e Missões Interativas
@@ -41,7 +41,7 @@ A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. As
 
 Após registrar atividade, o painel **Seu progresso nesta sessão**, no Início, exibe os totais de missões concluídas e conceitos dominados, além do próximo desafio recomendado.
 
-Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**. A interface usa um traço no campo de pontuação de um conceito ainda não avaliado. Após uma resposta incorreta sem pontuação anterior, o conceito aparece como **Inicial**, com zero pontos. [Modelo do aluno](modelo-do-aluno.md)
+Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**. A pontuação oficial do conceito aparece após a primeira resposta objetiva. Se essa resposta estiver incorreta, o conceito aparece como **Inicial**, com zero pontos. [Modelo do aluno](modelo-do-aluno.md)
 
 ## 5. Sessão
 

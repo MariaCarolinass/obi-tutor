@@ -11,7 +11,7 @@ Para cada conceito `C1` a `C10`, manter:
 
 Na sessão do MVP, registrar ainda conceito atual, modo ativo, tentativas na questão, dicas utilizadas, respostas e histórico de conversa. A interface deve indicar que um conceito está **não avaliado** até receber uma resposta objetiva.
 
-Na aplicação web, o backend mantém o estado de cada conceito, os resultados do diagnóstico, as missões concluídas, os erros e as ajudas por item. O histórico do chat fica em memória na aba. A alternativa em edição e o feedback visível ficam na tela da atividade. [Modelo do aluno em Python](../obi_tutor/models/modelo_aluno.py) · [Sessão web](../obi_tutor/sessao.py)
+Na aplicação web, o backend mantém o estado de cada conceito, os resultados do diagnóstico, as missões concluídas, os erros e as ajudas por item. O chat guarda o histórico exibido na aba e os turnos recentes de cada conversa no backend. A alternativa em edição e o feedback visível ficam na tela da atividade. [Modelo do aluno em Python](../obi_tutor/models/modelo_aluno.py) · [Sessão web](../obi_tutor/sessao.py)
 
 ## 2. Eventos e atualização
 

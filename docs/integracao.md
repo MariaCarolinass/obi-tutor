@@ -25,7 +25,7 @@ O chat da demonstração privada usa o Gemini 3.1 Flash-Lite via `generateConten
 
 O módulo `obi_tutor/tutor.py` seleciona o contexto da conversa e a resposta de contingência. O adaptador `obi_tutor/services/gemini.py` lê a chave, envia a solicitação e extrai o texto retornado.
 
-O adaptador envia a pergunta atual e até dois pares recentes de pergunta e resposta sobre o conteúdo. O enunciado da missão é incluído quando a pessoa se refere a ela. O backend reconhece agradecimentos, confirmações de compreensão e observações sobre respostas longas e responde localmente. Use perguntas fictícias na apresentação. Os termos do nível gratuito permitem que o Google use as entradas e respostas para melhorar seus produtos. Se a chave estiver ausente ou a API devolver erro de cota, falha ou texto vazio, o Olimpio usa uma orientação preparada. [Termos do Gemini](https://aistudio.google.com/docs/terms)
+O adaptador envia a pergunta atual e até dois pares recentes de pergunta e resposta da mesma conversa. No chat aberto pela missão, pode enviar o enunciado e o código do desafio. No chat aberto pelo diagnóstico, envia as questões numeradas, os conceitos avaliados e o resultado de cada questão. O backend reconhece agradecimentos, confirmações de compreensão e observações sobre respostas longas e responde localmente. Use perguntas fictícias na apresentação. Os termos do nível gratuito permitem que o Google use as entradas e respostas para melhorar seus produtos. Se a chave estiver ausente ou a API devolver erro de cota, falha ou texto vazio, o Olimpio usa uma orientação preparada. [Termos do Gemini](https://aistudio.google.com/docs/terms)
 
 ## Validação antes da apresentação
 
