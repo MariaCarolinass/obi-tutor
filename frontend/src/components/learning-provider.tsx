@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import type { Answer, Catalog, Help, LearningState } from "@/lib/learning";
-import { LearningContext, tutorName, type Message } from "./learning-context";
-
-const welcome: Message = {
-  role: "tutor",
-  text: `Oi! Sou o ${tutorName}, seu tutor para a OBI. Posso ajudar você a praticar Python e se preparar para as provas de programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`,
-};
+import { LearningContext, type Message } from "./learning-context";
 
 type Session = { id: string; catalog: Catalog; state: LearningState };
 
@@ -26,7 +21,7 @@ async function request<T>(path: string, method: string, id?: string, body?: obje
 
 export function LearningProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
-  const [messages, setMessages] = useState<Message[]>([welcome]);
+  const [conversations, setConversations] = useState<Record<string, Message[]>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ended, setEnded] = useState(false);
@@ -36,10 +31,6 @@ export function LearningProvider({ children }: { children: ReactNode }) {
   const nextChatId = useRef(0);
   const opening = useRef<Promise<Session> | null>(null);
   const latest = useRef({ id: 0, retry: "" });
-  const activeQuestion = useRef<string | undefined>(undefined);
-  const focus = useCallback((questionId: string) => {
-    activeQuestion.current = questionId;
-  }, []);
   const startActivity = useCallback((activityId: string) => {
     setActivityHistory((history) =>
       history[0] === activityId
@@ -115,17 +106,19 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     action<Answer>({ action: "answer", questionId, optionId });
   const help = async (questionId: string, kind: Help) =>
     (await action<{ message: string }>({ action: "help", questionId, kind }))?.message;
-  const send = (text: string) => {
+  const send = (text: string, context: string) => {
     const trimmed = text.trim();
     if (!session || !trimmed || trimmed.length > 2000) return false;
-    const questionId = activeQuestion.current;
     const id = nextChatId.current++;
-    setMessages((history) => [
-      ...history,
-      { role: "student", text: trimmed },
-      { role: "tutor", text: "Aguardando resposta…", pendingId: id },
-    ]);
-    void action<Omit<Message, "role">>({ action: "chat", text: trimmed, questionId }, true).then(
+    setConversations((threads) => ({
+      ...threads,
+      [context]: [
+        ...(threads[context] ?? []),
+        { role: "student", text: trimmed },
+        { role: "tutor", text: "Aguardando resposta…", pendingId: id },
+      ],
+    }));
+    void action<Omit<Message, "role">>({ action: "chat", text: trimmed, context }, true).then(
       (reply) => {
         const message: Message = reply
           ? { role: "tutor", ...reply }
@@ -134,7 +127,12 @@ export function LearningProvider({ children }: { children: ReactNode }) {
               text: "A resposta falhou. Você pode reenviar a pergunta.",
               quiet: true,
             };
-        setMessages((history) => history.map((item) => (item.pendingId === id ? message : item)));
+        setConversations((threads) => ({
+          ...threads,
+          [context]: (threads[context] ?? []).map((item) =>
+            item.pendingId === id ? message : item,
+          ),
+        }));
       },
     );
     return true;
@@ -144,10 +142,9 @@ export function LearningProvider({ children }: { children: ReactNode }) {
     !!(await run(async () => {
       if (session) await request("/api/session", "DELETE", session.id);
       setSession(null);
-      setMessages([welcome]);
+      setConversations({});
       setEnded(true);
       setActivityHistory([]);
-      activeQuestion.current = undefined;
       return true;
     }));
 
@@ -159,9 +156,8 @@ export function LearningProvider({ children }: { children: ReactNode }) {
         void request("/api/session", "DELETE", session.id).catch(() => {});
       }
       latest.current = { id: 0, retry: "" };
-      activeQuestion.current = undefined;
       setSession(current);
-      setMessages([welcome]);
+      setConversations({});
       setEnded(false);
       setActivityHistory([]);
       return true;
@@ -191,12 +187,11 @@ export function LearningProvider({ children }: { children: ReactNode }) {
         busy,
         answer,
         help,
-        focus,
         activityHistory,
         startActivity,
         reset,
         end,
-        messages,
+        conversations,
         send,
       }}
     >

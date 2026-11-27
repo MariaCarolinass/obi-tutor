@@ -29,7 +29,9 @@ Ao concluir as dez questões, o estudante vê o total de acertos e uma missão s
 
 ## 3. Pergunte ao Tutor
 
-O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. A pergunta aparece imediatamente e a conversa indica enquanto o Olimpio prepara a resposta. Os atalhos **Ver exemplo** e **Explicar de outro jeito** podem enfileirar outra pergunta. O tutor retoma o assunto das mensagens recentes e usa o enunciado da missão quando o estudante pergunta sobre ela. Mensagens livres deixam a pontuação intacta.
+Ao abrir **Pergunte ao Tutor** pelo menu, o estudante vê a saudação da conversa geral. O link **Conversar com o Olimpio** no resultado do diagnóstico abre uma conversa sobre as questões respondidas e os assuntos que vale revisar. O mesmo link em uma missão faz o Olimpio mencionar o desafio e perguntar onde surgiu a dúvida. Ele usa o enunciado e o trecho de código da missão para orientar a resposta. Cada conversa conserva seu histórico na sessão.
+
+O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. A pergunta aparece imediatamente e a conversa indica enquanto o Olimpio prepara a resposta. Os atalhos **Ver exemplo** e **Explicar de outro jeito** podem enfileirar outra pergunta. O tutor retoma o assunto dos turnos recentes da conversa. Mensagens livres deixam a pontuação intacta.
 
 Quando o estudante diz que está entediado ou quer trocar de atividade, o chat oferece uma missão diferente, a trilha e uma pausa. O estudante também pode ficar no chat. O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
 

@@ -4,10 +4,12 @@ import { ArrowRight, BookOpen, Send, Sparkles } from "lucide-react";
 import tutorIllustration from "@/assets/obi-learning-red.webp";
 import { PageHeading, TutorIcon } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
-import { tutorName, useLearning } from "@/components/learning-context";
+import { tutorName, useLearning, type Message } from "@/components/learning-context";
 import { pageMeta } from "@/lib/page-meta";
 
 export const Route = createFileRoute("/tutor")({
+  validateSearch: (search): { contexto?: string } =>
+    typeof search["contexto"] === "string" ? { contexto: search["contexto"] } : {},
   head: () =>
     pageMeta(
       "Pergunte ao tutor",
@@ -22,8 +24,52 @@ const suggestions = [
   "Como identificar erros no meu código?",
   "Pode mostrar um exemplo mais simples?",
 ];
+const diagnosticSuggestions = ["O que meu diagnóstico mostrou?", "Por onde começo a revisar?"];
+const missionSuggestions = [
+  "Pode me dar uma pista para este desafio?",
+  "Pode explicar o enunciado?",
+];
+const welcome = `Oi! Sou o ${tutorName}, seu tutor para a OBI. Posso ajudar você a praticar Python e se preparar para as provas de programação. Me conte o que você quer aprender ou em que parte travou. Podemos começar com um exemplo pequeno e pensar juntos no próximo passo.`;
+const emptyConversation: Message[] = [];
+
 function Tutor() {
-  const { messages, send, busy, end, state } = useLearning();
+  const { contexto } = Route.useSearch();
+  const { state, catalog } = useLearning();
+  const mission = catalog.trainingMissions.find((m) => m.id === contexto);
+  const diagnostic =
+    contexto === "diagnostico" &&
+    catalog.diagnosticQuestions.every((q) => state.diagnosticAnswers[q.id] !== undefined);
+  const context = mission?.id ?? (diagnostic ? "diagnostico" : "geral");
+  let greeting = welcome;
+  if (mission) {
+    greeting = `Oi! Sou o ${tutorName}, seu tutor para a OBI. Você veio do desafio “${mission.title}”. Em que parte você ficou com dúvida?`;
+  } else if (diagnostic) {
+    const questions = catalog.diagnosticQuestions;
+    const correct = questions.filter((q) => state.diagnosticAnswers[q.id]).length;
+    greeting = `Oi! Sou o ${tutorName}, seu tutor para a OBI. Você acertou ${correct} de ${questions.length} questões no diagnóstico. Ficou com dúvida em alguma questão? Podemos conversar sobre ela ou decidir por onde começar a revisar.`;
+  }
+  return (
+    <TutorChat
+      key={context}
+      context={context}
+      greeting={greeting}
+      prompts={mission ? missionSuggestions : diagnostic ? diagnosticSuggestions : suggestions}
+    />
+  );
+}
+
+function TutorChat({
+  context,
+  greeting,
+  prompts,
+}: {
+  context: string;
+  greeting: string;
+  prompts: string[];
+}) {
+  const { conversations, send, busy, end, state } = useLearning();
+  const messages = conversations[context] ?? emptyConversation;
+  const opening: Message = { role: "tutor", text: greeting, quiet: context !== "geral" };
   const [text, setText] = useState("");
   const history = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -31,14 +77,17 @@ function Tutor() {
     if (element) element.scrollTop = element.scrollHeight;
   }, [messages]);
   const waiting = messages.some((message) => message.pendingId !== undefined);
-  const latestReply = messages
-    .filter(
-      (message) =>
-        message.role === "tutor" && message.pendingId === undefined && (!waiting || !message.quiet),
-    )
-    .at(-1);
+  const latestReply =
+    messages
+      .filter(
+        (message) =>
+          message.role === "tutor" &&
+          message.pendingId === undefined &&
+          (!waiting || !message.quiet),
+      )
+      .at(-1) ?? opening;
   const submit = () => {
-    if (send(text)) setText("");
+    if (send(text, context)) setText("");
   };
   return (
     <>
@@ -63,7 +112,7 @@ function Tutor() {
             aria-live="polite"
             aria-label="Histórico da conversa"
           >
-            {messages.map((m, i) => (
+            {[opening, ...messages].map((m, i) => (
               <div className={`message ${m.role}`} key={i}>
                 {m.role === "tutor" && <TutorIcon />}
                 <div className="message-body">
@@ -106,7 +155,7 @@ function Tutor() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => send("Pode mostrar um exemplo menor do conceito?")}
+                    onClick={() => send("Pode mostrar um exemplo menor do conceito?", context)}
                   >
                     Ver exemplo
                   </Button>
@@ -122,7 +171,7 @@ function Tutor() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => send("Pode explicar de outro jeito?")}
+                    onClick={() => send("Pode explicar de outro jeito?", context)}
                   >
                     Explicar de outro jeito
                   </Button>
@@ -161,8 +210,8 @@ function Tutor() {
             <Sparkles size={15} className="inline mr-2 text-primary" />
             Por onde começar?
           </h3>
-          {suggestions.map((s) => (
-            <Button variant="outline" key={s} onClick={() => send(s)}>
+          {prompts.map((s) => (
+            <Button variant="outline" key={s} onClick={() => send(s, context)}>
               <BookOpen />
               {s}
             </Button>

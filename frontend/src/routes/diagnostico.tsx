@@ -120,6 +120,11 @@ function Diagnostic() {
               <Button variant="outline" asChild>
                 <Link to="/trilha">Escolher outro conceito</Link>
               </Button>
+              <Button variant="outline" asChild>
+                <Link to="/tutor" search={{ contexto: "diagnostico" }}>
+                  Conversar com o Olimpio
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

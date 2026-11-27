@@ -192,7 +192,18 @@ it("shows the learner model status and diagnostic result for each assessed conce
   expect(inputOutput).toHaveTextContent("Vale reforçar");
   expect(inputOutput).toHaveTextContent("Inicial");
 
+  fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
+  const chat = await screen.findByRole("log");
+  expect(within(chat).getByText(/Sou o Olimpio.*questões no diagnóstico/)).toBeVisible();
+  fireEvent.click(screen.getByRole("button", { name: "Por onde começo a revisar?" }));
+  expect(
+    await within(chat).findByText(/Podemos começar revisando entradas, saídas/i),
+  ).toBeVisible();
+
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
+  fireEvent.click(within(nav).getByRole("link", { name: "Pergunte ao tutor" }));
+  await screen.findByText(/Sou o Olimpio.*provas de programação/);
+  expect(screen.queryByText("Por onde começo a revisar?")).not.toBeInTheDocument();
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
@@ -222,6 +233,8 @@ it("keeps mission help in the scoring session and lets the student end it", asyn
   fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
   expect(await screen.findByText(/Boa descoberta! \+15 pontos/)).toBeVisible();
   fireEvent.click(screen.getByRole("link", { name: "Conversar com o Olimpio" }));
+  const chat = await screen.findByRole("log");
+  expect(within(chat).getByText(/Detetive de Bugs.*Condicionais.*Em que parte/)).toBeVisible();
   const input = await screen.findByRole("textbox", { name: "Sua pergunta" });
   fireEvent.change(input, { target: { value: "Pode mostrar um exemplo menor?" } });
   fireEvent.click(screen.getByRole("button", { name: "Enviar pergunta" }));

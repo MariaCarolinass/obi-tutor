@@ -13,8 +13,30 @@ class Sessao:
         self.concluidas = []
         self.diagnostico = {}
         self.ultimo_pedido = None
-        self.conversa = ConversaTutor()
+        self.conversas = {"geral": ConversaTutor()}
         self.lock = Lock()
+
+    def conversar(self, texto, contexto="geral", question_id=None):
+        foco = self.dominio.questoes.get(question_id)
+        diagnostico = None
+        if contexto == "diagnostico":
+            if not all(q["id"] in self.diagnostico for q in self.dominio.diagnostico):
+                raise ValueError("Conclua o diagnóstico antes de conversar sobre o resultado.")
+            diagnostico = self.diagnostico
+            foco = None
+        elif contexto != "geral":
+            foco = self.dominio.questoes.get(contexto)
+            if not foco or foco["tipo"] == "diagnostico":
+                raise ValueError("Contexto de conversa desconhecido.")
+
+        if contexto not in self.conversas:
+            self.conversas[contexto] = ConversaTutor()
+        recomendada = self.estado()["recommendation"]["missionId"]
+        return self.conversas[contexto].responder(
+            self.dominio, texto, foco, recomendada, self.concluidas,
+            diagnostico=diagnostico,
+            contextualizar_missao=contexto not in {"geral", "diagnostico"},
+        )
 
     def estado(self):
         registros = {

@@ -73,7 +73,6 @@ function MissionActivity({ mission }: { mission: Mission }) {
     state,
     answer,
     help,
-    focus,
     startActivity,
     busy,
     catalog: { concepts, trainingMissions },
@@ -83,10 +82,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
   const [guidance, setGuidance] = useState<{ kind: Help; message: string } | null>(null);
   const [paused, setPaused] = useState(false);
   const [pauseMenu, setPauseMenu] = useState(false);
-  useEffect(() => {
-    focus(mission.id);
-    startActivity(mission.id);
-  }, [focus, mission.id, startActivity]);
+  useEffect(() => startActivity(mission.id), [mission.id, startActivity]);
 
   const concept = concepts.find((c) => c.id === mission.concept);
   const record = state.records[mission.concept];
@@ -299,7 +295,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
               </Button>
             )}
             <Button variant="ghost" asChild>
-              <Link to="/tutor">
+              <Link to="/tutor" search={{ contexto: mission.id }}>
                 Conversar com o Olimpio <ArrowRight />
               </Link>
             </Button>

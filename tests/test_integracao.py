@@ -348,6 +348,66 @@ def test_chat_retem_o_assunto_sem_voltar_para_a_missao_anterior(api, monkeypatch
     assert agradeceu["state"] == sessao["state"]
 
 
+def test_chat_separa_conversas_e_usa_contexto_do_catalogo_e_do_diagnostico(api, monkeypatch):
+    prompts = []
+
+    def simular(_, mensagem):
+        prompts.append(json.loads(mensagem))
+        return "Vamos pensar juntos."
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", simular)
+    _, agir = abrir(api)
+    dominio = Dominio()
+    missao = dominio.questoes["MISS-C4-02"]
+    for indice, questao in enumerate(dominio.diagnostico):
+        alternativa = questao["gabarito"] if indice else next(
+            opcao["id"] for opcao in questao["alternativas"] if opcao["id"] != questao["gabarito"]
+        )
+        estado = agir("answer", questionId=questao["id"], optionId=alternativa)["state"]
+
+    diagnostico = agir("chat", text="Por onde começo a revisar?", context="diagnostico")
+    assert diagnostico["state"] == estado
+    resultados = prompts[-1]["contexto"]["diagnostico"]
+    assert len(resultados) == len(dominio.diagnostico)
+    assert resultados[0] == {
+        "numero": 1,
+        "conceito": dominio.conceitos[dominio.diagnostico[0]["concept_id"]]["name"],
+        "enunciado": dominio.diagnostico[0]["enunciado"],
+        "acertou": False,
+    }
+    assert all(resultado["acertou"] for resultado in resultados[1:])
+
+    exercicio = agir("chat", text="Onde começo?", context=missao["id"])
+    assert exercicio["state"] == estado
+    assert exercicio["result"]["missionId"] == missao["id"]
+    assert prompts[-1]["contexto"]["enunciado"] == missao["enunciado"]
+    assert prompts[-1]["contexto"]["codigo_python"] == missao["codigo_python"]
+    assert "turnos_recentes" not in prompts[-1]
+    assert "diagnostico" not in prompts[-1]["contexto"]
+
+    agir("chat", text="Como funciona um for?", context="geral")
+    assert prompts[-1]["contexto"] == {"conceito": "Laços de repetição"}
+    assert "turnos_recentes" not in prompts[-1]
+    agir("chat", text="Pode explicar de outro jeito?", context=missao["id"])
+    assert prompts[-1]["turnos_recentes"][0]["pergunta"] == "Onde começo?"
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", lambda *_: None)
+    duvida_diagnostico = agir("chat", text="Pode explicar a questão 2?", context="diagnostico")
+    assert duvida_diagnostico["result"]["text"] == dominio.diagnostico[1]["explicacao"]
+    assert duvida_diagnostico["state"] == estado
+
+
+@pytest.mark.parametrize("contexto", ["diagnostico", "atividade-inexistente", []])
+def test_chat_recusa_contextos_indisponiveis(api, contexto):
+    sessao, _ = abrir(api)
+    status, _ = api(
+        "POST", "/api/session/action",
+        {"requestId": 1, "action": "chat", "text": "Olá", "context": contexto},
+        sessao["id"],
+    )
+    assert status == 400
+
+
 def test_chat_em_contingencia_explica_com_exemplo_do_ultimo_assunto(api):
     _, agir = abrir(api)
     agir("chat", text="Como funciona um for?", questionId="MISS-C4-01")
