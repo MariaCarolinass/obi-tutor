@@ -19,9 +19,9 @@ export function ObiTutorIntro() {
       <div>
         <h2 id="home-obi-project-title">Onde o OBI Tutor entra?</h2>
         <p>
-          No OBI Tutor, você pratica Python com desafios inspirados na modalidade Programação da
-          OBI. Na trilha, você escolhe um assunto e resolve missões como descobrir o que um código
-          imprime, encontrar um erro ou completar um trecho.
+          No OBI Tutor, você pratica Python com desafios de programação inspirados na OBI. Na
+          trilha, você escolhe um assunto e resolve missões como descobrir o que um código imprime,
+          encontrar um erro ou completar um trecho.
         </p>
         <p>
           Se travar, peça uma pista ao Olimpio para tentar de novo. Você também pode ver um exemplo
