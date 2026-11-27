@@ -1018,9 +1018,6 @@ h3 {
   line-height: 1.8;
   color: var(--foreground);
 }
-.feedback button {
-  margin-top: 12px;
-}
 .mission-help {
   border-left: 1px solid var(--border);
   padding-left: 24px;
