@@ -46,14 +46,15 @@ def requisitos_fracos(dominio, aluno):
     }
 
 
-def orientar_erro(dominio, questao, erros, concluidas):
+def orientar_erro(dominio, questao, alternativa, erros, concluidas):
+    feedback = questao.get("feedback_por_alternativa", {}).get(alternativa)
     if erros == 1:
         orientacoes = {
             "Detetive de Bugs": "Compare o comportamento pedido no enunciado com o que o código faria.",
             "Complete o Código": "Confira quais valores precisam estar disponíveis antes e depois da linha que falta.",
             "Preveja a Saída": "Anote o valor das variáveis a cada passo e confira o que chega ao print.",
         }
-        return {"message": orientacoes[questao["formato"]], "alternativeId": None}
+        return {"message": feedback or orientacoes[questao["formato"]], "alternativeId": None}
     outra = next((
         q["id"] for q in dominio.missoes
         if q["concept_id"] == questao["concept_id"]
@@ -61,7 +62,10 @@ def orientar_erro(dominio, questao, erros, concluidas):
         and q["id"] not in concluidas
     ), None)
     return {
-        "message": "Que tal mudar a abordagem? Você pode ver um exemplo menor, revisar o conceito ou pedir a explicação direta.",
+        "message": feedback or (
+            "Que tal mudar a abordagem? Você pode ver um exemplo menor, "
+            "revisar o conceito ou pedir a explicação direta."
+        ),
         "alternativeId": outra,
     }
 

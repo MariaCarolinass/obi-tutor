@@ -37,6 +37,8 @@ function Trail() {
   const weakIds = selected ? state.weakPrerequisites[selected.id] : [];
   const weak = concepts.filter((c) => weakIds?.includes(c.id));
   const activities = trainingMissions.filter((m) => m.concept === selected?.id);
+  const difficulties = [...new Set(activities.map((mission) => mission.difficulty))];
+  const nextActivity = activities.find((mission) => !state.completed.includes(mission.id));
   return (
     <>
       <PageHeading
@@ -168,36 +170,47 @@ function Trail() {
             )}
             {activities.length ? (
               <div className="concept-missions">
-                {activities.map((m) => {
-                  const Icon =
-                    m.type === "Detetive de Bugs"
-                      ? Bug
-                      : m.type === "Complete o Código"
-                        ? Code2
-                        : Eye;
-                  return (
-                    <div className="concept-mission-row" key={m.id}>
-                      <span className="icon-tile">
-                        <Icon size={18} />
-                      </span>
-                      <div>
-                        <small>{m.type}</small>
-                        <h3>{m.title}</h3>
-                        <span>
-                          {state.completed.includes(m.id)
-                            ? "Concluído · repetir sem novos pontos"
-                            : m.difficulty}
-                        </span>
-                      </div>
-                      <Button size="sm" asChild>
-                        <Link to="/missoes/$id" params={{ id: m.id }}>
-                          Iniciar
-                          <ArrowRight />
-                        </Link>
-                      </Button>
-                    </div>
-                  );
-                })}
+                {difficulties.map((difficulty) => (
+                  <section
+                    className="concept-mission-group"
+                    key={difficulty}
+                    aria-label={`Dificuldade ${difficulty}`}
+                  >
+                    <h3>{difficulty}</h3>
+                    {activities
+                      .filter((mission) => mission.difficulty === difficulty)
+                      .map((mission) => {
+                        const Icon =
+                          mission.type === "Detetive de Bugs"
+                            ? Bug
+                            : mission.type === "Complete o Código"
+                              ? Code2
+                              : Eye;
+                        return (
+                          <div className="concept-mission-row" key={mission.id}>
+                            <span className="icon-tile">
+                              <Icon size={18} />
+                            </span>
+                            <div>
+                              <h4>{mission.title}</h4>
+                              {state.completed.includes(mission.id) && (
+                                <span>Concluído · repetir sem novos pontos</span>
+                              )}
+                              {mission.id === nextActivity?.id && (
+                                <span>Próximo desafio sugerido</span>
+                              )}
+                            </div>
+                            <Button size="sm" asChild>
+                              <Link to="/missoes/$id" params={{ id: mission.id }}>
+                                Iniciar
+                                <ArrowRight />
+                              </Link>
+                            </Button>
+                          </div>
+                        );
+                      })}
+                  </section>
+                ))}
               </div>
             ) : (
               <div className="empty-state">

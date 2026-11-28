@@ -30,6 +30,8 @@ A pontuação é limitada ao intervalo **0 a 100**, de acordo com:
 
 Se houve dica e mais de uma tentativa, o acerto vale **+15**, conforme o pré-projeto. Se houve nova tentativa sem dica, vale **+10**. Na demonstração, a pista, o exemplo menor, a revisão do conceito e a explicação direta, quando pedidos na missão antes do acerto, registram uso de ajuda no item.
 
+O feedback automático de uma resposta incorreta registra somente a tentativa. Um acerto posterior vale **+10** se o estudante seguir sem solicitar ajuda.
+
 A primeira resposta registrada encerra cada questão do diagnóstico. Nas missões, os erros contam como tentativas e é possível tentar novamente até acertar. A primeira resposta correta aplica a pontuação da missão, limitada pelos 100 pontos do conceito. Repetições posteriores servem para revisão e valem zero.
 
 Uma resposta correta no diagnóstico, por ser dada de primeira e sem dica, também conta como um acerto independente. Acertos após dica ou após nova tentativa não contam como independentes.

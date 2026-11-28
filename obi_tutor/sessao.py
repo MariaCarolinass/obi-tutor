@@ -15,18 +15,17 @@ class Sessao:
         self.dominio = dominio
         self.tentativas = {}
         self.concluidas = []
-        self.diagnostico = {}
+        self.respostas_diagnostico = {}
         self.ultimo_pedido = None
         self.conversas = {"geral": ConversaTutor()}
         self.lock = Lock()
 
     def conversar(self, texto, contexto="geral", question_id=None):
         foco = self.dominio.questoes.get(question_id)
-        diagnostico = None
+        diagnostico = self._resultado_diagnostico()
         if contexto == "diagnostico":
-            if not all(q["id"] in self.diagnostico for q in self.dominio.diagnostico):
+            if len(diagnostico) != len(self.dominio.diagnostico):
                 raise ValueError("Conclua o diagnóstico antes de conversar sobre o resultado.")
-            diagnostico = self.diagnostico
             foco = None
         elif contexto != "geral":
             foco = self.dominio.questoes.get(contexto)
@@ -35,14 +34,21 @@ class Sessao:
 
         if contexto not in self.conversas:
             self.conversas[contexto] = ConversaTutor()
-        recomendada = recomendar(self.dominio, self.aluno, self.concluidas, self.diagnostico)["missionId"]
+        recomendada = recomendar(self.dominio, self.aluno, self.concluidas, diagnostico)["missionId"]
         return self.conversas[contexto].responder(
             self.dominio, texto, foco, recomendada, self.concluidas,
-            diagnostico=diagnostico,
+            diagnostico=diagnostico if contexto == "diagnostico" else None,
             contextualizar_missao=contexto not in {"geral", "diagnostico"},
         )
 
+    def _resultado_diagnostico(self):
+        return {
+            id_: alternativa == self.dominio.questoes[id_]["gabarito"]
+            for id_, alternativa in self.respostas_diagnostico.items()
+        }
+
     def estado(self):
+        diagnostico = self._resultado_diagnostico()
         registros = {
             id_: {
                 "evaluated": conceito["avaliado"],
@@ -64,8 +70,9 @@ class Sessao:
                 for id_, tentativa in self.tentativas.items()
             },
             "completed": self.concluidas.copy(),
-            "diagnosticAnswers": self.diagnostico.copy(),
-            "recommendation": recomendar(self.dominio, self.aluno, self.concluidas, self.diagnostico),
+            "diagnosticAnswers": diagnostico,
+            "diagnosticReview": self._revisao_diagnostico(),
+            "recommendation": recomendar(self.dominio, self.aluno, self.concluidas, diagnostico),
             "weakPrerequisites": requisitos_fracos(self.dominio, self.aluno),
         }
 
@@ -89,6 +96,22 @@ class Sessao:
                 registro["points"] = min(LIMITE_PONTUACAO, registro["points"] + pontos)
         return progresso
 
+    def _revisao_diagnostico(self):
+        if len(self.respostas_diagnostico) != len(self.dominio.diagnostico):
+            return {}
+
+        revisao = {}
+        for questao in self.dominio.diagnostico:
+            id_ = questao["id"]
+            alternativa = self.respostas_diagnostico[id_]
+            revisao[id_] = {
+                "selectedId": alternativa,
+                "correctId": questao["gabarito"],
+                "explanation": questao["explicacao"],
+                "feedback": questao.get("feedback_por_alternativa", {}).get(alternativa),
+            }
+        return revisao
+
     def _tentativa(self, id_):
         return self.tentativas.setdefault(
             id_, {"errors": 0, "ajudas": 0, "pistas": 0, "points": 0}
@@ -99,8 +122,12 @@ class Sessao:
         if alternativa not in {opcao["id"] for opcao in questao["alternativas"]}:
             raise ValueError("Alternativa inválida.")
         diagnostico = questao["tipo"] == "diagnostico"
-        if diagnostico and id_ in self.diagnostico:
-            return {"correct": self.diagnostico[id_], "points": 0, "review": True}
+        if diagnostico and id_ in self.respostas_diagnostico:
+            return {
+                "correct": self.respostas_diagnostico[id_] == questao["gabarito"],
+                "points": 0,
+                "review": True,
+            }
 
         tentativa = self._tentativa(id_)
         correta = alternativa == questao["gabarito"]
@@ -117,14 +144,16 @@ class Sessao:
             else:
                 tentativa["errors"] += 1
             if diagnostico:
-                self.diagnostico[id_] = correta
+                self.respostas_diagnostico[id_] = alternativa
 
         resultado = {"correct": correta, "points": pontos, "review": revisao}
         if correta and not diagnostico:
             resultado["message"] = questao["explicacao"]
         elif not correta and not diagnostico:
             erros = max(tentativa["errors"], 1)
-            resultado.update(orientar_erro(self.dominio, questao, erros, self.concluidas))
+            resultado.update(
+                orientar_erro(self.dominio, questao, alternativa, erros, self.concluidas)
+            )
         return resultado
 
     def ajudar(self, questao, tipo):
