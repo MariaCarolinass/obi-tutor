@@ -66,7 +66,6 @@
   :is(
     .concept-code,
     .concept-actions span,
-    .concept-mission-row small,
     .concept-mission-row > div > span,
     .legend > span:first-child,
     .prerequisites,
@@ -131,7 +130,7 @@
     .chat-header h3,
     .chat-suggestions h3,
     .diagnostic-profile h3,
-    .concept-mission-row h3
+    .concept-mission-row h4
   ) {
   font-size: 1.125rem;
   line-height: 1.35;
@@ -361,6 +360,21 @@
 .study-page .diagnostic-profile li p {
   margin-top: 2px;
   color: var(--muted-foreground);
+}
+
+.diagnostic-answer-review {
+  flex-basis: 100%;
+  min-width: 0;
+}
+
+.diagnostic-answer-review summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 650;
+}
+
+.study-page .diagnostic-profile .diagnostic-answer-review p {
+  margin-top: 10px;
 }
 
 .study-page .progress-summary h2,

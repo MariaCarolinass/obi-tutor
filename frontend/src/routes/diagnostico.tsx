@@ -67,10 +67,14 @@ function Diagnostic() {
             <ul>
               {diagnosticQuestions.map((q) => {
                 const correct = state.diagnosticAnswers[q.id];
+                const review = state.diagnosticReview?.[q.id];
+                const conceptName = concepts.find((c) => c.id === q.concept)?.name;
+                const selectedOption = q.options.find((option) => option.id === review?.selectedId);
+                const correctOption = q.options.find((option) => option.id === review?.correctId);
                 return (
                   <li key={q.id}>
                     <div>
-                      <strong>{concepts.find((c) => c.id === q.concept)?.name}</strong>
+                      <strong>{conceptName}</strong>
                       <p>
                         {correct ? (
                           <>
@@ -85,6 +89,25 @@ function Diagnostic() {
                       </p>
                     </div>
                     <StatusBadge value={status(state.records[q.concept])} />
+                    {review && (
+                      <details className="diagnostic-answer-review">
+                        <summary aria-label={`Revisar resposta de ${conceptName}`}>
+                          Revisar resposta
+                        </summary>
+                        <p>{q.prompt}</p>
+                        {q.code && <CodeBlock code={q.code} />}
+                        <p className="answer-text">
+                          <strong>Sua resposta</strong> · {selectedOption?.texto}
+                        </p>
+                        {!correct && (
+                          <p className="answer-text">
+                            <strong>Resposta correta</strong> · {correctOption?.texto}
+                          </p>
+                        )}
+                        {review.feedback && <p>{review.feedback}</p>}
+                        <p>{review.explanation}</p>
+                      </details>
+                    )}
                   </li>
                 );
               })}
