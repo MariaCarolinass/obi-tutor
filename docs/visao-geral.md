@@ -8,7 +8,7 @@ O OBI Tutor pretende oferecer apoio contextual sem substituir automaticamente o 
 
 ## 2. Público e objetivos
 
-**Público:** estudantes do 1º e 2º anos do Ensino Médio, com atividades introdutórias de Python inspiradas na modalidade Programação da OBI. As séries escolares não são equivalentes aos níveis oficiais da competição.
+**Público:** estudantes do 1º e 2º anos do Ensino Médio, com atividades introdutórias de Python inspiradas nas provas de programação da OBI. As séries escolares não são equivalentes aos níveis oficiais da competição.
 
 **Objetivos verificáveis:**
 
@@ -28,7 +28,7 @@ O **laço externo** seleciona o próximo conceito ou exercício. O **laço inter
 
 ## 4. Experiências
 
-**Pergunte ao Tutor** oferece um chat com o Olimpio para tirar dúvidas de Python e explorar exemplos de preparação para a OBI. O backend usa a mensagem e, quando pertinente, a missão em foco. O LLM é opcional e o tutor tem orientações locais de contingência. A conversa não altera a pontuação.
+**Pergunte ao Tutor** oferece um chat com o Olimpio para tirar dúvidas de Python e explorar exemplos de preparação para a OBI. O tutor pode usar o resultado do diagnóstico ou o enunciado e o código de uma missão, conforme a entrada no chat. O LLM é opcional e o tutor tem orientações locais de contingência. A conversa não altera a pontuação.
 
 **Missões Interativas** oferece diagnóstico opcional e desafios com gabarito local. A aplicação registra tentativas, oferece ajuda e concede pontos uma única vez por item.
 
@@ -50,7 +50,7 @@ A pausa e a navegação preservam o progresso registrado enquanto a sessão esti
 - React, TypeScript, TanStack Router e Vite executam a interface no navegador.
 - O servidor Python carrega e valida os conceitos, os pré-requisitos e o catálogo de 39 questões. O backend consulta o gabarito local e entrega à interface os dados necessários para cada tela.
 - O modelo do aluno em Python registra respostas objetivas. O modelo pedagógico usa o estado do aluno e o grafo para recomendar revisão, prática ou avanço.
-- O histórico do chat fica na aba. A correção, o progresso e as recomendações usam uma sessão em memória no servidor. O fluxo web funciona sem banco de dados.
+- O histórico exibido no chat fica na aba. A sessão em memória no servidor guarda os turnos recentes de cada conversa e sustenta a correção, o progresso e as recomendações. O fluxo web funciona sem banco de dados.
 - O tutor usa a API de LLM quando configurada. Se o provedor estiver indisponível, o backend usa uma orientação local e preserva o fluxo de estudo.
 
 [Contrato de integração](integracao.md)

@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
+import { TrainingProgress } from "@/components/training-progress";
 import { status, type Answer, type Help, type Mission } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
@@ -73,7 +74,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
     state,
     answer,
     help,
-    focus,
+    startActivity,
     busy,
     catalog: { concepts, trainingMissions },
   } = useLearning();
@@ -82,13 +83,19 @@ function MissionActivity({ mission }: { mission: Mission }) {
   const [guidance, setGuidance] = useState<{ kind: Help; message: string } | null>(null);
   const [paused, setPaused] = useState(false);
   const [pauseMenu, setPauseMenu] = useState(false);
-  useEffect(() => focus(mission.id), [focus, mission.id]);
+  useEffect(() => startActivity(mission.id), [mission.id, startActivity]);
 
   const concept = concepts.find((c) => c.id === mission.concept);
   const record = state.records[mission.concept];
   const attempt = state.attempts[mission.id];
   const solved = feedback?.correct === true;
   const points = feedback?.points ?? 0;
+  const score = record?.score ?? 0;
+  const scoreReason = attempt?.hinted
+    ? "após usar ajuda"
+    : (attempt?.errors ?? 0) > 0
+      ? "em uma nova tentativa, sem ajuda"
+      : "de primeira, sem ajuda";
   const next =
     trainingMissions.find(
       (m) =>
@@ -139,7 +146,6 @@ function MissionActivity({ mission }: { mission: Mission }) {
             <span className="tiny-tag">
               {concept?.short} · {mission.difficulty}
             </span>
-            <span className="tiny-tag">1º e 2º anos do Ensino Médio</span>
           </div>
           <h2>{mission.title}</h2>
           <p className="mission-prompt">{mission.prompt}</p>
@@ -184,16 +190,23 @@ function MissionActivity({ mission }: { mission: Mission }) {
                 Ainda não é essa. Vamos pensar juntos?
               </h3>
               <p>{feedback.message}</p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setFeedback(null);
-                  setSelected(null);
-                }}
-              >
-                <RefreshCw />
-                Tentar novamente
-              </Button>
+              <div className="button-row">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFeedback(null);
+                    setSelected(null);
+                  }}
+                >
+                  <RefreshCw />
+                  Tentar novamente
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link to="/tutor" search={{ contexto: mission.id }}>
+                    Pergunte ao tutor
+                  </Link>
+                </Button>
+              </div>
             </div>
           )}
           {solved && (
@@ -205,15 +218,21 @@ function MissionActivity({ mission }: { mission: Mission }) {
               </h3>
               <p>{feedback?.message}</p>
               <p className="mt-2">
-                {feedback?.review
-                  ? "Você já concluiu esta questão nesta sessão."
-                  : points === 0
-                    ? "O conceito já atingiu 100 pontos."
-                    : attempt?.hinted
-                      ? "Você usou ajuda e chegou à solução. Isso também é aprender!"
-                      : "Seu progresso foi atualizado. Continue explorando!"}{" "}
-                {status(record) === "Dominado" ? "Conceito dominado!" : ""}
+                {feedback?.review ? (
+                  "Você já concluiu esta questão nesta sessão."
+                ) : points === 0 ? (
+                  "O conceito já atingiu 100 pontos."
+                ) : (
+                  <>
+                    <strong>
+                      {concept?.name} passou de {score - points} para {score} pontos.
+                    </strong>{" "}
+                    Você ganhou {points} {points === 1 ? "ponto" : "pontos"} por acertar{" "}
+                    {scoreReason}.{score === 100 ? " Esse é o limite por conceito." : ""}
+                  </>
+                )}
               </p>
+              {status(record) === "Dominado" && <p>Conceito dominado!</p>}
               <div className="button-row">
                 {next ? (
                   <Button asChild>
@@ -295,7 +314,7 @@ function MissionActivity({ mission }: { mission: Mission }) {
               </Button>
             )}
             <Button variant="ghost" asChild>
-              <Link to="/tutor">
+              <Link to="/tutor" search={{ contexto: mission.id }}>
                 Conversar com o Olimpio <ArrowRight />
               </Link>
             </Button>
@@ -315,13 +334,10 @@ function MissionActivity({ mission }: { mission: Mission }) {
             </div>
           )}
           <div className="mission-progress">
-            <p>
-              <span>{concept?.short}</span>
-              <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
-                {record?.evaluated ? `${record.score} / 100` : "—"}
-              </strong>
-            </p>
-            <progress max="100" value={record?.score ?? 0} aria-label="Progresso no conceito" />
+            <TrainingProgress
+              score={state.trainingProgress?.[mission.concept]}
+              concept={concept?.name ?? mission.concept}
+            />
             <small>
               {status(record)} · {record?.independent ?? 0} acertos independentes
               <br />

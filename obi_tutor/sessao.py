@@ -1,6 +1,10 @@
 from threading import Lock
 
-from obi_tutor.models.modelo_aluno import ModeloAluno
+from obi_tutor.models.modelo_aluno import (
+    LIMITE_PONTUACAO,
+    PONTOS_ACERTO_INDEPENDENTE_MISSAO,
+    ModeloAluno,
+)
 from obi_tutor.pedagogia import oferecer_ajuda, orientar_erro, recomendar, requisitos_fracos
 from obi_tutor.tutor import ConversaTutor
 
@@ -13,14 +17,38 @@ class Sessao:
         self.concluidas = []
         self.respostas_diagnostico = {}
         self.ultimo_pedido = None
-        self.conversa = ConversaTutor()
+        self.conversas = {"geral": ConversaTutor()}
         self.lock = Lock()
 
-    def estado(self):
-        diagnostico = {
+    def conversar(self, texto, contexto="geral", question_id=None):
+        foco = self.dominio.questoes.get(question_id)
+        diagnostico = self._resultado_diagnostico()
+        if contexto == "diagnostico":
+            if len(diagnostico) != len(self.dominio.diagnostico):
+                raise ValueError("Conclua o diagnóstico antes de conversar sobre o resultado.")
+            foco = None
+        elif contexto != "geral":
+            foco = self.dominio.questoes.get(contexto)
+            if not foco or foco["tipo"] == "diagnostico":
+                raise ValueError("Contexto de conversa desconhecido.")
+
+        if contexto not in self.conversas:
+            self.conversas[contexto] = ConversaTutor()
+        recomendada = recomendar(self.dominio, self.aluno, self.concluidas, diagnostico)["missionId"]
+        return self.conversas[contexto].responder(
+            self.dominio, texto, foco, recomendada, self.concluidas,
+            diagnostico=diagnostico if contexto == "diagnostico" else None,
+            contextualizar_missao=contexto not in {"geral", "diagnostico"},
+        )
+
+    def _resultado_diagnostico(self):
+        return {
             id_: alternativa == self.dominio.questoes[id_]["gabarito"]
             for id_, alternativa in self.respostas_diagnostico.items()
         }
+
+    def estado(self):
+        diagnostico = self._resultado_diagnostico()
         registros = {
             id_: {
                 "evaluated": conceito["avaliado"],
@@ -32,6 +60,7 @@ class Sessao:
         }
         return {
             "records": registros,
+            "trainingProgress": self._progresso_trilha(),
             "attempts": {
                 id_: {
                     "errors": tentativa["errors"],
@@ -46,6 +75,26 @@ class Sessao:
             "recommendation": recomendar(self.dominio, self.aluno, self.concluidas, diagnostico),
             "weakPrerequisites": requisitos_fracos(self.dominio, self.aluno),
         }
+
+    def _progresso_trilha(self):
+        progresso = {id_: {"points": 0, "maxPoints": 0} for id_ in self.dominio.conceitos}
+        concluidas = set(self.concluidas)
+        for questao in self.dominio.missoes:
+            registro = progresso[questao["concept_id"]]
+            registro["maxPoints"] = min(
+                LIMITE_PONTUACAO,
+                registro["maxPoints"] + PONTOS_ACERTO_INDEPENDENTE_MISSAO,
+            )
+            if questao["id"] in concluidas:
+                tentativa = self.tentativas[questao["id"]]
+                pontos = self.aluno.calcular_pontuacao({
+                    "resultado": True,
+                    "tipo_atividade": questao["tipo"],
+                    "tentativas": tentativa["errors"] + 1,
+                    "dicas_utilizadas": tentativa["ajudas"],
+                })
+                registro["points"] = min(LIMITE_PONTUACAO, registro["points"] + pontos)
+        return progresso
 
     def _revisao_diagnostico(self):
         if len(self.respostas_diagnostico) != len(self.dominio.diagnostico):

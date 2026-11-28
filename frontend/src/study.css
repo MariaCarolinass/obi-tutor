@@ -71,7 +71,6 @@
     .prerequisites,
     .tiny-tag,
     .option-letter,
-    .mission-progress p,
     .mission-progress small,
     .integration-strip,
     .message-body > small,
@@ -159,10 +158,6 @@
   padding: 4px 8px;
   border-radius: 100px;
   font-size: 0.75rem;
-}
-
-.study-page .concept-score strong {
-  font-size: var(--study-small);
 }
 
 .study-page .concept-actions {
@@ -398,7 +393,7 @@
   font-weight: 700;
 }
 
-.study-page .progress-table :is(th, td, a, .table-score strong) {
+.study-page .progress-table :is(th, td, a) {
   font-size: var(--study-small);
 }
 
@@ -406,12 +401,62 @@
   font-size: var(--study-caption);
 }
 
-.study-page .table-score strong {
-  width: 52px;
+.study-page .training-progress {
+  display: grid;
+  gap: 5px;
+}
+
+.study-page .training-progress p {
+  color: var(--muted-foreground);
+  font-size: var(--study-small);
+}
+
+.study-page .training-progress strong {
+  color: var(--foreground);
+}
+
+.study-page .progress-diagnostic,
+.study-page .progress-official-score,
+.study-page .scoring-rules p + p {
+  margin-top: 6px;
+}
+
+.study-page .progress-diagnostic {
+  color: var(--muted-foreground);
 }
 
 .progress-mobile-label {
   display: none;
+}
+
+.study-page .progress-gap {
+  margin-bottom: 4px;
+}
+
+.study-page .progress-gap,
+.study-page .progress-extra-answers {
+  color: var(--muted-foreground);
+}
+
+.study-page .scoring-rules {
+  margin-block: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  font-size: var(--study-small);
+}
+
+.study-page .scoring-rules summary {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.study-page .scoring-rules ul {
+  margin-block: 10px;
+  padding-inline-start: 20px;
+  list-style: disc;
 }
 
 @media (max-width: 900px) {
@@ -475,7 +520,7 @@
   }
 
   .study-page .progress-table td:last-child {
-    align-self: end;
+    grid-column: 1 / -1;
   }
 
   .study-page .progress-mobile-label {

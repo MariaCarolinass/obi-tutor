@@ -19,11 +19,12 @@ type LearningSession = {
   busy: boolean;
   answer: (questionId: string, optionId: string) => Promise<Answer | undefined>;
   help: (questionId: string, kind: Help) => Promise<string | undefined>;
-  focus: (questionId: string) => void;
+  activityHistory: string[];
+  startActivity: (activityId: string) => void;
   reset: () => Promise<boolean>;
   end: () => Promise<boolean>;
-  messages: Message[];
-  send: (text: string) => boolean;
+  conversations: Record<string, Message[]>;
+  send: (text: string, context: string) => boolean;
 };
 
 export const LearningContext = createContext<LearningSession | null>(null);

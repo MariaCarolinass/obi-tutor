@@ -84,22 +84,6 @@
   background: var(--accent);
 }
 
-.home-guide-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 36px;
-  margin-top: 9px;
-  color: var(--muted-foreground);
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.home-guide-link:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
-
 .home-example {
   min-width: 0;
   color: var(--code-text);
@@ -213,13 +197,14 @@
   text-decoration: underline;
 }
 
-.home-example-controls :focus-visible {
+.home-example-controls :focus-visible,
+.home-example-dismiss:focus-visible {
   outline: 2px solid var(--action);
   outline-offset: 3px;
   border-radius: 5px;
 }
 
-.home-example-reply > div {
+.home-example-reply:has(.home-example-dismiss) {
   display: flex;
   gap: 9px;
   margin-top: 12px;
@@ -227,6 +212,28 @@
   border-radius: 8px;
   background: #3e2a2e;
   line-height: 1.5;
+}
+
+.home-example-reply > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.home-example-dismiss {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  align-self: flex-start;
+  width: 36px;
+  height: 36px;
+  margin-inline-start: auto;
+  border-radius: 5px;
+  color: var(--code-text);
+}
+
+.home-example-dismiss:hover {
+  background: #625055;
 }
 
 .home-example-reply .tutor-icon {
@@ -318,12 +325,14 @@
 }
 
 .home-progress .home-next-mission {
-  display: flex;
-  align-items: center;
-  gap: 7px;
   margin-top: 9px;
-  color: var(--primary);
   font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.home-progress .home-next-mission:hover {
+  color: var(--foreground);
 }
 
 .home-next-mission svg {
@@ -353,14 +362,16 @@
   outline-offset: 4px;
 }
 
-.home-obi-heading h2 {
+.home-obi-heading h2,
+.home-obi-project h2 {
   font-size: clamp(1.2rem, 1.7vw, 1.45rem);
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.02em;
 }
 
-.home-obi p {
+.home-obi p,
+.home-obi-project p {
   margin-top: 8px;
   color: var(--muted-foreground);
   font-size: 1rem;
@@ -424,7 +435,7 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
   gap: 12px;
-  padding-top: 16px;
+  padding-top: 22px;
   border-top: 1px solid var(--border);
 }
 

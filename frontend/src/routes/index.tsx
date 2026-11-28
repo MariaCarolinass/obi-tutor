@@ -1,18 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowRight,
-  ArrowDown,
   Bot,
   ClipboardCheck,
   Code2,
   Lightbulb,
   MessageSquareCode,
+  X,
 } from "lucide-react";
 import { TutorIcon } from "@/components/app-shell";
 import { CodeBlock } from "@/components/code-block";
 import { tutorName, useLearning } from "@/components/learning-context";
-import { ObiGuide } from "@/components/obi-guide";
+import { ObiGuide, ObiTutorIntro } from "@/components/obi-guide";
 import { Button } from "@/components/ui/button";
 import { hasActivity, status } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
   head: () =>
     pageMeta(
       "Treine para a OBI com seu tutor",
-      "Prepare-se para a modalidade Programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
+      "Treine para as provas de programação da Olimpíada Brasileira de Informática com desafios guiados, pistas e acompanhamento do progresso.",
     ),
   component: Index,
 });
@@ -54,6 +54,7 @@ const sampleOptions = [
 function TutorExample() {
   const [selected, setSelected] = useState<number | null>(null);
   const [reply, setReply] = useState("");
+  const replyTrigger = useRef<HTMLButtonElement>(null);
 
   return (
     <figure className="home-example">
@@ -78,7 +79,8 @@ function TutorExample() {
                 key={value}
                 type="button"
                 aria-pressed={selected === value}
-                onClick={() => {
+                onClick={(event) => {
+                  replyTrigger.current = event.currentTarget;
                   setSelected(value);
                   setReply(reply);
                 }}
@@ -90,7 +92,8 @@ function TutorExample() {
           <button
             type="button"
             className="home-example-hint"
-            onClick={() => {
+            onClick={(event) => {
+              replyTrigger.current = event.currentTarget;
               setReply(
                 "Comece com total igual a 0. Some 5 na primeira volta e 8 na segunda. Qual valor ainda falta somar?",
               );
@@ -99,15 +102,30 @@ function TutorExample() {
             Pedir uma pista
           </button>
         </div>
-        <div className="home-example-reply" role="status">
+        <div className="home-example-reply">
+          <div role="status">
+            {reply && (
+              <>
+                <TutorIcon />
+                <p>
+                  <strong>{tutorName}</strong>
+                  {reply}
+                </p>
+              </>
+            )}
+          </div>
           {reply && (
-            <div>
-              <TutorIcon />
-              <p>
-                <strong>{tutorName}</strong>
-                {reply}
-              </p>
-            </div>
+            <button
+              type="button"
+              className="home-example-dismiss"
+              aria-label={`Fechar resposta do ${tutorName}`}
+              onClick={() => {
+                setReply("");
+                replyTrigger.current?.focus();
+              }}
+            >
+              <X size={18} aria-hidden="true" />
+            </button>
           )}
         </div>
       </div>
@@ -139,9 +157,21 @@ const studyPaths = [
 function Index() {
   const {
     state,
-    catalog: { concepts, trainingMissions },
+    activityHistory,
+    catalog: { concepts, diagnosticQuestions, trainingMissions },
   } = useLearning();
   const started = hasActivity(state);
+  const resume = activityHistory.find((id) =>
+    id === "diagnostico"
+      ? diagnosticQuestions.some((question) => state.diagnosticAnswers[question.id] === undefined)
+      : !state.completed.includes(id),
+  );
+  const primaryLink =
+    resume === "diagnostico"
+      ? ({ to: "/diagnostico", search: { retomar: true } } as const)
+      : resume
+        ? ({ to: "/missoes/$id", params: { id: resume } } as const)
+        : ({ to: "/trilha" } as const);
   const recommended = trainingMissions.find((m) => m.id === state.recommendation.missionId);
   const mastered = concepts.filter((c) => status(state.records[c.id]) === "Dominado").length;
   const completed = trainingMissions.filter((m) => state.completed.includes(m.id)).length;
@@ -157,13 +187,13 @@ function Index() {
             Treine para a <mark>OBI</mark> <span>com seu tutor.</span>
           </h1>
           <p className="home-description">
-            Pratique Python com desafios inspirados na <strong>modalidade Programação</strong>,
+            Pratique <strong>Python</strong> com desafios de programação inspirados na OBI e
             voltados ao 1º e ao 2º ano do Ensino Médio. Se travar, peça uma pista ao Olimpio.
           </p>
           <div className="home-actions">
             <Button asChild size="lg">
-              <Link to="/missoes/$id" params={{ id: state.recommendation.missionId }}>
-                {started ? "Continuar com o tutor" : "Começar com o tutor"}
+              <Link {...primaryLink}>
+                {resume ? "Continuar de onde parei" : "Começar pela trilha"}
                 <ArrowRight aria-hidden="true" />
               </Link>
             </Button>
@@ -174,9 +204,6 @@ function Index() {
               </Link>
             </Button>
           </div>
-          <a className="home-guide-link" href="#sobre-a-obi">
-            Saiba como funciona a OBI <ArrowDown size={16} aria-hidden="true" />
-          </a>
         </div>
 
         <TutorExample />
@@ -190,10 +217,13 @@ function Index() {
               {completed} {completed === 1 ? "missão concluída" : "missões concluídas"} · {mastered}{" "}
               {mastered === 1 ? "conceito dominado" : "conceitos dominados"}
             </p>
-            <p className="home-next-mission">
-              <Lightbulb size={16} aria-hidden="true" />
-              Próximo desafio · {recommended?.title}
-            </p>
+            {recommended && (
+              <Link className="home-next-mission" to="/missoes/$id" params={{ id: recommended.id }}>
+                <Lightbulb size={16} aria-hidden="true" />
+                Próximo desafio · {recommended.title}
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            )}
           </div>
           <Link to="/progresso">
             Ver meu progresso <ArrowRight size={16} aria-hidden="true" />
@@ -221,6 +251,7 @@ function Index() {
         </ul>
       </section>
 
+      <ObiTutorIntro />
       <ObiGuide />
     </div>
   );

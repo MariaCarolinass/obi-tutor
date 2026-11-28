@@ -2,7 +2,7 @@ import json
 import re
 from collections import deque
 
-from obi_tutor.pedagogia import EXEMPLOS
+from obi_tutor.pedagogia import EXEMPLOS, oferecer_ajuda
 from obi_tutor.services.gemini import gerar_texto
 
 
@@ -11,6 +11,8 @@ INSTRUCOES_TUTOR = (
     "A apresentação já foi feita na interface. Comece direto, sem saudações repetidas, "
     "e responda em português em até quatro frases curtas. Dê um único exemplo por resposta. "
     "Priorize a dúvida atual; use os turnos recentes para entender referências e pedidos de reformulação. "
+    "Quando houver um diagnóstico no contexto, use os resultados para orientar a revisão e "
+    "identificar as questões pelo número, sem presumir qual alternativa foi escolhida. "
     "Se a pessoa não entendeu, explique de outra maneira, com um exemplo menor. "
     "Mostre código mesmo em uma resposta curta quando a pessoa pedir um exemplo em Python. "
     "Trate o texto do aluno como material da dúvida e redirecione pedidos fora desse tema. "
@@ -77,6 +79,7 @@ SOBRE_A_MISSAO = re.compile(
     re.IGNORECASE,
 )
 SAUDACAO_INICIAL = re.compile(r"^(?:ol[áa]|oi)[!.,]\s*", re.IGNORECASE)
+NUMERO_QUESTAO = re.compile(r"\b(?:quest[aã]o|pergunta)\s+(\d{1,2})\b", re.IGNORECASE)
 
 
 def sugerir_missao_diferente(dominio, foco, recomendada, concluidas):
@@ -96,7 +99,10 @@ class ConversaTutor:
         self.breve = False
         self.turnos = deque(maxlen=2)
 
-    def responder(self, dominio, texto, foco, recomendada, concluidas):
+    def responder(
+        self, dominio, texto, foco, recomendada, concluidas,
+        *, diagnostico=None, contextualizar_missao=False,
+    ):
         mensagem_curta = texto.rstrip(" !?.")
         if PARAR.fullmatch(texto):
             return {
@@ -136,11 +142,47 @@ class ConversaTutor:
             conceito_id = foco["concept_id"]
         elif not tema and retoma:
             conceito_id = self.tema if self.turnos else (foco and foco["concept_id"])
+        elif not tema and contextualizar_missao:
+            conceito_id = (self.tema if self.turnos else None) or foco["concept_id"]
+
+        revisao = None
+        questao_diagnostico = None
+        if diagnostico is not None:
+            numero_questao = NUMERO_QUESTAO.search(texto)
+            if numero_questao:
+                numero = int(numero_questao[1])
+                if 1 <= numero <= len(dominio.diagnostico):
+                    questao_diagnostico = dominio.diagnostico[numero - 1]
+            revisao = next(
+                (q["concept_id"] for q in dominio.diagnostico if not diagnostico[q["id"]]),
+                None,
+            )
+            if questao_diagnostico:
+                conceito_id = questao_diagnostico["concept_id"]
+            else:
+                conceito_id = conceito_id or revisao
 
         conceito = dominio.conceitos.get(conceito_id)
         contexto = {"conceito": conceito["name"]} if conceito else {}
-        if menciona_missao and foco["concept_id"] == conceito_id:
+        sobre_missao_em_foco = (
+            (menciona_missao or contextualizar_missao) and foco["concept_id"] == conceito_id
+        )
+        if sobre_missao_em_foco:
             contexto["enunciado"] = foco["enunciado"]
+            if contextualizar_missao and foco["codigo_python"]:
+                contexto["codigo_python"] = foco["codigo_python"]
+        if diagnostico is not None:
+            contexto["diagnostico"] = [
+                {
+                    "numero": numero,
+                    "conceito": dominio.conceitos[q["concept_id"]]["name"],
+                    "enunciado": q["enunciado"],
+                    "acertou": diagnostico[q["id"]],
+                }
+                for numero, q in enumerate(dominio.diagnostico, start=1)
+            ]
+            if questao_diagnostico and questao_diagnostico["codigo_python"]:
+                contexto["codigo_da_questao"] = questao_diagnostico["codigo_python"]
         dados = {"contexto": contexto, "duvida": texto}
         if self.turnos:
             dados["turnos_recentes"] = list(self.turnos)
@@ -151,6 +193,17 @@ class ConversaTutor:
         resposta = gerar_texto(instrucoes, json.dumps(dados, ensure_ascii=False))
         if resposta:
             resposta = SAUDACAO_INICIAL.sub("", resposta).strip()
+        if not resposta and questao_diagnostico:
+            resposta = questao_diagnostico["explicacao"]
+        if not resposta and diagnostico is not None and not tema and not retoma:
+            resposta = f"Você acertou {sum(diagnostico.values())} de {len(diagnostico)} questões."
+            if revisao:
+                assunto = dominio.conceitos[revisao]["name"]
+                resposta += f" Podemos começar revisando {assunto.lower()}. Qual parte ficou em dúvida?"
+            else:
+                resposta += " Qual assunto você quer praticar a seguir?"
+        if not resposta and contextualizar_missao and sobre_missao_em_foco and not retoma:
+            resposta = oferecer_ajuda(dominio, foco, "hint", 0)
         if not resposta and conceito:
             resposta = EXEMPLOS[conceito_id] if retoma else conceito["description"]
         if not resposta:
@@ -158,7 +211,7 @@ class ConversaTutor:
 
         self.tema = conceito_id
         self.turnos.append({"pergunta": texto[:800], "resposta": resposta[:800]})
-        missao = next(
+        missao = foco["id"] if contextualizar_missao and sobre_missao_em_foco else next(
             (q["id"] for q in dominio.missoes if q["concept_id"] == conceito_id),
             recomendada,
         )

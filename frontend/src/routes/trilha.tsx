@@ -15,6 +15,7 @@ import {
 import { PageHeading, StatusBadge } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { useLearning } from "@/components/learning-context";
+import { TrainingProgress } from "@/components/training-progress";
 import { status, type Concept } from "@/lib/learning";
 import { pageMeta } from "@/lib/page-meta";
 
@@ -78,14 +79,7 @@ function Trail() {
               </div>
               <p>{c.description}</p>
               <div className="concept-score">
-                <progress
-                  max="100"
-                  value={record?.score ?? 0}
-                  aria-label={`Progresso em ${c.name}`}
-                />
-                <strong className={(record?.score ?? 0) > 0 ? "text-success" : undefined}>
-                  {record?.evaluated ? `${record.score} / 100` : "—"}
-                </strong>
+                <TrainingProgress score={state.trainingProgress?.[c.id]} concept={c.name} />
               </div>
               <div className="prerequisites">
                 <Network size={12} />
@@ -148,6 +142,9 @@ function Trail() {
             </span>
             <h2 id="concept-title">{selected.name}</h2>
             <p>{selected.description}</p>
+            {activities.length > 0 && (
+              <p>Cada desafio tem uma questão. Ao acertar, você conclui o desafio.</p>
+            )}
             {weak.length > 0 && (
               <div className="prerequisite-advice">
                 <Info size={15} />

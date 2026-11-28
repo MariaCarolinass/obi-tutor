@@ -4,10 +4,10 @@
 
 A interface web tem um menu lateral no desktop e um menu recolhível no celular. O estudante pode alternar entre treinar e conversar com o tutor durante a sessão.
 
-- **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Começar com o tutor** ou **Continuar com o tutor** abre a missão recomendada. **Conversar com o tutor** abre o chat com o Olimpio. A página também dá acesso ao diagnóstico, à trilha e ao guia sobre a modalidade Programação da OBI.
+- **Início** (`/`) apresenta o OBI Tutor e seu público, estudantes do 1º e do 2º ano do Ensino Médio. **Continuar de onde parei** retoma a atividade mais recente ainda em andamento na sessão. Quando não há atividade para retomar, **Começar pela trilha** abre os conceitos e desafios disponíveis. **Fazer o diagnóstico** é uma opção para quem quer uma sugestão de estudo. Quando há tentativas registradas, **Seu progresso nesta sessão** inclui um link direto para o **Próximo desafio** recomendado. **Conversar com o tutor** abre o chat com o Olimpio. No aquecimento, o estudante pode fechar a resposta do Olimpio pelo botão **X**. A página apresenta o projeto antes do guia sobre as provas de programação da OBI.
 - **Diagnóstico** (`/diagnostico`) oferece dez questões opcionais, um resultado por conceito avaliado e uma missão recomendada.
 - **Treinar para a OBI** (`/trilha`) apresenta os conceitos, pré-requisitos e atividades disponíveis. As missões abrem em `/missoes/<id>`.
-- **Pergunte ao Tutor** (`/tutor`) reúne a conversa demonstrativa com o Olimpio e sugestões de perguntas.
+- **Pergunte ao Tutor** (`/tutor`) reúne as conversas com o Olimpio e sugestões de perguntas.
 - **Meu Progresso** (`/progresso`) exibe a pontuação, o estado e os acertos independentes de cada conceito.
 
 ## 2. Diagnóstico e Missões Interativas
@@ -21,25 +21,27 @@ Ao concluir as dez questões, o estudante vê o total de acertos e uma missão s
 ### Treinamento
 
 1. Em **Treinar para a OBI**, abra um conceito para consultar sua descrição, seus pré-requisitos e suas missões por dificuldade. A primeira missão pendente é destacada como sugestão. Com um pré-requisito abaixo de 50 pontos, a interface oferece revisão e permite iniciar a atividade escolhida.
-2. Escolha uma alternativa e pressione **Verificar resposta**. O backend compara o ID da alternativa ao gabarito local e devolve o efeito sobre o progresso. Em cada erro, a mensagem abaixo das alternativas indica um ponto específico da opção marcada.
-3. Quando precisar de ajuda, escolha uma pista, um exemplo mais simples, uma revisão do conceito ou uma explicação direta. Após erros repetidos, a interface também oferece a troca de missão.
-4. Após acertar, consulte a explicação e os pontos recebidos. Siga para outra missão ou abra **Meu Progresso**. Uma missão concluída pode ser repetida para revisão, sem conceder novos pontos.
+2. Cada desafio tem uma questão e termina quando o estudante acerta. Escolha uma alternativa e pressione **Verificar resposta**. O backend compara a resposta ao gabarito local e, em caso de erro, mostra uma orientação específica para a alternativa escolhida.
+3. Quando precisar de ajuda, escolha uma pista, um exemplo mais simples, uma revisão do conceito ou uma explicação direta. A cada erro, **Pergunte ao tutor** aparece ao lado de **Tentar novamente** e abre o chat com o contexto da missão. Após erros repetidos, a interface também oferece a troca de missão.
+4. Após acertar, consulte a explicação, a pontuação do conceito antes e depois e o motivo dos pontos recebidos. Siga para outra missão ou abra **Meu Progresso**. Uma missão concluída pode ser repetida para revisão, sem conceder novos pontos.
 
 **Quero fazer uma pausa** abre opções para pausar, voltar à trilha ou escolher outra missão. **Retomar atividade** volta à missão que está aberta.
 
 ## 3. Pergunte ao Tutor
 
-O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. A pergunta aparece imediatamente e a conversa indica enquanto o Olimpio prepara a resposta. Os atalhos **Ver exemplo** e **Explicar de outro jeito** podem enfileirar outra pergunta. O tutor retoma o assunto das mensagens recentes e usa o enunciado da missão quando o estudante pergunta sobre ela. Mensagens livres deixam a pontuação intacta.
+Ao abrir **Pergunte ao Tutor** pelo menu, o estudante vê a saudação da conversa geral. O link **Conversar com o Olimpio** no resultado do diagnóstico abre uma conversa sobre as questões respondidas e os assuntos que vale revisar. O mesmo link em uma missão faz o Olimpio mencionar o desafio e perguntar onde surgiu a dúvida. Ele usa o enunciado e o trecho de código da missão para orientar a resposta. Cada conversa conserva seu histórico na sessão.
+
+O estudante pode digitar uma pergunta, colar um trecho de Python ou usar uma das sugestões do chat. A pergunta aparece imediatamente e a conversa indica enquanto o Olimpio prepara a resposta. Os atalhos **Ver exemplo** e **Explicar de outro jeito** podem enfileirar outra pergunta. O tutor retoma o assunto dos turnos recentes da conversa. Mensagens livres deixam a pontuação intacta.
 
 Quando o estudante diz que está entediado ou quer trocar de atividade, o chat oferece uma missão diferente, a trilha e uma pausa. O estudante também pode ficar no chat. O chat analisa o código recebido como texto. [Modelo pedagógico](modelo-pedagogico.md)
 
 ## 4. Trilha e painel de progresso
 
-A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. **Meu Progresso** reúne pontuações, acertos independentes, estados e uma recomendação para continuar.
+A trilha mostra os dez conceitos e indica os pré-requisitos em cada cartão. As barras da trilha, da missão e de **Meu Progresso** mostram os pontos conquistados nos desafios em relação ao máximo disponível por conceito, até 100. O painel mostra separadamente o resultado do diagnóstico opcional, a pontuação oficial e os critérios que faltam para confirmar o domínio. **Como a pontuação funciona?** explica o valor de cada tipo de acerto e quando a pontuação fica igual.
 
 Após registrar atividade, o painel **Seu progresso nesta sessão**, no Início, exibe os totais de missões concluídas e conceitos dominados, além do próximo desafio recomendado.
 
-Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**. A interface usa um traço no campo de pontuação de um conceito ainda não avaliado. Após uma resposta incorreta sem pontuação anterior, o conceito aparece como **Inicial**, com zero pontos. [Modelo do aluno](modelo-do-aluno.md)
+Os estados são **Não avaliado**, **Inicial**, **Em progresso** e **Dominado**. A pontuação oficial do conceito aparece após a primeira resposta objetiva. Se essa resposta estiver incorreta, o conceito aparece como **Inicial**, com zero pontos. [Modelo do aluno](modelo-do-aluno.md)
 
 ## 5. Sessão
 

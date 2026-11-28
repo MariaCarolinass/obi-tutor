@@ -1,6 +1,10 @@
 from copy import deepcopy
 
 
+LIMITE_PONTUACAO = 100
+PONTOS_ACERTO_INDEPENDENTE_MISSAO = 25
+
+
 class ModeloAluno:
 
     def __init__(self, aluno_id):
@@ -114,7 +118,7 @@ class ModeloAluno:
         if atividade["tentativas"] > 1:
             return 10
 
-        return 25
+        return PONTOS_ACERTO_INDEPENDENTE_MISSAO
 
     def atualizar_conceito(self, atividade):
         conceito_id = atividade["conceito_id"]
@@ -141,7 +145,7 @@ class ModeloAluno:
         
         # Atualiza a pontuação, respeitando o limite de 100
         pontuacao_atual = conceito["pontuacao"]
-        nova_pontuacao = min(100, pontuacao_atual + pontos)
+        nova_pontuacao = min(LIMITE_PONTUACAO, pontuacao_atual + pontos)
 
         conceito["pontuacao"] = nova_pontuacao
 

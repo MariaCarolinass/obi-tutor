@@ -146,11 +146,10 @@ class Handler(SimpleHTTPRequestHandler):
             texto = dados.get("text")
             if not isinstance(texto, str) or not 0 < len(texto.strip()) <= 2000:
                 raise ValueError("Digite uma pergunta de até 2000 caracteres.")
-            foco = dominio.questoes.get(dados.get("questionId"))
-            recomendada = sessao.estado()["recommendation"]["missionId"]
-            return sessao.conversa.responder(
-                dominio, texto.strip(), foco, recomendada, sessao.concluidas,
-            )
+            contexto = dados.get("context", "geral")
+            if not isinstance(contexto, str):
+                raise ValueError("Contexto de conversa inválido.")
+            return sessao.conversar(texto.strip(), contexto, dados.get("questionId"))
 
         questao = dominio.questoes.get(dados.get("questionId"))
         if questao is None:

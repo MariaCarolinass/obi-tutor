@@ -87,6 +87,10 @@ def test_catalogo_contem_grafo_e_distribuicao_sem_gabaritos(api):
         for q in diagnostico + missoes
     )
     assert all(r["status"] == "Não avaliado" for r in sessao["state"]["records"].values())
+    assert sessao["state"]["trainingProgress"] == {
+        conceito: {"points": 0, "maxPoints": min(100, quantidade * 25)}
+        for conceito, quantidade in Counter(q["concept"] for q in missoes).items()
+    }
 
 
 def test_catalogo_tem_feedback_para_todas_as_alternativas_incorretas():
@@ -159,9 +163,16 @@ def test_perfis_atualizam_modelo_e_recomendacao(api, perfil):
         "erra": (0, 0, "Inicial"),
         "misto": (75, 3, "Dominado"),
     }[perfil]
+    assert registro["trainingProgress"]["C4"] == {
+        "points": 0 if perfil == "erra" else 75, "maxPoints": 75,
+    }
+    if perfil == "acerta":
+        assert registro["trainingProgress"]["C1"] == {"points": 50, "maxPoints": 50}
+        assert registro["trainingProgress"]["C10"] == {"points": 100, "maxPoints": 100}
     if perfil == "misto":
         assert registro["records"]["C5"]["score"] == 45
         assert registro["records"]["C5"]["independent"] == 0
+        assert registro["trainingProgress"]["C5"] == {"points": 45, "maxPoints": 75}
     assert all(0 <= r["score"] <= 100 for r in registro["records"].values())
     assert registro["recommendation"]["missionId"] in dominio.questoes
 
@@ -434,6 +445,66 @@ def test_chat_retem_o_assunto_sem_voltar_para_a_missao_anterior(api, monkeypatch
     ]
     assert retomada["result"]["missionId"] == "MISS-C5-01"
     assert agradeceu["state"] == sessao["state"]
+
+
+def test_chat_separa_conversas_e_usa_contexto_do_catalogo_e_do_diagnostico(api, monkeypatch):
+    prompts = []
+
+    def simular(_, mensagem):
+        prompts.append(json.loads(mensagem))
+        return "Vamos pensar juntos."
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", simular)
+    _, agir = abrir(api)
+    dominio = Dominio()
+    missao = dominio.questoes["MISS-C4-02"]
+    for indice, questao in enumerate(dominio.diagnostico):
+        alternativa = questao["gabarito"] if indice else next(
+            opcao["id"] for opcao in questao["alternativas"] if opcao["id"] != questao["gabarito"]
+        )
+        estado = agir("answer", questionId=questao["id"], optionId=alternativa)["state"]
+
+    diagnostico = agir("chat", text="Por onde começo a revisar?", context="diagnostico")
+    assert diagnostico["state"] == estado
+    resultados = prompts[-1]["contexto"]["diagnostico"]
+    assert len(resultados) == len(dominio.diagnostico)
+    assert resultados[0] == {
+        "numero": 1,
+        "conceito": dominio.conceitos[dominio.diagnostico[0]["concept_id"]]["name"],
+        "enunciado": dominio.diagnostico[0]["enunciado"],
+        "acertou": False,
+    }
+    assert all(resultado["acertou"] for resultado in resultados[1:])
+
+    exercicio = agir("chat", text="Onde começo?", context=missao["id"])
+    assert exercicio["state"] == estado
+    assert exercicio["result"]["missionId"] == missao["id"]
+    assert prompts[-1]["contexto"]["enunciado"] == missao["enunciado"]
+    assert prompts[-1]["contexto"]["codigo_python"] == missao["codigo_python"]
+    assert "turnos_recentes" not in prompts[-1]
+    assert "diagnostico" not in prompts[-1]["contexto"]
+
+    agir("chat", text="Como funciona um for?", context="geral")
+    assert prompts[-1]["contexto"] == {"conceito": "Laços de repetição"}
+    assert "turnos_recentes" not in prompts[-1]
+    agir("chat", text="Pode explicar de outro jeito?", context=missao["id"])
+    assert prompts[-1]["turnos_recentes"][0]["pergunta"] == "Onde começo?"
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", lambda *_: None)
+    duvida_diagnostico = agir("chat", text="Pode explicar a questão 2?", context="diagnostico")
+    assert duvida_diagnostico["result"]["text"] == dominio.diagnostico[1]["explicacao"]
+    assert duvida_diagnostico["state"] == estado
+
+
+@pytest.mark.parametrize("contexto", ["diagnostico", "atividade-inexistente", []])
+def test_chat_recusa_contextos_indisponiveis(api, contexto):
+    sessao, _ = abrir(api)
+    status, _ = api(
+        "POST", "/api/session/action",
+        {"requestId": 1, "action": "chat", "text": "Olá", "context": contexto},
+        sessao["id"],
+    )
+    assert status == 400
 
 
 def test_chat_em_contingencia_explica_com_exemplo_do_ultimo_assunto(api):

@@ -14,8 +14,10 @@ export type RecordState = {
   status: ConceptStatus;
 };
 type Attempt = { errors: number; hinted: boolean; points: number };
+export type TrainingScore = { points: number; maxPoints: number };
 export type LearningState = {
   records: Record<string, RecordState>;
+  trainingProgress: Record<string, TrainingScore>;
   attempts: Record<string, Attempt>;
   completed: string[];
   diagnosticAnswers: Record<string, boolean>;
