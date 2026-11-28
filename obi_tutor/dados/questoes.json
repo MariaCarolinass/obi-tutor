@@ -23,6 +23,11 @@
       ],
       "gabarito": "A",
       "explicacao": "A expressão 'pelo menos 80 pontos' significa pontuação maior ou igual a 80 (>= 80). Portanto, 80 pontos satisfaz a condição da medalha de ouro.",
+      "feedback_por_alternativa": {
+        "B": "A faixa da prata termina em 79. Confira qual faixa inclui exatamente 80.",
+        "C": "As faixas de ouro e prata são separadas. Veja a qual delas pertence a pontuação 80.",
+        "D": "A ausência de medalha vale para pontuações abaixo de 50. Compare esse limite com 80."
+      },
       "dicas": [
         "Preste atenção à expressão 'pelo menos': ela inclui o próprio número limite.",
         "Compare 80 com o intervalo [80, +infinito) antes de olhar a faixa da prata."
@@ -44,6 +49,11 @@
       ],
       "gabarito": "B",
       "explicacao": "A função input() retorna texto (str). Para multiplicar numericamente base e altura, cada leitura em linha separada precisa ser convertida com int().",
+      "feedback_por_alternativa": {
+        "A": "input() devolve texto. Para multiplicar as duas medidas, cada leitura precisa virar um número inteiro.",
+        "C": "int(input()) devolve um único inteiro. Como as medidas vêm em linhas separadas, é preciso ler cada linha.",
+        "D": "print() exibe o texto e devolve None. O valor que a variável precisa guardar vem da leitura convertida."
+      },
       "dicas": [
         "Lembre-se de que input() sempre devolve uma string em Python.",
         "Como os valores vêm em linhas separadas, são necessárias duas chamadas de leitura."
@@ -65,6 +75,11 @@
       ],
       "gabarito": "B",
       "explicacao": "O operador // realiza divisão inteira (23 // 5 = 4) e o operador % calcula o resto da divisão (23 % 5 = 3).",
+      "feedback_por_alternativa": {
+        "A": "O primeiro número vem de //, que guarda o quociente inteiro. O 4.6 viria de uma divisão com /.",
+        "C": "Observe a ordem em print(completos, sobra). O quociente é impresso antes do resto.",
+        "D": "Depois de formar quatro pacotes de cinco figurinhas, subtraia as 20 usadas das 23 disponíveis para obter o resto."
+      },
       "dicas": [
         "// descarta a parte decimal e mantém apenas o quociente inteiro.",
         "% retorna o que sobra após formar todos os grupos de 5."
@@ -86,6 +101,11 @@
       ],
       "gabarito": "B",
       "explicacao": "A primeira condição (40 > 50) é falsa. A segunda condição (40 >= 40) é verdadeira, então imprime 'MEDIA' e encerra a estrutura condicional.",
+      "feedback_por_alternativa": {
+        "A": "Para imprimir ALTA, energia precisa ser maior que 50. Com 40, o Python passa para a próxima condição.",
+        "C": "Antes de chegar ao else, observe que >= inclui o próprio 40.",
+        "D": "Em uma sequência if/elif/else, apenas o primeiro bloco com condição verdadeira é executado."
+      },
       "dicas": [
         "Verifique a diferença entre '>' (estritamente maior) e '>=' (maior ou igual).",
         "Em uma cadeia if/elif/else, apenas o primeiro bloco verdadeiro é executado."
@@ -107,6 +127,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Em Python, range(1, 5) gera os valores 1, 2, 3 e 4 (o limite superior 5 não é incluído), totalizando 4 repetições.",
+      "feedback_por_alternativa": {
+        "A": "range(1, 5) começa em 1 e também inclui 4. Conte os valores antes de 5.",
+        "C": "O limite final de range(1, 5) fica de fora. Não há uma volta com i igual a 5.",
+        "D": "O print está dentro do for. Ele roda uma vez para cada valor do intervalo."
+      },
       "dicas": [
         "Em range(inicio, fim), o valor 'fim' fica de fora da sequência.",
         "Conte quantos inteiros existem de 1 até 4."
@@ -128,6 +153,11 @@
       ],
       "gabarito": "B",
       "explicacao": "A variável 'total' atua como acumulador. Apenas 10 e 4 têm resto 0 na divisão por 2, portanto total = 0 + 10 + 4 = 14.",
+      "feedback_por_alternativa": {
+        "A": "Você contou as pontuações pares. Como o código soma p a cada volta válida, ele acumula os valores dessas pontuações.",
+        "C": "Esse é o total de todas as rodadas. O if deixa de fora as pontuações ímpares.",
+        "D": "Escreva apenas os valores com resto zero na divisão por 2. São esses valores que entram na soma."
+      },
       "dicas": [
         "Observe se 'total' soma +1 (contador) ou +p (acumulador).",
         "Filtre primeiro quais elementos da lista satisfazem p % 2 == 0."
@@ -149,6 +179,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Em Python, o índice 0 é o primeiro elemento (12), o índice 1 é o segundo (8) e o índice -1 acessa o último elemento (6). Logo, 8 + 6 = 14.",
+      "feedback_por_alternativa": {
+        "A": "O índice 1 aponta para o segundo elemento, pois a lista começa no índice 0. Some esse valor ao último.",
+        "C": "O índice -1 começa a contar do fim da lista. Identifique primeiro o último valor.",
+        "D": "A expressão usa os índices 1 e -1. Leia o segundo e o último valor em vez dos dois primeiros."
+      },
       "dicas": [
         "Listas em Python começam no índice 0, não no índice 1.",
         "O índice -1 referencia o último item da lista."
@@ -170,6 +205,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Para k=0: a=2, b=5. Para k=1: a=3, b=5. Para k=2: a=5, b=5 (5 > 5 é falso). Ao final do laço, a=5 e b=5.",
+      "feedback_por_alternativa": {
+        "B": "range(3) produz 0, 1 e 2. Pare o teste de mesa depois de somar o último desses valores.",
+        "C": "b só recebe um novo valor quando a > b. Veja o que acontece na última volta, quando os dois valores se igualam.",
+        "D": "Comece com a igual a 2 e some 0, depois 1, depois 2. Atualize b apenas nas voltas em que a ultrapassar b."
+      },
       "dicas": [
         "Monte uma tabela com os valores de k, a e b ao final de cada volta.",
         "Lembre-se de que range(3) assume os valores 0, 1 e 2."
@@ -191,6 +231,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Como 'maior' foi inicializado com 0, se todos os elementos forem negativos, nenhum deles será maior que 0, e a função retornará 0 incorretamente.",
+      "feedback_por_alternativa": {
+        "B": "O for também processa o último elemento. O ponto a conferir é o valor inicial de maior em relação aos dados.",
+        "C": "Repetir um valor não muda qual número é o maior. Experimente comparar o valor inicial 0 com uma lista de números negativos.",
+        "D": "O número 100 é maior que o valor inicial 0 e pode atualizar maior. Veja quando nenhum valor da lista passa pelo if."
+      },
       "dicas": [
         "Observe o valor inicial escolhido para a variável 'maior'.",
         "Teste mentalmente a entrada [-10, -4, -7]."
@@ -212,6 +257,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Os pares (anterior -> atual) com aumento e atual >= 50 são: 45->50 (sim), 50->50 (não aumentou), 50->62 (sim), 62->58 (caiu), 58->70 (sim). Total: 3 alertas.",
+      "feedback_por_alternativa": {
+        "A": "O limite usa >=. Conte também um aumento que chegue a exatamente 50.",
+        "C": "Confira a passagem de 50 para 50. A comparação com a leitura anterior exige um aumento estrito.",
+        "D": "Nem toda leitura a partir de 50 gera alerta. Uma queda ou uma leitura igual à anterior também precisa ser descartada."
+      },
       "dicas": [
         "Verifique as duas condições juntas para cada transição a partir do índice 1.",
         "Atenção à transição 50 -> 50: ela não é estritamente maior."
@@ -233,6 +283,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Para t = 3 horas, a primeira hora custa R$ 10 e as 2 horas adicionais custam 2 * 4 = R$ 8, totalizando R$ 18 (e não 3 * 4 = 12).",
+      "feedback_por_alternativa": {
+        "B": "Confira quanto custa a segunda hora. O valor de R$ 10 se aplica também às horas adicionais?",
+        "C": "O teste já define t como 3. Compare o valor calculado com o custo de cada uma das três horas.",
+        "D": "Teste uma estadia de uma hora e outra de três horas. As duas deveriam cobrar o mesmo número de horas adicionais?"
+      },
       "dicas": [
         "Calcule manualmente quanto deveria custar 3 horas pela regra do enunciado.",
         "Separe a cobrança da 1ª hora das (t - 1) horas restantes."
@@ -254,6 +309,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Ser múltiplo de 3 equivale a x % 3 == 0; não ser múltiplo de 5 equivale a x % 5 != 0; o conectivo 'e' exige ambos verdadeiros simultaneamente (and).",
+      "feedback_por_alternativa": {
+        "A": "Teste com x = 15. Se só uma parte da condição for verdadeira, o enunciado ainda considera o número equilibrado?",
+        "C": "Teste com x = 6. Quais das duas divisões deveriam ter resto zero?",
+        "D": "Em x = 6, compare o quociente com o resto da divisão por 3. Qual deles indica divisibilidade?"
+      },
       "dicas": [
         "Traduza cada parte da frase separadamente usando o operador de resto %.",
         "A palavra 'e' no enunciado exige que as duas restrições valham ao mesmo tempo."
@@ -275,6 +335,11 @@
       ],
       "gabarito": "A",
       "explicacao": "input().split() devolve uma lista de strings (ex: ['3', '1']), e int() aceita apenas um valor por vez, não uma lista.",
+      "feedback_por_alternativa": {
+        "B": "Imagine o resultado de '3 1'.split(). Que tipo de valor chega a int()?",
+        "C": "Veja se a falha acontece ao distribuir dois resultados ou antes disso, quando int() recebe a saída de split().",
+        "D": "Leia o código linha por linha. O Python consegue chegar ao print depois de avaliar a primeira linha?"
+      },
       "dicas": [
         "Verifique o tipo retornado por input().split().",
         "Em Python, map(int, input().split()) aplica int() a cada elemento separado."
@@ -296,6 +361,11 @@
       ],
       "gabarito": "B",
       "explicacao": "A saída solicitada neste desafio contém apenas a letra 'N' em uma linha. A chamada print('N') produz essa saída.",
+      "feedback_por_alternativa": {
+        "A": "Compare caractere por caractere a saída dessa linha com o que o enunciado pede para quem não passou.",
+        "C": "Quando usado em uma função, return devolve um valor a quem chamou. Nesta tarefa, onde a letra deve aparecer?",
+        "D": "input() pede uma nova entrada. O programa precisa ler outra coisa nessa parte ou apenas produzir uma saída?"
+      },
       "dicas": [
         "Juízes online comparam exatamente o texto impresso na tela.",
         "Use print() com apenas o caractere solicitado no enunciado."
@@ -317,6 +387,11 @@
       ],
       "gabarito": "A",
       "explicacao": "135 // 60 resulta em 2 horas inteiras (120 minutos), e 135 % 60 resulta nos 15 minutos restantes.",
+      "feedback_por_alternativa": {
+        "B": "Observe o operador // na linha das horas. O quociente armazenado pode conter uma parte decimal?",
+        "C": "O resto de uma divisão por 60 precisa ser menor que 60. Confira se 75 pode ser o valor da variável minutos.",
+        "D": "Depois de separar duas horas inteiras, subtraia os 120 minutos já usados. Quanto ainda resta?"
+      },
       "dicas": [
         "60 minutos formam 1 hora; veja quantas vezes 60 cabe em 135.",
         "O resto da divisão por 60 dá os minutos que sobraram."
@@ -338,6 +413,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Na linha 'x = y', x passa a valer 20 e o valor 10 é perdido. Para trocar valores, é preciso usar uma variável auxiliar (temp = x) ou atribuição simultânea (x, y = y, x).",
+      "feedback_por_alternativa": {
+        "B": "Observe a primeira atribuição x = y. O problema é ser um inteiro ou perder o valor que x guardava antes?",
+        "C": "Antes de olhar para o print, anote o conteúdo de x e y depois de cada atribuição. Os valores já estão diferentes do esperado?",
+        "D": "Pense na diferença entre comparar dois valores e guardar um valor na variável. Qual operação uma troca precisa fazer?"
+      },
       "dicas": [
         "Acompanhe o valor de x linha por linha após 'x = y'.",
         "Pense no que acontece com o número 10 depois da terceira linha."
@@ -359,6 +439,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Como 85 >= 50 é verdadeiro, o Python entra no primeiro bloco ('Prata') e nunca chega a testar o elif nota >= 70. Faixas numéricas decrescentes devem começar pelo maior limite.",
+      "feedback_por_alternativa": {
+        "B": "Com nota 85, avalie a primeira condição e acompanhe se o Python ainda chega ao elif. O que já aconteceu antes de pensar em acrescentar outro teste?",
+        "C": "Veja que o programa chega a imprimir Prata. O problema está na sintaxe do elif ou em qual condição é testada primeiro?",
+        "D": "A comparação numérica com 85 já funciona. Verifique por que ela entra no primeiro bloco com o valor atual."
+      },
       "dicas": [
         "Qual é a primeira condição avaliada pelo Python quando nota = 85?",
         "Teste se 85 satisfaz nota >= 50."
@@ -380,6 +465,11 @@
       ],
       "gabarito": "B",
       "explicacao": "As três comparações com '<' precisam ser verdadeiras ao mesmo tempo, por isso usamos 'and'. Com 1, 2 e 3, a última comparação é 3 < 1 + 2, que é falsa.",
+      "feedback_por_alternativa": {
+        "A": "Com 1, 2 e 3, a condição que você escolheu pode aceitar o triângulo mesmo quando um lado falha? Avalie as três comparações.",
+        "C": "Compare o lado 3 com a soma 1 + 2. A regra do enunciado permite que os dois valores sejam iguais?",
+        "D": "A soma dos lados 1, 2 e 3 é positiva. O que acontece se você comparar só o maior lado com a soma dos outros dois?"
+      },
       "dicas": [
         "Se apenas uma desigualdade falhar (ex: 1, 2 e 10), o triângulo já não fecha.",
         "Use 'and' para garantir que os três lados respeitem a regra."
@@ -401,6 +491,11 @@
       ],
       "gabarito": "A",
       "explicacao": "O laço imprime 16, 8, 4 e 2. Quando dist passa a valer 1, a condição dist > 1 torna-se falsa e o laço encerra antes de imprimir 1.",
+      "feedback_por_alternativa": {
+        "B": "Quando dist chega a 1, o while volta a testar dist > 1. O print ainda é executado nessa volta?",
+        "C": "Confira qual linha vem primeiro dentro do while. O código imprime a distância inicial antes ou depois de reduzi-la?",
+        "D": "Acompanhe a volta com dist igual a 2. Ela ainda satisfaz a condição antes da divisão?"
+      },
       "dicas": [
         "Verifique em que momento dist passa a ser igual a 1.",
         "A condição do while é testada antes de cada nova impressão."
@@ -422,6 +517,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Por padrão, range(inicio, fim) usa passo +1. Como 5 já é maior que 0, a sequência gerada é vazia. Com passo -1, range(5, 0, -1) gera 5, 4, 3, 2, 1.",
+      "feedback_por_alternativa": {
+        "B": "range() permite começar em um valor maior. Observe em que direção ele anda quando o terceiro argumento é omitido.",
+        "C": "O limite final de range fica de fora também na contagem regressiva. Veja se parar em 1 inclui o próprio 1.",
+        "D": "O for atribui um valor a n a cada volta. Confira primeiro se range(5, 0) produz algum valor para essa atribuição."
+      },
       "dicas": [
         "Qual é o passo padrão da função range() quando o terceiro argumento é omitido?",
         "Para contar para trás, o passo precisa ser negativo."
@@ -443,6 +543,11 @@
       ],
       "gabarito": "A",
       "explicacao": "qtd é um contador de ocorrências (incrementa em +1) e soma é um acumulador de valores (incrementa em +g).",
+      "feedback_por_alternativa": {
+        "B": "Para uma partida de 5 gols, compare quanto cada variável deveria aumentar. Qual conta uma ocorrência e qual soma gols?",
+        "C": "Imagine duas partidas válidas seguidas. As atribuições com = guardam a soma anterior ou substituem os valores?",
+        "D": "qtd indica quantas partidas já passaram pelo filtro. Na variável soma, entra esse número ou os gols da partida atual?"
+      },
       "dicas": [
         "Diferencie 'quantas vezes aconteceu' (+1) de 'quanto vale no total' (+g).",
         "Use += para somar ao valor já guardado sem sobrescrevê-lo."
@@ -464,6 +569,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Como 'aprovados = 0' está indentado dentro do for, o contador é reiniciado a cada elemento da lista, guardando apenas o resultado da última nota.",
+      "feedback_por_alternativa": {
+        "B": "A regra inclui notas iguais a 7. Acompanhe o contador depois das notas 8 e 9 e veja por que os dois acertos não se acumulam.",
+        "C": "Mover o print muda quando o valor aparece. Verifique se o contador ainda guarda a nota anterior ao começar a próxima volta.",
+        "D": "Em duas voltas consecutivas com nota aprovada, veja em que momento o contador volta a zero. Trocar o operador corrige esse reinício?"
+      },
       "dicas": [
         "Observe a indentação da linha 'aprovados = 0'.",
         "Um contador precisa ser inicializado uma única vez antes de o laço começar."
@@ -485,6 +595,11 @@
       ],
       "gabarito": "A",
       "explicacao": "len(salas) é 5. range(0, 5, 2) gera os índices 0, 2 e 4, que correspondem aos elementos 10, 30 e 50.",
+      "feedback_por_alternativa": {
+        "B": "Veja o primeiro índice de range(0, len(salas), 2). A leitura começa na primeira ou na segunda posição da lista?",
+        "C": "O terceiro argumento de range faz o índice saltar duas posições. Depois do primeiro elemento, qual posição vem em seguida?",
+        "D": "A lista tem cinco elementos. Confira se o índice 4 ainda fica abaixo de len(salas)."
+      },
       "dicas": [
         "O terceiro parâmetro de range(0, 5, 2) faz o índice pular de 2 em 2.",
         "Mapeie os índices 0, 2 e 4 aos valores da lista 'salas'."
@@ -506,6 +621,11 @@
       ],
       "gabarito": "A",
       "explicacao": "A lista tem 4 elementos (índices 0 a 3). Quando i chega a 3, i + 1 vale 4, ultrapassando o limite da lista. O laço deveria ir até range(len(valores) - 1).",
+      "feedback_por_alternativa": {
+        "B": "O if pode acessar elementos com colchetes. Faça o teste de mesa da última volta e confira se os dois índices existem.",
+        "C": "Separe a quantidade de elementos do índice do último elemento. São quatro valores, numerados a partir de zero.",
+        "D": "As comparações das primeiras voltas usam dois inteiros. Na última volta, o código consegue obter o segundo inteiro antes de comparar?"
+      },
       "dicas": [
         "Descubra qual é o maior valor que i assume em range(4).",
         "Calcule quanto vale i + 1 na última volta do laço."
@@ -527,6 +647,11 @@
       ],
       "gabarito": "C",
       "explicacao": "Após inserir 'A', 'B' e 'C', a pilha fica ['A', 'B', 'C']. O método pop() remove e retorna o último elemento ('C'), restando ['A', 'B']. Em seguida, append('D') insere 'D' no topo, formando ['A', 'B', 'D'].",
+      "feedback_por_alternativa": {
+        "A": "Depois de retirar o topo, veja em que ponta da lista append() coloca a letra D.",
+        "B": "Compare a ordem de entrada de A e C. Qual delas entrou por último antes de pop()?",
+        "D": "Logo antes de pop(), qual letra está acima de B na pilha? Volte à última inserção antes da remoção."
+      },
       "dicas": [
         "Em uma pilha, append() insere no final e pop() sem argumentos remove do final.",
         "Acompanhe o conteúdo da lista após cada operação."
@@ -548,6 +673,11 @@
       ],
       "gabarito": "B",
       "explicacao": "A diagonal principal corresponde às posições onde o índice da linha é igual ao da coluna: tabuleiro[0][0] = 2, tabuleiro[1][1] = 8 e tabuleiro[2][2] = 9. A soma é 2 + 8 + 9 = 19.",
+      "feedback_por_alternativa": {
+        "A": "Escreva os pares de índices de tabuleiro[i][i] para i = 0, 1 e 2. Confira se cada valor somado vem da mesma linha e coluna.",
+        "C": "A cada volta, o índice muda tanto de linha quanto de coluna. Confira se a soma usou apenas uma célula de cada linha.",
+        "D": "Revise a última célula da diagonal. Qual valor aparece na terceira linha e na terceira coluna?"
+      },
       "dicas": [
         "Substitua i por 0, 1 e 2 na expressão tabuleiro[i][i].",
         "Na diagonal principal, o índice da linha e o da coluna são iguais."
@@ -569,6 +699,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Início: 10. Após +4 -> 14. Após -3 -> 11. Após +8 -> 19. Após -12 -> 7. Como moedas nunca ficou menor que 0, o valor final impresso é 7.",
+      "feedback_por_alternativa": {
+        "B": "O saldo só é zerado quando fica abaixo de zero. Confira o saldo logo antes e logo depois do evento -12.",
+        "C": "Se o saldo ficasse negativo, o if o levaria a zero. Anote o valor acumulado depois de cada evento antes de decidir se isso acontece.",
+        "D": "19 aparece durante o percurso. Ainda falta aplicar o último evento antes do print."
+      },
       "dicas": [
         "Atualize o valor de 'moedas' passo a passo para cada item de 'eventos'.",
         "Some: 10 + 4 - 3 + 8 - 12 e verifique se em algum momento ficou negativo."
@@ -590,6 +725,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Trajetória de x (Conjectura de Collatz a partir de 3): 3 -> 10 (1) -> 5 (2) -> 16 (3) -> 8 (4) -> 4 (5) -> 2 (6) -> 1 (7). Total: 7 passos.",
+      "feedback_por_alternativa": {
+        "A": "Depois de cinco atualizações, confira se x já vale 1. Siga o laço enquanto a condição continuar verdadeira.",
+        "C": "Conte uma vez por atualização de x dentro do laço. O valor inicial e a verificação final da condição não são passos.",
+        "D": "Confira a passagem de x = 2 para x = 1. O contador ainda é incrementado nessa volta?"
+      },
       "dicas": [
         "Anote a sequência de valores de x: começa em 3 (ímpar, vira 3*3+1 = 10).",
         "Conte cada transição até x chegar exatamente em 1."
@@ -611,6 +751,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Se nenhum item satisfaz d > 0, o contador 'cont' termina em 0 e a divisão 'soma // cont' tenta dividir por zero. É necessário testar 'if cont == 0:' antes de dividir.",
+      "feedback_por_alternativa": {
+        "B": "Se todos os valores são positivos, cont aumenta a cada volta. Pense em quando o denominador continua igual a zero.",
+        "C": "A divisão inteira pode usar uma soma ímpar. Qual parte da expressão precisa ser zero para aparecer ZeroDivisionError?",
+        "D": "Compare duas listas de três elementos, com e sem positivos. O tamanho sozinho determina o valor de cont?"
+      },
       "dicas": [
         "Verifique o valor de 'cont' ao final do laço para a entrada [-5, 0, -2].",
         "Nunca divida por um contador sem antes garantir que ele é diferente de zero."
@@ -632,6 +777,11 @@
       ],
       "gabarito": "C",
       "explicacao": "Inicializar 'menor' com o primeiro elemento da própria lista (leituras[0]) garante que o valor de referência pertence ao domínio dos dados, funcionando para qualquer faixa numérica.",
+      "feedback_por_alternativa": {
+        "A": "Teste com [4, 8, 12]. Algum valor da lista substituiria o zero? O resultado ainda seria um elemento da lista?",
+        "B": "Experimente uma lista só com números maiores que -100. Que valor ficaria em menor até o fim?",
+        "D": "len(leituras) é a quantidade de itens. Com [4, 8, 12], essa quantidade é um candidato válido ao menor elemento?"
+      },
       "dicas": [
         "Qualquer número fixo chutado (como 0 ou -100) pode falhar se todos os itens da lista forem menores que ele.",
         "Use um elemento que você sabe com certeza que já faz parte da lista."
@@ -653,6 +803,11 @@
       ],
       "gabarito": "D",
       "explicacao": "Quando c = 101 aparece pela primeira vez, a chave 101 ainda não existe em 'contagem', então tentar ler seu valor atual com += 1 dispara KeyError. Usar contagem[c] = contagem.get(c, 0) + 1 resolve o problema.",
+      "feedback_por_alternativa": {
+        "A": "Se a chave já guardasse o número 2, o que aconteceria ao somar 1 com +=? Veja qual valor o operador tenta ler primeiro.",
+        "B": "Observe como o dicionário começa. O erro acontece pelo tipo do código 101 ou pelo que já existe na coleção na primeira volta?",
+        "C": "Que tipo de coleção [] cria? Compare com o que o código precisa guardar para cada chave."
+      },
       "dicas": [
         "Para executar contagem[c] += 1, o Python precisa primeiro ler quanto vale contagem[c].",
         "O método .get(chave, 0) devolve 0 se a chave ainda não estiver no dicionário."
@@ -674,6 +829,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Os dias consecutivos > 30 são [31, 33] (tamanho 2) e [32, 34, 35] (tamanho 3). O contador 'atual' zera quando encontra 28 e 29, mantendo recorde = 3.",
+      "feedback_por_alternativa": {
+        "A": "Dois dias formam a primeira sequência. Continue o teste de mesa depois do primeiro dia com 30 graus ou menos.",
+        "C": "Confira onde o contador atual volta a zero. Os dias quentes dos dois trechos são consecutivos?",
+        "D": "atual volta a zero no fim da lista. Observe se recorde também é zerado ou se guarda o maior valor encontrado."
+      },
       "dicas": [
         "Acompanhe 'atual' e 'recorde' a cada dia; quando t <= 30, 'atual' volta a 0.",
         "Identifique o maior bloco contínuo de números maiores que 30."
@@ -695,6 +855,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Para [1, 2, 4, 6], o else nunca roda após o 2, o 4 e o 6. Assim, seq chega a 3, mas melhor permanece 0. Atualizar 'melhor' dentro do if (ou após o laço) corrige o caso-limite.",
+      "feedback_por_alternativa": {
+        "B": "Teste a condição com n = 2 e n = 1. Depois de confirmar quais valores entram no if, localize onde melhor recebe uma atualização.",
+        "C": "Se seq fosse zerado em toda volta, ele conseguiria contar dois pares consecutivos? Veja em que situação o contador deve voltar a zero.",
+        "D": "break encerra o laço. Se o programa parar ao ler o primeiro ímpar, ainda consegue examinar uma sequência que venha depois?"
+      },
       "dicas": [
         "Faça o teste de mesa com nums = [1, 2, 4, 6] e veja em que linha 'melhor' é alterado.",
         "O que acontece se o bloco else nunca for executado após a sequência par?"
@@ -716,6 +881,11 @@
       ],
       "gabarito": "B",
       "explicacao": "Em Python, conjuntos (set) armazenam apenas elementos distintos e utilizam o método .add() para inserção. Ao final, unicos contém {12, 45, 78, 90}, e len(unicos) imprime 4.",
+      "feedback_por_alternativa": {
+        "A": "append() é um método de lista. Repare no tipo de coleção criado por set() e procure uma operação que insira um elemento nele.",
+        "C": "A atribuição por índice associa uma chave a um valor. Neste problema, o conjunto precisa guardar um valor para cada chave ou só o próprio identificador?",
+        "D": "comp é um inteiro e unicos é uma coleção. A operação precisa somar números ou inserir um item distinto?"
+      },
       "dicas": [
         "Listas usam .append(), enquanto conjuntos (set) usam outro método para inserir um item.",
         "Conjuntos eliminam automaticamente valores duplicados."
@@ -737,6 +907,11 @@
       ],
       "gabarito": "C",
       "explicacao": "Inicialmente fila = [10, 20, 30]. O primeiro popleft() remove 10 (primeiro = 10), deixando [20, 30]. Depois append(15) insere 15 no fim, ficando [20, 30, 15]. O segundo popleft() remove 20, restando [30, 15].",
+      "feedback_por_alternativa": {
+        "A": "Essa é a fila logo após a primeira remoção. Continue acompanhando a inserção e a segunda remoção.",
+        "B": "O primeiro popleft() já retira 10. Veja o que entra no fim da fila com o valor guardado em primeiro.",
+        "D": "Compare o elemento 30 que já estava na fila com o 15 que chegou depois. Em qual ponta o append() coloca o novo elemento?"
+      },
       "dicas": [
         "popleft() remove o elemento mais à esquerda (início da fila), e append() adiciona no final.",
         "Acompanhe a fila a cada uma das três operações."
@@ -758,6 +933,11 @@
       ],
       "gabarito": "A",
       "explicacao": "Para '(()())': '(' empilha (tam 1), '(' empilha (tam 2), ')' desempilha (tam 1), '(' empilha (tam 2), ')' desempilha (tam 1), ')' desempilha (tam 0). Como valida é True e a pilha termina vazia, imprime True.",
+      "feedback_por_alternativa": {
+        "B": "Marque a altura da pilha a cada caractere. Algum fechamento encontra a pilha vazia ou sobra alguma abertura no fim?",
+        "C": "Observe a expressão dentro de print. Ela imprime o tamanho da pilha ou o resultado de um teste lógico?",
+        "D": "A pilha ajuda a acompanhar as aberturas. Confira se o print mostra a própria pilha ou o resultado da validação."
+      },
       "dicas": [
         "Conte quantos '(' estão abertos na pilha após ler cada caractere de '(()())'.",
         "Para a expressão ser válida, a pilha nunca pode estar vazia ao ler ')' e deve terminar vazia."
@@ -779,6 +959,11 @@
       ],
       "gabarito": "A",
       "explicacao": "'Até 500g (inclusive)' é peso <= 500; 'estritamente menor que 30cm' é altura < 30. As duas comparações precisam valer juntas ('and'), ou basta ter autorização ('or'). Sem autorização, altura de 30 cm reprova o protótipo.",
+      "feedback_por_alternativa": {
+        "B": "Considere um protótipo com autorização especial. A regra também exige que ele cumpra os dois limites físicos?",
+        "C": "Teste com 500 g, 28 cm e sem autorização. O enunciado exige autorização mesmo quando os dois limites são atendidos?",
+        "D": "Use o exemplo com 500 g, 30 cm e sem autorização. Cumprir apenas o limite de peso é suficiente?"
+      },
       "dicas": [
         "Separe os limites inclusivos (<=) dos estritos (<).",
         "Agrupe com parênteses as duas medidas físicas antes de combinar com 'or autorizado'."
@@ -800,6 +985,11 @@
       ],
       "gabarito": "B",
       "explicacao": "range(1, 5) executa para seg = 1, 2, 3, 4. Em seg=1: +3 -1 = 2; seg=2: +3 = 5; seg=3: +3 -1 = 7; seg=4: +3 = 10.",
+      "feedback_por_alternativa": {
+        "A": "O drone sobe em todas as voltas. Identifique quais segundos são ímpares antes de descontar as perdas.",
+        "C": "12 metros é o total da subida sem vento. Confira em quais voltas o código subtrai um metro.",
+        "D": "Liste os segundos de 1 a 4. Conte em quantos deles seg % 2 vale 1."
+      },
       "dicas": [
         "Liste os quatro valores que 'seg' assume em range(1, 5).",
         "Aplique -1 apenas nos segundos ímpares (seg = 1 e seg = 3)."
@@ -821,6 +1011,11 @@
       ],
       "gabarito": "A",
       "explicacao": "total_depositos acumula os valores positivos (50 + 30 + 40 = 120) e qtd_saques conta quantos valores negativos existem (-20, -10, -5 -> 3 saques).",
+      "feedback_por_alternativa": {
+        "B": "Observe a ordem do print e a diferença entre contar ocorrências e somar valores. Qual dessas operações é feita para os saques?",
+        "C": "Confira a primeira condição. Os saques são descontados de total_depositos ou só afetam o contador de saques?",
+        "D": "A cada saque, qtd_saques aumenta em 1. O programa soma valores negativos ou conta quantos aparecem?"
+      },
       "dicas": [
         "Note que total_depositos soma 'm', enquanto qtd_saques soma '1'.",
         "Calcule separadamente a soma dos positivos e a contagem dos negativos."

@@ -19,6 +19,10 @@ export type LearningState = {
   attempts: Record<string, Attempt>;
   completed: string[];
   diagnosticAnswers: Record<string, boolean>;
+  diagnosticReview: Record<
+    string,
+    { selectedId: string; correctId: string; explanation: string; feedback: string | null }
+  >;
   recommendation: { missionId: string; message: string };
   weakPrerequisites: Record<string, string[]>;
 };

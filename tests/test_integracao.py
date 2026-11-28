@@ -75,12 +75,25 @@ def test_catalogo_contem_grafo_e_distribuicao_sem_gabaritos(api):
         "C1": 2, "C2": 2, "C3": 2, "C4": 3, "C5": 3,
         "C6": 3, "C7": 4, "C8": 2, "C9": 3, "C10": 5,
     }
+    ordem_conceitos = {c["id"]: i for i, c in enumerate(catalogo["concepts"])}
+    ordem_dificuldades = {"Fácil": 0, "Médio": 1, "Difícil": 2}
+    ordem_missoes = [
+        (ordem_conceitos[q["concept"]], ordem_dificuldades[q["difficulty"]]) for q in missoes
+    ]
+    assert ordem_missoes == sorted(ordem_missoes)
     assert len({q["id"] for q in diagnostico + missoes}) == 39
     assert all(
-        {"gabarito", "answer", "explicacao", "dicas"}.isdisjoint(q)
+        {"gabarito", "answer", "explicacao", "dicas", "feedback_por_alternativa"}.isdisjoint(q)
         for q in diagnostico + missoes
     )
     assert all(r["status"] == "Não avaliado" for r in sessao["state"]["records"].values())
+
+
+def test_catalogo_tem_feedback_para_todas_as_alternativas_incorretas():
+    for questao in Dominio().questoes.values():
+        incorretas = {opcao["id"] for opcao in questao["alternativas"]} - {questao["gabarito"]}
+        assert set(questao["feedback_por_alternativa"]) == incorretas, questao["id"]
+        assert len(set(questao["feedback_por_alternativa"].values())) == len(incorretas)
 
 
 @pytest.mark.parametrize("destino", ["C12", "C10"])
@@ -91,6 +104,26 @@ def test_rejeita_grafo_invalido(tmp_path, destino):
     arquivo.write_text(json.dumps(conceitos), encoding="utf-8")
     with pytest.raises(ValueError, match="Pré-requisito desconhecido|Ciclo no grafo"):
         Dominio(caminho_conceitos=arquivo)
+
+
+@pytest.mark.parametrize("feedback", [
+    {"B": "Mensagem para o gabarito."},
+    {"Z": "Alternativa inexistente."},
+    {"A": "  "},
+    ["Mensagem sem ID da alternativa."],
+])
+def test_rejeita_feedback_por_alternativa_invalido(tmp_path, feedback):
+    dominio = Dominio()
+    dominio.questoes["MISS-C4-02"]["feedback_por_alternativa"] = feedback
+    catalogo = {
+        "questoes": list(dominio.questoes.values()),
+        "distribuicao": Counter(q["tipo"] for q in dominio.questoes.values()),
+        "total_questoes": len(dominio.questoes),
+    }
+    arquivo = tmp_path / "questoes.json"
+    arquivo.write_text(json.dumps(catalogo), encoding="utf-8")
+    with pytest.raises(ValueError, match="Feedback por alternativa inválido: MISS-C4-02"):
+        Dominio(caminho_catalogo=arquivo)
 
 
 def errada(q):
@@ -157,8 +190,9 @@ def test_erro_ajuda_reenvio_e_revisao(api):
     assert erro["state"]["attempts"][q["id"]]["errors"] == 1
     assert erro["state"]["records"]["C4"]["evaluated"]
     assert api("POST", "/api/session/action", corpo, sessao["id"]) == (200, erro)
-    assert "Compare" in erro["result"]["message"]
+    assert "nota 85" in erro["result"]["message"]
     segundo = agir("answer", questionId=q["id"], optionId=errada(q))
+    assert segundo["result"]["message"] == erro["result"]["message"]
     assert segundo["result"]["alternativeId"] == "MISS-C4-02"
     acerto = agir("answer", questionId=q["id"], optionId=q["gabarito"])
     assert acerto["result"]["points"] == 10
@@ -170,6 +204,60 @@ def test_erro_ajuda_reenvio_e_revisao(api):
         assert ajuda["result"]["message"] == dica
         assert ajuda["state"]["records"]["C4"]["score"] == 10
     assert agir("answer", questionId=outra["id"], optionId=outra["gabarito"])["result"]["points"] == 15
+
+
+@pytest.mark.parametrize(("questao_id", "alternativa", "trecho"), [
+    ("MISS-C4-02", "A", "mesmo quando um lado falha"),
+    ("MISS-C4-02", "C", "os dois valores sejam iguais"),
+    ("MISS-C7-03", "A", "append() coloca a letra D"),
+    ("MISS-C9-03", "B", "tipo do código 101"),
+])
+def test_erro_orienta_pela_alternativa_sem_contar_ajuda(api, questao_id, alternativa, trecho):
+    _, agir = abrir(api)
+    questao = Dominio().questoes[questao_id]
+    erro = agir("answer", questionId=questao_id, optionId=alternativa)
+    assert trecho in erro["result"]["message"]
+    assert erro["result"]["points"] == 0
+    assert erro["state"]["attempts"][questao_id]["hinted"] is False
+
+    segundo_erro = agir("answer", questionId=questao_id, optionId=alternativa)
+    assert trecho in segundo_erro["result"]["message"]
+    outra_missao = segundo_erro["result"]["alternativeId"]
+    assert outra_missao and outra_missao != questao_id
+
+    acerto = agir("answer", questionId=questao_id, optionId=questao["gabarito"])
+    assert acerto["result"]["points"] == 10
+
+
+def test_diagnostico_libera_feedback_so_apos_a_ultima_resposta(api):
+    sessao, agir = abrir(api)
+    questoes = Dominio().diagnostico
+    primeira = questoes[0]
+    escolha = errada(primeira)
+    assert sessao["state"]["diagnosticReview"] == {}
+
+    for q in questoes[:-1]:
+        alternativa = escolha if q is primeira else q["gabarito"]
+        resposta = agir("answer", questionId=q["id"], optionId=alternativa)
+        assert resposta["state"]["diagnosticReview"] == {}
+        assert "message" not in resposta["result"]
+
+    ultima = questoes[-1]
+    resposta = agir("answer", questionId=ultima["id"], optionId=ultima["gabarito"])
+    revisao = resposta["state"]["diagnosticReview"]
+    assert len(revisao) == 10
+    assert revisao[primeira["id"]] == {
+        "selectedId": escolha,
+        "correctId": primeira["gabarito"],
+        "explanation": primeira["explicacao"],
+        "feedback": primeira["feedback_por_alternativa"][escolha],
+    }
+    assert revisao[ultima["id"]]["feedback"] is None
+    assert resposta["result"]["points"] == 30
+
+    repetida = agir("answer", questionId=primeira["id"], optionId=primeira["gabarito"])
+    assert repetida["result"] == {"correct": False, "points": 0, "review": True}
+    assert repetida["state"]["diagnosticReview"] == revisao
 
 
 def test_recomendacao_revisa_base_abaixo_do_limiar(api):
