@@ -513,3 +513,161 @@ def test_chat_em_contingencia_explica_com_exemplo_do_ultimo_assunto(api):
     resposta = agir("chat", text="Não entendi", questionId="MISS-C4-01")
     assert "range(2)" in resposta["result"]["text"]
     assert resposta["result"]["missionId"] == "MISS-C5-01"
+
+
+def test_chat_retoma_assunto_apos_pedidos_curtos_e_uma_mensagem_ambigua(api):
+    sessao, agir = abrir(api)
+    agir("chat", text="Como funciona um for?", context="geral")
+
+    exemplo = agir("chat", text="Pode dar um exemplo?", context="geral")
+    assert "range(2)" in exemplo["result"]["text"]
+
+    ambigua = agir("chat", text="Tenho outra dúvida", context="geral")
+    assert "repetições" in ambigua["result"]["text"]
+    retomada = agir("chat", text="Pode explicar melhor esse código?", context="geral")
+    assert "range(2)" in retomada["result"]["text"]
+
+    agir("chat", text="O que é uma lista?", context="geral")
+    outro_assunto = agir("chat", text="Como assim?", context="geral")
+    assert "Na lista [4, 7]" in outro_assunto["result"]["text"]
+    assert outro_assunto["state"] == sessao["state"]
+
+
+@pytest.mark.parametrize(("pergunta", "exemplo", "atualizado", "novo_assunto"), [
+    (
+        "Como funciona um for?",
+        "for i in range(3):\n    print(i)",
+        "for i in range(1, 3):\n    print(i)",
+        "Como funciona uma condição if?",
+    ),
+    (
+        "Como funciona um if?",
+        "if temperatura > 30:\n    print('Quente')",
+        "if temperatura >= 30:\n    print('Quente')",
+        "Como funciona um laço while?",
+    ),
+])
+def test_chat_preserva_o_exemplo_atual_sem_amarrar_a_um_conceito(
+    api, monkeypatch, pergunta, exemplo, atualizado, novo_assunto,
+):
+    prompts = []
+
+    def provedor(instrucoes, mensagem):
+        prompts.append((instrucoes, json.loads(mensagem)))
+        if len(prompts) == 1:
+            return f"Veja este exemplo.\n```python\n{exemplo}\n```"
+        if len(prompts) == 2:
+            return f"Veja como fica com a mudança.\n```python\n{atualizado}\n```"
+        if len(prompts) in {3, 4}:
+            return "Observe como a mudança afeta o resultado."
+        return None
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", provedor)
+    sessao, agir = abrir(api)
+    agir("chat", text=pergunta)
+    agir("chat", text="E se eu mudar a regra?")
+    assert prompts[-1][1]["contexto"]["exemplo_atual"] == exemplo
+    assert agir("chat", text="Lixo")["result"]["quiet"]
+    assert agir("chat", text="Feio")["result"]["quiet"]
+    assert len(prompts) == 2
+
+    agir("chat", text="Pode resumir?")
+    agir("chat", text="E o resultado esperado?")
+    retomada = agir("chat", text="Você não explica nada direito")
+    instrucoes, pedido = prompts[-1]
+    assert "no máximo duas frases" in instrucoes
+    assert pedido["contexto"]["exemplo_atual"] == atualizado
+    assert all(atualizado not in turno["resposta"] for turno in pedido["turnos_recentes"])
+    assert atualizado in retomada["result"]["text"]
+    agir("chat", text=novo_assunto)
+    assert "exemplo_atual" not in prompts[-1][1]["contexto"]
+    assert retomada["state"] == sessao["state"]
+
+
+def test_chat_entrega_a_resposta_do_provedor_sem_abertura_generica(api, monkeypatch):
+    codigo = "total = 0\nfor valor in range(3):\n    total += valor"
+    prompts = []
+
+    def provedor(instrucoes, mensagem):
+        prompts.append((instrucoes, json.loads(mensagem)))
+        if len(prompts) == 1:
+            return f"Veja o exemplo.\n```python\n{codigo}\n```"
+        return "Olá! Boa pergunta! Sim, o total termina em 3. O laço soma 0, 1 e 2."
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", provedor)
+    _, agir = abrir(api)
+    agir("chat", text="Como funciona um for?")
+    resposta = agir("chat", text="Nesse código, o total termina em 3?")
+    instrucoes, pedido = prompts[-1]
+    assert "Na primeira frase, dê a resposta concreta" in instrucoes
+    assert "Faça uma pergunta de acompanhamento só se ela ajudar" in instrucoes
+    assert pedido["contexto"]["exemplo_atual"] == codigo
+    assert resposta["result"]["text"].startswith("Sim, o total termina em 3.")
+
+
+def test_chat_em_contingencia_usa_a_ajuda_pedida_na_missao(api):
+    sessao, agir = abrir(api)
+    missao = Dominio().questoes["MISS-C4-01"]
+    for pergunta, esperado in [
+        ("Pode me dar uma pista?", missao["dicas"][0]),
+        ("Pode dar um exemplo mais simples?", "idade >= 16"),
+        ("Pode dar a resposta?", missao["explicacao"]),
+        ("O que acontece na linha 2 do desafio?", "Na linha 2, anote os valores"),
+    ]:
+        resposta = agir("chat", text=pergunta, context=missao["id"])
+        assert esperado in resposta["result"]["text"]
+        assert resposta["state"] == sessao["state"]
+
+
+def test_chat_em_contingencia_orienta_pelo_trecho_ja_discutido(api):
+    codigo = "total = 0\nfor valor in range(3):\n    total += valor"
+    _, agir = abrir(api)
+    agir("chat", text=f"Minha dúvida é sobre este laço:\n```python\n{codigo}\n```")
+    resposta = agir("chat", text="Qual é o valor de total nesse código?")
+    assert resposta["result"]["text"].startswith("Acompanhe `total` desde o valor inicial.")
+    assert codigo in resposta["result"]["text"]
+    linha = agir("chat", text="Pode explicar a linha 3?")
+    assert linha["result"]["text"].startswith("Na linha 3, anote os valores")
+    assert codigo in linha["result"]["text"]
+
+
+def test_chat_respeita_a_recusa_e_a_confirmacao_de_entendimento(api, monkeypatch):
+    prompts = []
+
+    def provedor(_, mensagem):
+        prompts.append(json.loads(mensagem))
+        return "Uma lista agrupa valores. Você quer tentar somar os valores?"
+
+    monkeypatch.setattr("obi_tutor.tutor.gerar_texto", provedor)
+    sessao, agir = abrir(api)
+    agir("chat", text="O que é uma lista?")
+    for texto in ("não", "eu falei que não queria", "já entendi o assuntp", "não quero mais"):
+        resposta = agir("chat", text=texto)
+        assert resposta["result"]["quiet"]
+        assert "?" not in resposta["result"]["text"]
+        assert resposta["state"] == sessao["state"]
+    assert len(prompts) == 1
+
+    agir("chat", text="não, como seria?")
+    assert prompts[-1]["duvida"] == "como seria?"
+    assert prompts[-1]["contexto"]["conceito"] == "Listas e percursos"
+    agir("chat", text="agora não, quero aprender condicionais")
+    assert prompts[-1]["duvida"] == "quero aprender condicionais"
+    assert prompts[-1]["contexto"]["conceito"] == "Condicionais e comparações"
+
+
+@pytest.mark.parametrize(("interno", "externo"), [("if", "while"), ("while", "for")])
+def test_chat_em_contingencia_preserva_o_encaixe_dos_blocos(api, interno, externo):
+    _, agir = abrir(api)
+    agir("chat", text=f"Como funciona o {externo}?")
+    pergunta = agir("chat", text=f"Agora não, quero saber como colocar um `{interno}` dentro do `{externo}`.")
+    exemplo = agir("chat", text="Pode mostrar um exemplo menor do conceito?")
+    for mensagem in (pergunta, exemplo):
+        resposta = mensagem["result"]["text"]
+        assert resposta.startswith(f"Coloque o `{interno}` dentro do `{externo}`")
+        assert f"\n{externo} " in resposta
+        assert f"\n    {interno} " in resposta
+    novo_assunto = agir("chat", text="O que é uma lista?")
+    assert "Organize valores em listas" in novo_assunto["result"]["text"]
+    outro_exemplo = agir("chat", text="Pode mostrar um exemplo menor?")
+    assert "Na lista [4, 7]" in outro_exemplo["result"]["text"]

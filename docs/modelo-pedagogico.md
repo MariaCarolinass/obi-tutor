@@ -14,6 +14,14 @@ O estudante pergunta sobre Python, enunciados, algoritmos e trechos de código. 
 
 Perguntas livres **não atualizam** o domínio numérico. O tutor usa o conceito em foco para contextualizar explicações e o progresso para recomendar missões. Ao orientar sobre código enviado, descreve o que o trecho faria e esclarece dúvidas sobre a execução quando o estudante perguntar.
 
+Pedidos curtos como “pode dar um exemplo?” retomam o último assunto reconhecido na conversa. Uma mensagem ambígua preserva esse assunto, e uma pergunta sobre outro conceito pode mudar o foco.
+
+O Olimpio acolhe uma recusa ou confirmação de entendimento com uma resposta breve. Se a pessoa recusar uma atividade e fizer outra pergunta na mesma mensagem, o tutor segue a nova dúvida. Quando uma pergunta combina conceitos, pedidos de outro exemplo retomam a combinação. Na contingência, o tutor pode mostrar como os blocos se encaixam ou orientar a análise do exemplo atual.
+
+O Olimpio guarda o último exemplo apresentado em um bloco de código. O trecho acompanha os turnos recentes até uma mudança de assunto ou a apresentação de outro exemplo. O tutor usa o trecho como texto e, quando o provedor está indisponível, pode retomá-lo para localizar a dúvida. Uma crítica curta recebe um convite para mudar a explicação ou o assunto. Quando o estudante diz que a explicação foi confusa, o tutor tenta reformular a mesma ideia em menos palavras.
+
+As instruções ao Gemini apresentam a OBI, o público do OBI Tutor e os conceitos da trilha. Elas orientam o Olimpio a explicar como interpretar enunciados, testar casos e construir soluções em Python. Para dúvidas sobre níveis, regras ou inscrições, orientam a usar informações verificadas da organização da OBI. As instruções também pedem a resposta concreta na primeira frase e uma pergunta de acompanhamento apenas quando ela ajuda. Na contingência, o tutor usa a pista ou a explicação do desafio conforme o pedido. Ele também pode usar um exemplo do conceito ou orientar um teste de mesa sobre a linha ou variável citada no trecho atual. O teste de mesa é uma orientação para o estudante, com o código tratado como texto.
+
 ### Missões Interativas
 
 O sistema apresenta um problema objetivo de previsão de saída, identificação de bug ou complemento de código. O estudante responde. A aplicação verifica o gabarito, registra tentativas e utiliza o modelo do aluno para pontuar.
