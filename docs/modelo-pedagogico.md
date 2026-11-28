@@ -29,20 +29,22 @@ O catálogo do MVP pode ter até **duas dicas preparadas** por questão. As miss
 
 O tutor pode recomendar revisão quando houver pré-requisito com menos de 50 pontos. A recomendação **não bloqueia** a autonomia do aluno.
 
-Na demonstração, a recomendação prioriza dificuldades registradas no diagnóstico quando há uma missão pendente no conceito. Também pode sugerir um pré-requisito direto abaixo de 50 pontos quando ele tem uma atividade pendente. O catálogo atual delimita as recomendações disponíveis. [Recomendações no backend](../obi_tutor/pedagogia.py)
+Na demonstração, a recomendação prioriza dificuldades registradas no diagnóstico quando há uma missão pendente no conceito. Também pode sugerir um pré-requisito direto abaixo de 50 pontos quando ele tem uma atividade pendente. Dentro do conceito selecionado, as sugestões seguem a ordem de dificuldade e priorizam a primeira missão pendente. [Recomendações no backend](../obi_tutor/pedagogia.py)
 
 ## 4. Rota de Desbloqueio
 
 | Sinal observado | Comportamento planejado |
 | --- | --- |
 | Não sabe começar | Oferecer exemplo simples, explicação direta ou divisão do problema |
-| Primeiro erro | Apontar o ponto relevante e oferecer nova tentativa |
-| Erro repetido | Mudar a abordagem ou oferecer outra missão do mesmo conceito |
+| Primeiro erro | Apontar o ponto relevante da alternativa escolhida, quando tiver orientação preparada, e oferecer nova tentativa |
+| Erro repetido | Exibir a orientação da alternativa escolhida, se disponível, e oferecer outra abordagem ou missão do mesmo conceito |
 | Solicita resposta direta | Explicar com clareza e oferecer aplicação opcional |
 | Relata tédio ou deseja encerrar | Oferecer troca de modo, outra missão, pausa ou encerramento sem insistir |
 | Avança, mas falta evidência de domínio | Reconhecer o que fez e sugerir uma missão nova |
 
 Não inferir emoções ocultas a partir de uma nota. As intervenções respondem a **ações observáveis e preferências expressas**. Quando o estudante diz que está entediado ou quer mudar de atividade, o Olimpio oferece outra missão, acesso à trilha ou pausa. Essa orientação é preparada pelo backend e mantém a conversa aberta para quem quiser continuar.
+
+Em cada erro nas 29 missões, a orientação usa a alternativa marcada para ajudar o estudante a rever o raciocínio. A partir do segundo erro, as opções de mudar a abordagem ou trocar de missão aparecem ao lado da questão. Os pedidos de ajuda continuam registrados separadamente. O diagnóstico disponibiliza as orientações e explicações na revisão, depois que o estudante confirma as dez respostas.
 
 ## 5. Exemplos de conversa previstos
 

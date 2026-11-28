@@ -16,12 +16,12 @@ A interface web tem um menu lateral no desktop e um menu recolhível no celular.
 
 No Início, **Fazer o diagnóstico** abre a tela do diagnóstico. O estudante pode iniciá-lo, pausá-lo ou seguir direto para a trilha. Na retomada, a interface abre a primeira questão ainda sem resposta registrada.
 
-Ao concluir as dez questões, o estudante vê o total de acertos e uma missão sugerida. Em **Seu nível por conceito**, cada conceito avaliado mostra o resultado da questão, os pontos ganhos em caso de acerto e o estado atual do conceito na sessão. Essa estimativa orienta a prática. Os níveis oficiais de inscrição na OBI seguem critérios de escolaridade.
+Ao concluir as dez questões, o estudante vê o total de acertos e uma missão sugerida. Em **Seu nível por conceito**, cada conceito avaliado mostra o resultado da questão, os pontos ganhos em caso de acerto e o estado atual do conceito na sessão. **Revisar resposta** abre o enunciado, a alternativa escolhida e a explicação. Em caso de erro, também mostra a orientação específica e a alternativa correta. Os níveis oficiais de inscrição na OBI seguem critérios de escolaridade.
 
 ### Treinamento
 
-1. Em **Treinar para a OBI**, abra um conceito para consultar sua descrição, seus pré-requisitos e suas missões. Com um pré-requisito abaixo de 50 pontos, a interface oferece revisão e permite iniciar a atividade escolhida.
-2. Escolha uma alternativa e pressione **Verificar resposta**. O backend compara o ID da alternativa ao gabarito local e devolve o efeito sobre o progresso.
+1. Em **Treinar para a OBI**, abra um conceito para consultar sua descrição, seus pré-requisitos e suas missões por dificuldade. A primeira missão pendente é destacada como sugestão. Com um pré-requisito abaixo de 50 pontos, a interface oferece revisão e permite iniciar a atividade escolhida.
+2. Escolha uma alternativa e pressione **Verificar resposta**. O backend compara o ID da alternativa ao gabarito local e devolve o efeito sobre o progresso. Em cada erro, a mensagem abaixo das alternativas indica um ponto específico da opção marcada.
 3. Quando precisar de ajuda, escolha uma pista, um exemplo mais simples, uma revisão do conceito ou uma explicação direta. Após erros repetidos, a interface também oferece a troca de missão.
 4. Após acertar, consulte a explicação e os pontos recebidos. Siga para outra missão ou abra **Meu Progresso**. Uma missão concluída pode ser repetida para revisão, sem conceder novos pontos.
 

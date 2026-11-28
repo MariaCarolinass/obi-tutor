@@ -6,6 +6,7 @@ from pathlib import Path
 PASTA_DADOS = Path(__file__).resolve().parent / "dados"
 FORMATOS_MISSAO = {"Detetive de Bugs", "Preveja a Saída", "Complete o Código"}
 DIFICULDADES = {"facil": "Fácil", "medio": "Médio", "dificil": "Difícil"}
+ORDEM_DIFICULDADES = {dificuldade: indice for indice, dificuldade in enumerate(DIFICULDADES)}
 
 
 class Dominio:
@@ -32,9 +33,14 @@ class Dominio:
         self.diagnostico = [
             q for q in self.questoes.values() if q["tipo"] == "diagnostico"
         ]
-        self.missoes = [
-            q for q in self.questoes.values() if q["tipo"] != "diagnostico"
-        ]
+        ordem_conceitos = {id_: indice for indice, id_ in enumerate(self.conceitos)}
+        self.missoes = sorted(
+            (q for q in self.questoes.values() if q["tipo"] != "diagnostico"),
+            key=lambda q: (
+                ordem_conceitos[q["concept_id"]],
+                ORDEM_DIFICULDADES[q["dificuldade"]],
+            ),
+        )
 
     @staticmethod
     def _ler(caminho):
@@ -84,6 +90,19 @@ class Dominio:
             )
         ):
             raise ValueError(f"Questão inválida: {questao['id']}")
+
+        feedback = questao.get("feedback_por_alternativa", {})
+        if (
+            not isinstance(feedback, dict)
+            or any(
+                id_ not in alternativas
+                or id_ == questao["gabarito"]
+                or not isinstance(mensagem, str)
+                or not mensagem.strip()
+                for id_, mensagem in feedback.items()
+            )
+        ):
+            raise ValueError(f"Feedback por alternativa inválido: {questao['id']}")
 
     def catalogo_publico(self):
         ordinais = Counter()

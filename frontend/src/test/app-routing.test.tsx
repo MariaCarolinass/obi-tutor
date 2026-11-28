@@ -170,13 +170,14 @@ it("guides the warmup with a hint and distinct feedback without starting a score
   expect(screen.getByRole("link", { name: "Começar pela trilha" })).toBeVisible();
 });
 
-it("shows the learner model status and diagnostic result for each assessed concept", async () => {
+it("shows diagnostic feedback only after all answers are submitted", async () => {
   const router = getRouter(createMemoryHistory({ initialEntries: ["/diagnostico"] }));
   render(<RouterProvider router={router} />);
 
   fireEvent.click(await screen.findByRole("button", { name: "Iniciar diagnóstico" }));
   for (let index = 0; index < 10; index++) {
     await screen.findByText(`Questão ${index + 1} de 10`);
+    expect(screen.queryByText("Revisar resposta")).not.toBeInTheDocument();
     fireEvent.click(screen.getAllByRole("radio")[0]!);
     fireEvent.click(
       screen.getByRole("button", { name: index === 9 ? "Ver meu resultado" : "Próxima questão" }),
@@ -191,10 +192,48 @@ it("shows the learner model status and diagnostic result for each assessed conce
   expect(reading).toHaveTextContent("Inicial");
   expect(inputOutput).toHaveTextContent("Vale reforçar");
   expect(inputOutput).toHaveTextContent("Inicial");
+  const review = within(inputOutput!).getByText("Revisar resposta");
+  const feedback = within(inputOutput!).getByText(/input\(\) devolve texto/);
+  expect(feedback).not.toBeVisible();
+  fireEvent.click(review);
+  expect(feedback).toBeVisible();
+  expect(within(inputOutput!).getByText("Resposta correta")).toBeVisible();
 
   const nav = screen.getByRole("navigation", { name: "Navegação principal" });
   fireEvent.click(within(nav).getByRole("link", { name: "Início" }));
   expect(await screen.findByRole("link", { name: "Começar pela trilha" })).toBeVisible();
+});
+
+it("groups missions by difficulty and suggests the next unfinished mission in order", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/trilha"] }));
+  render(<RouterProvider router={router} />);
+
+  const heading = await screen.findByRole("heading", { name: "Casos-limite e validação" });
+  fireEvent.click(
+    within(heading.closest("article")!).getByRole("button", { name: "Ver desafios" }),
+  );
+  const dialog = screen.getByRole("dialog", { name: "Casos-limite e validação" });
+  const medium = within(dialog).getByRole("region", { name: "Dificuldade Médio" });
+  const hard = within(dialog).getByRole("region", { name: "Dificuldade Difícil" });
+  const mediumMissions = within(medium).getAllByRole("link", { name: "Iniciar" });
+  expect(mediumMissions.map((link) => link.getAttribute("href"))).toEqual([
+    "/missoes/MISS-C9-01",
+    "/missoes/MISS-C9-03",
+  ]);
+  expect(within(hard).getByRole("link", { name: "Iniciar" })).toHaveAttribute(
+    "href",
+    "/missoes/MISS-C9-02",
+  );
+
+  fireEvent.click(mediumMissions[0]!);
+  fireEvent.click(
+    await screen.findByRole("radio", { name: /nenhum elemento da lista é maior que 0/ }),
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(await screen.findByRole("link", { name: "Próxima missão" })).toHaveAttribute(
+    "href",
+    "/missoes/MISS-C9-03",
+  );
 });
 
 it("redirects the old diagnostic URL into the single diagnostic flow", async () => {
@@ -202,6 +241,28 @@ it("redirects the old diagnostic URL into the single diagnostic flow", async () 
   render(<RouterProvider router={router} />);
   expect(await screen.findByRole("button", { name: "Iniciar diagnóstico" })).toBeVisible();
   expect(router.state.location.pathname).toBe("/diagnostico");
+});
+
+it("updates the feedback after choosing another wrong option and offers another mission", async () => {
+  const router = getRouter(createMemoryHistory({ initialEntries: ["/missoes/MISS-C4-02"] }));
+  render(<RouterProvider router={router} />);
+
+  fireEvent.click(await screen.findByRole("radio", { name: /a < b \+ c or/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(await screen.findByText(/mesmo quando um lado falha/)).toBeVisible();
+
+  fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
+  fireEvent.click(screen.getByRole("radio", { name: /a <= b \+ c and/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(
+    await screen.findByText(/A regra do enunciado permite que os dois valores sejam iguais/),
+  ).toBeVisible();
+  expect(screen.getByRole("link", { name: "Tentar outra missão" })).toBeVisible();
+
+  fireEvent.click(screen.getByRole("button", { name: "Tentar novamente" }));
+  fireEvent.click(screen.getByRole("radio", { name: /a < b \+ c and/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Verificar resposta" }));
+  expect(await screen.findByText(/Boa descoberta! \+10 pontos/)).toBeVisible();
 });
 
 it("keeps mission help in the scoring session and lets the student end it", async () => {
